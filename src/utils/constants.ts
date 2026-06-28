@@ -51,6 +51,9 @@ export const INITIAL_PORTFOLIO_CONTENT: PortfolioContent = {
   certifications: [],
   github_repos: [],
   theme: 'light',
+  template: 'minimal',
+  accent_color: 'zinc',
+  font_pair: 'modern-tech',
   sections_visibility: {
     experience: true,
     projects: true,

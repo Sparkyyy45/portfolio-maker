@@ -93,6 +93,9 @@ export interface PortfolioContent {
   leetcode?: LeetCodeStats;
   github_repos?: GitHubRepoData[];
   theme?: 'light' | 'cyberpunk';
+  template?: 'bento' | 'brutalist' | 'minimal' | 'terminal';
+  accent_color?: string;
+  font_pair?: string;
   sections_visibility?: SectionsVisibility;
 }
 

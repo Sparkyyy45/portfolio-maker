@@ -36,12 +36,14 @@ export default function DashboardPage() {
 
   const [loadingData, setLoadingData] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [polishingItem, setPolishingItem] = useState<{ type: 'experience' | 'project'; index: number; subIndex?: number } | null>(null);
 
   const [usernameInput, setUsernameInput] = useState('');
   const [isPublishedInput, setIsPublishedInput] = useState(false);
   const [usernameError, setUsernameError] = useState('');
 
   const [mounted, setMounted] = useState(false);
+  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
 
   useEffect(() => {
     setMounted(true);
@@ -121,6 +123,11 @@ export default function DashboardPage() {
   const handleThemeChange = (selectedTheme: 'light' | 'cyberpunk') => {
     if (!content) return;
     setContent((prev) => prev ? ({ ...prev, theme: selectedTheme }) : null);
+  };
+
+  const handleTemplateChange = (selectedTemplate: 'minimal' | 'bento' | 'brutalist' | 'terminal') => {
+    if (!content) return;
+    setContent((prev) => prev ? ({ ...prev, template: selectedTemplate }) : null);
   };
 
   const handleSectionVisibilityToggle = (section: keyof SectionsVisibility) => {
@@ -221,6 +228,60 @@ export default function DashboardPage() {
       updated[expIdx] = { ...updated[expIdx], bullets: updated[expIdx].bullets.filter((_, i) => i !== bulletIdx) };
       return { ...prev, experience: updated };
     });
+  };
+
+  const polishExperienceBullet = async (expIdx: number, bIdx: number) => {
+    if (!content) return;
+    const bulletText = content.experience[expIdx].bullets[bIdx];
+    if (!bulletText.trim() || bulletText === 'New bullet point...') return;
+
+    setPolishingItem({ type: 'experience', index: expIdx, subIndex: bIdx });
+    try {
+      const response = await fetch('/api/polish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: bulletText }),
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Polishing failed');
+      }
+      const data = await response.json();
+      updateExperienceBullet(expIdx, bIdx, data.polishedText);
+      addToast('Bullet point polished by AI!', 'success');
+    } catch (err: any) {
+      console.error(err);
+      addToast(err.message || 'Failed to polish text.', 'error');
+    } finally {
+      setPolishingItem(null);
+    }
+  };
+
+  const polishProjectDescription = async (projIdx: number) => {
+    if (!content) return;
+    const descText = content.projects[projIdx].description;
+    if (!descText.trim() || descText === 'Describe details...') return;
+
+    setPolishingItem({ type: 'project', index: projIdx });
+    try {
+      const response = await fetch('/api/polish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: descText }),
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Polishing failed');
+      }
+      const data = await response.json();
+      updateProject(projIdx, 'description', data.polishedText);
+      addToast('Project description polished by AI!', 'success');
+    } catch (err: any) {
+      console.error(err);
+      addToast(err.message || 'Failed to polish text.', 'error');
+    } finally {
+      setPolishingItem(null);
+    }
   };
 
   // Skills CRUD
@@ -962,10 +1023,22 @@ export default function DashboardPage() {
                             <label className={labelCls}>Bullet Points</label>
                             <button onClick={() => addExperienceBullet(expIdx)} className="text-2xs text-text-secondary hover:text-text-primary hover:underline cursor-pointer">+ Add Bullet</button>
                           </div>
-                          {exp.bullets.map((bullet, bIdx) => (
+                           {exp.bullets.map((bullet, bIdx) => (
                             <div key={bIdx} className="flex gap-1.5 items-center">
                               <input type="text" value={bullet} onChange={(e) => updateExperienceBullet(expIdx, bIdx, e.target.value)} className={`flex-1 ${inputSmCls}`} />
-                              <button onClick={() => deleteExperienceBullet(expIdx, bIdx)} className="text-text-tertiary hover:text-rose-500 transition cursor-pointer"><Trash2 size={13} /></button>
+                              <button
+                                onClick={() => polishExperienceBullet(expIdx, bIdx)}
+                                disabled={polishingItem?.type === 'experience' && polishingItem.index === expIdx && polishingItem.subIndex === bIdx}
+                                className="p-1.5 rounded-lg border border-border-primary hover:bg-bg-primary text-text-secondary hover:text-accent disabled:opacity-50 transition cursor-pointer flex items-center justify-center shrink-0"
+                                title="Polish with AI"
+                              >
+                                {polishingItem?.type === 'experience' && polishingItem.index === expIdx && polishingItem.subIndex === bIdx ? (
+                                  <Loader2 size={12} className="animate-spin" />
+                                ) : (
+                                  <Sparkles size={12} />
+                                )}
+                              </button>
+                              <button onClick={() => deleteExperienceBullet(expIdx, bIdx)} className="text-text-tertiary hover:text-rose-500 transition cursor-pointer shrink-0"><Trash2 size={13} /></button>
                             </div>
                           ))}
                         </div>
@@ -1015,7 +1088,24 @@ export default function DashboardPage() {
                           <div key={projIdx} className={cardCls}>
                             <button onClick={() => deleteProject(projIdx)} className="absolute right-3 top-3 text-text-tertiary hover:text-rose-500 transition cursor-pointer"><Trash2 size={14} /></button>
                             <div className="space-y-1"><label className={labelCls}>Project Title</label><input type="text" value={proj.title} onChange={(e) => updateProject(projIdx, 'title', e.target.value)} className={inputSmCls} /></div>
-                            <div className="space-y-1"><label className={labelCls}>Description</label><textarea rows={2} value={proj.description} onChange={(e) => updateProject(projIdx, 'description', e.target.value)} className={`${inputSmCls} resize-none`} /></div>
+                            <div className="space-y-1">
+                              <div className="flex justify-between items-center">
+                                <label className={labelCls}>Description</label>
+                                <button
+                                  type="button"
+                                  onClick={() => polishProjectDescription(projIdx)}
+                                  disabled={polishingItem?.type === 'project' && polishingItem.index === projIdx}
+                                  className="text-2xs font-semibold text-text-secondary hover:text-accent hover:underline flex items-center gap-1 disabled:opacity-50 transition cursor-pointer select-none"
+                                >
+                                  {polishingItem?.type === 'project' && polishingItem.index === projIdx ? (
+                                    <><Loader2 size={10} className="animate-spin" /> Polishing...</>
+                                  ) : (
+                                    <><Sparkles size={10} /> Polish with AI</>
+                                  )}
+                                </button>
+                              </div>
+                              <textarea rows={2} value={proj.description} onChange={(e) => updateProject(projIdx, 'description', e.target.value)} className={`${inputSmCls} resize-none`} />
+                            </div>
                             <div className="space-y-1"><label className={labelCls}>Tech tags (comma separated)</label><input type="text" value={proj.tech.join(', ')} onChange={(e) => updateProject(projIdx, 'tech', e.target.value)} className={inputSmCls} /></div>
                             <div className="grid grid-cols-2 gap-3">
                               <div className="space-y-1"><label className={labelCls}>GitHub Repo Link</label><input type="text" value={proj.github || ''} onChange={(e) => updateProject(projIdx, 'github', e.target.value)} className={inputSmCls} placeholder="owner/repo" /></div>
@@ -1257,6 +1347,37 @@ export default function DashboardPage() {
                 {activeEditTab === 'design' && (
                   <div className="space-y-5 animate-fade-in">
                     <div className="border-b border-border-primary pb-2">
+                      <h3 className={sectionHeaderCls}>Visual Template</h3>
+                      <p className="text-2xs text-text-tertiary mt-0.5">Select a layout structure for your profile.</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      {[
+                        { id: 'minimal' as const, name: 'Minimalist Document', desc: 'Airy, single-column focused on clean typography.', icon: '📜' },
+                        { id: 'bento' as const, name: 'Bento Grid Dashboard', desc: 'Responsive dashboard of cards with stats and repos.', icon: '🍱' },
+                        { id: 'brutalist' as const, name: 'Neo-Brutalist Pop', desc: 'Thick black borders, offset solid shadows, and high contrast.', icon: '⚡' },
+                        { id: 'terminal' as const, name: 'Retro UNIX Terminal', desc: 'Interactive developer console styling with CLI commands.', icon: '💻' }
+                      ].map((t) => (
+                        <button
+                          key={t.id}
+                          onClick={() => handleTemplateChange(t.id)}
+                          className={`p-4 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer select-none relative bg-bg-surface border-border-primary ${
+                            (content?.template || 'minimal') === t.id ? 'ring-2 ring-accent border-accent bg-accent/5' : 'hover:scale-[1.01]'
+                          }`}
+                        >
+                          <div>
+                            <span className="text-lg mb-1 block">{t.icon}</span>
+                            <span className="text-xs font-bold block text-text-primary">{t.name}</span>
+                            <span className="text-[10px] text-text-secondary mt-1 block leading-relaxed">{t.desc}</span>
+                          </div>
+                          {(content?.template || 'minimal') === t.id && (
+                            <span className="absolute right-3 top-3 bg-accent text-text-inverse p-0.5 rounded-full"><Check size={11} /></span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="border-b border-border-primary pb-2">
                       <h3 className={sectionHeaderCls}>Visual Theme</h3>
                       <p className="text-2xs text-text-tertiary mt-0.5">Choose a design aesthetic for your page.</p>
                     </div>
@@ -1394,9 +1515,25 @@ export default function DashboardPage() {
           className="overflow-y-auto hidden md:flex md:w-1/2 flex-col relative bg-bg-surface/30 p-5 shrink-0"
         >
           <div className="flex justify-between items-center mb-3 shrink-0 gap-4">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> Live Preview
-            </span>
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> Live Preview
+              </span>
+              <div className="flex items-center gap-1 border border-border-primary rounded-lg p-0.5 bg-bg-surface">
+                <button
+                  onClick={() => setPreviewMode('desktop')}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold transition select-none cursor-pointer ${previewMode === 'desktop' ? 'bg-accent text-text-inverse' : 'text-text-secondary hover:text-text-primary'}`}
+                >
+                  Desktop
+                </button>
+                <button
+                  onClick={() => setPreviewMode('mobile')}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold transition select-none cursor-pointer ${previewMode === 'mobile' ? 'bg-accent text-text-inverse' : 'text-text-secondary hover:text-text-primary'}`}
+                >
+                  Mobile
+                </button>
+              </div>
+            </div>
 
             {profile?.username && profile?.is_published && (
               <a href={livePortfolioUrl} target="_blank" rel="noopener noreferrer" className="text-2xs font-bold text-text-secondary hover:text-accent flex items-center gap-1 underline transition shrink-0">
@@ -1404,10 +1541,16 @@ export default function DashboardPage() {
               </a>
             )}
           </div>
-          <div className="flex-1 border border-border-primary bg-bg-primary rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] overflow-hidden relative">
-            {content ? <PortfolioPreview data={content} isDemo={true} /> : (
-              <div className="absolute inset-0 flex items-center justify-center"><Loader2 size={18} className="animate-spin text-text-tertiary" /></div>
-            )}
+          <div className="flex-1 flex items-center justify-center overflow-y-auto">
+            <div className={`transition-all duration-300 ${
+              previewMode === 'mobile' 
+                ? 'w-[375px] h-[667px] border-8 border-zinc-800 rounded-[2rem] shadow-2xl relative overflow-hidden shrink-0' 
+                : 'w-full h-full border border-border-primary rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] relative overflow-hidden'
+            } bg-bg-primary`}>
+              {content ? <PortfolioPreview data={content} isDemo={true} /> : (
+                <div className="absolute inset-0 flex items-center justify-center"><Loader2 size={18} className="animate-spin text-text-tertiary" /></div>
+              )}
+            </div>
           </div>
         </div>
 
