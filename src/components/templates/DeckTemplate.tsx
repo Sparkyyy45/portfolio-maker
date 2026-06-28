@@ -72,6 +72,15 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
   const showCertifications = (sections_visibility?.certifications ?? true) && certifications && certifications.length > 0;
   const showContact = (sections_visibility?.contact ?? true);
 
+  const isLightMode = theme === 'light' || theme === 'latte';
+  const textTitle = isLightMode 
+    ? (theme === 'latte' ? 'text-[#3C2A21]' : 'text-zinc-900') 
+    : (theme === 'nord' ? 'text-[#E5E9F0]' : theme === 'dracula' ? 'text-[#f8f8f2]' : 'text-white');
+
+  const textMuted = isLightMode 
+    ? (theme === 'latte' ? 'text-[#8B7365]' : 'text-zinc-650') 
+    : (theme === 'nord' ? 'text-[#969fac]' : theme === 'dracula' ? 'text-[#a4a9c6]' : theme === 'synthwave' ? 'text-[#b89eff]' : 'text-zinc-400');
+
   // Generate slides array based on visibility
   const slides: { title: string; render: () => React.ReactNode }[] = [];
 
@@ -96,20 +105,20 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
           </div>
         )}
         <div className="space-y-2.5 max-w-xl">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-none break-words">
+          <h1 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-none break-words ${textTitle}`}>
             {hero.name || 'Your Name'}
           </h1>
           <p className="text-sm sm:text-base font-extrabold text-accent uppercase tracking-wider">
             {hero.tagline || 'Software Engineer'}
           </p>
           {hero.bio && (
-            <p className="text-xs sm:text-sm leading-relaxed text-zinc-400 max-w-lg mx-auto">
+            <p className={`text-xs sm:text-sm leading-relaxed max-w-lg mx-auto ${textMuted}`}>
               {hero.bio}
             </p>
           )}
         </div>
         {hero.location && (
-          <div className="flex items-center gap-1 text-2xs font-semibold text-zinc-500">
+          <div className={`flex items-center gap-1 text-2xs font-semibold ${textMuted}`}>
             <MapPin size={12} className="shrink-0" />
             <span>{hero.location}</span>
           </div>
@@ -124,23 +133,23 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       title: 'Projects',
       render: () => (
         <div className="space-y-4 py-4">
-          <div className="flex items-center gap-2 border-b border-zinc-800 pb-2">
+          <div className="flex items-center gap-2 border-b border-current/10 pb-2">
             <Code2 size={16} className="text-accent" />
-            <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">Featured Projects</h2>
+            <h2 className={`text-xs sm:text-sm font-black uppercase tracking-wider ${textTitle}`}>Featured Projects</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 overflow-y-auto max-h-[50vh] pr-1 scrollbar-thin">
             {projects.map((proj, idx) => (
-              <div key={idx} className="p-4 rounded-xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/70 transition flex flex-col justify-between">
+              <div key={idx} className="p-4 rounded-xl border border-current/10 bg-current/[0.03] hover:bg-current/[0.06] transition flex flex-col justify-between">
                 <div className="space-y-2">
                   <div className="flex justify-between items-start gap-2">
-                    <h3 className="text-xs font-bold text-white leading-tight break-words">{proj.title}</h3>
+                    <h3 className={`text-xs font-bold leading-tight break-words ${textTitle}`}>{proj.title}</h3>
                     <div className="flex gap-1 shrink-0">
                       {proj.github && (
                         <a
                           href={proj.github.startsWith('http') ? proj.github : `https://github.com/${proj.github}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1 rounded text-zinc-400 hover:text-white transition"
+                          className="p-1 rounded text-current/60 hover:text-current transition"
                         >
                           <Github size={12} />
                         </a>
@@ -150,19 +159,19 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
                           href={proj.live.startsWith('http') ? proj.live : `https://${proj.live}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1 rounded text-zinc-400 hover:text-white transition"
+                          className="p-1 rounded text-current/60 hover:text-current transition"
                         >
                           <ArrowUpRight size={12} />
                         </a>
                       )}
                     </div>
                   </div>
-                  <p className="text-[11px] leading-relaxed text-zinc-400 break-words">{proj.description}</p>
+                  <p className={`text-[11px] leading-relaxed break-words ${textMuted}`}>{proj.description}</p>
                 </div>
                 {proj.tech && proj.tech.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-3 pt-2 border-t border-zinc-800/40">
+                  <div className="flex flex-wrap gap-1 mt-3 pt-2 border-t border-current/10">
                     {proj.tech.map((t, tIdx) => (
-                      <span key={tIdx} className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-zinc-900 text-zinc-300 border border-zinc-800">
+                      <span key={tIdx} className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-current/[0.05] text-current/80 border border-current/10">
                         {t}
                       </span>
                     ))}
@@ -182,23 +191,23 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       title: 'Experience',
       render: () => (
         <div className="space-y-4 py-4">
-          <div className="flex items-center gap-2 border-b border-zinc-800 pb-2">
+          <div className="flex items-center gap-2 border-b border-current/10 pb-2">
             <Briefcase size={16} className="text-accent" />
-            <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">Work Experience</h2>
+            <h2 className={`text-xs sm:text-sm font-black uppercase tracking-wider ${textTitle}`}>Work Experience</h2>
           </div>
-          <div className="space-y-5 overflow-y-auto max-h-[50vh] pr-1 scrollbar-thin relative border-l border-zinc-800 pl-4 ml-2">
+          <div className="space-y-5 overflow-y-auto max-h-[50vh] pr-1 scrollbar-thin relative border-l border-current/10 pl-4 ml-2">
             {experience.map((exp, idx) => (
               <div key={idx} className="space-y-1 relative">
-                <span className="absolute -left-[22.5px] top-1 w-3 h-3 rounded-full border border-zinc-800 bg-zinc-950" />
+                <span className="absolute -left-[22.5px] top-1 w-3 h-3 rounded-full border border-current/20 bg-accent" />
                 <div className="flex flex-wrap justify-between items-baseline gap-2">
-                  <h3 className="text-xs font-black text-white">{exp.role}</h3>
-                  <span className="text-[10px] font-bold text-zinc-500">{exp.period}</span>
+                  <h3 className={`text-xs font-black ${textTitle}`}>{exp.role}</h3>
+                  <span className={`text-[10px] font-bold ${textMuted}`}>{exp.period}</span>
                 </div>
                 <p className="text-[11px] font-bold text-accent">{exp.company}</p>
                 {exp.bullets && exp.bullets.length > 0 && (
                   <ul className="space-y-1 mt-2">
                     {exp.bullets.map((b, bIdx) => (
-                      <li key={bIdx} className="text-[11px] leading-relaxed text-zinc-400 flex gap-2">
+                      <li key={bIdx} className={`text-[11px] leading-relaxed flex gap-2 ${textMuted}`}>
                         <span className="text-accent select-none">•</span>
                         <span className="min-w-0">{b}</span>
                       </li>
@@ -222,14 +231,14 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {showSkills && (
               <div className="space-y-4">
-                <h3 className="text-xs font-black uppercase tracking-wider border-b border-zinc-800 pb-1 text-white">Technical Skills</h3>
+                <h3 className={`text-xs font-black uppercase tracking-wider border-b border-current/10 pb-1 ${textTitle}`}>Technical Skills</h3>
                 <div className="space-y-3">
                   {skills.map((cat, idx) => (
                     <div key={idx} className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{cat.category}</span>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>{cat.category}</span>
                       <div className="flex flex-wrap gap-1">
                         {cat.items.map((item, sIdx) => (
-                          <span key={sIdx} className="px-2 py-0.5 rounded text-[10px] font-bold bg-zinc-900 text-zinc-300 border border-zinc-800">
+                          <span key={sIdx} className="px-2 py-0.5 rounded text-[10px] font-bold bg-current/[0.05] text-current/80 border border-current/10">
                             {item}
                           </span>
                         ))}
@@ -242,13 +251,13 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
             <div className="space-y-5">
               {showEducation && (
                 <div className="space-y-3">
-                  <h3 className="text-xs font-black uppercase tracking-wider border-b border-zinc-800 pb-1 text-white">Education</h3>
+                  <h3 className={`text-xs font-black uppercase tracking-wider border-b border-current/10 pb-1 ${textTitle}`}>Education</h3>
                   <div className="space-y-3">
                     {education.map((edu, idx) => (
                       <div key={idx} className="space-y-0.5">
-                        <h4 className="text-2xs font-extrabold text-white">{edu.institution}</h4>
-                        <p className="text-[10px] font-semibold text-zinc-400">{edu.degree} in {edu.field}</p>
-                        <p className="text-[9px] text-zinc-500">{edu.period}</p>
+                        <h4 className={`text-2xs font-extrabold ${textTitle}`}>{edu.institution}</h4>
+                        <p className={`text-[10px] font-semibold ${textMuted}`}>{edu.degree} in {edu.field}</p>
+                        <p className={`text-[9px] ${textMuted}`}>{edu.period}</p>
                       </div>
                     ))}
                   </div>
@@ -256,19 +265,19 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
               )}
               {showCertifications && (
                 <div className="space-y-3">
-                  <h3 className="text-xs font-black uppercase tracking-wider border-b border-zinc-800 pb-1 text-white">Certifications</h3>
+                  <h3 className={`text-xs font-black uppercase tracking-wider border-b border-current/10 pb-1 ${textTitle}`}>Certifications</h3>
                   <div className="space-y-2.5">
                     {certifications.map((cert, idx) => (
                       <div key={idx} className="space-y-0.5 text-2xs">
                         <div className="flex items-start justify-between gap-1">
-                          <h4 className="font-bold text-white">{cert.name}</h4>
+                          <h4 className={`font-bold ${textTitle}`}>{cert.name}</h4>
                           {cert.url && (
-                            <a href={cert.url} target="_blank" rel="noopener noreferrer" className="p-0.5 text-zinc-400 hover:text-white">
+                            <a href={cert.url} target="_blank" rel="noopener noreferrer" className="p-0.5 text-current/60 hover:text-current">
                               <ExternalLink size={10} />
                             </a>
                           )}
                         </div>
-                        <p className="text-[10px] text-zinc-500">{cert.issuer} • {cert.date}</p>
+                        <p className={`text-[10px] ${textMuted}`}>{cert.issuer} • {cert.date}</p>
                       </div>
                     ))}
                   </div>
@@ -289,23 +298,23 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
         <div className="space-y-4 py-4 overflow-y-auto max-h-[55vh] pr-1 scrollbar-thin">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
             {leetcode && leetcode.username && (
-              <div className="p-4.5 rounded-xl border border-zinc-850 bg-zinc-900/30 space-y-4">
-                <h3 className="text-xs font-black uppercase tracking-wider text-white border-b border-zinc-800 pb-1 flex items-center gap-1">
+              <div className="p-4.5 rounded-xl border border-current/10 bg-current/[0.03] space-y-4">
+                <h3 className={`text-xs font-black uppercase tracking-wider border-b border-current/10 pb-1 flex items-center gap-1 ${textTitle}`}>
                   <Flame size={13} className="text-orange-500" /> Coding Stats
                 </h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-2xs font-semibold">
-                    <span className="text-zinc-500">LeetCode Username:</span>
-                    <span className="text-white font-bold">{leetcode.username}</span>
+                    <span className={textMuted}>LeetCode Username:</span>
+                    <span className={`font-bold ${textTitle}`}>{leetcode.username}</span>
                   </div>
                   <div className="flex justify-between items-center text-2xs font-semibold">
-                    <span className="text-zinc-500">Solved Problems:</span>
-                    <span className="text-white font-bold">{leetcode.solved}</span>
+                    <span className={textMuted}>Solved Problems:</span>
+                    <span className={`font-bold ${textTitle}`}>{leetcode.solved}</span>
                   </div>
                   {leetcode.rating && (
                     <div className="flex justify-between items-center text-2xs font-semibold">
-                      <span className="text-zinc-500">Contest Rating:</span>
-                      <span className="text-white font-bold">{leetcode.rating}</span>
+                      <span className={textMuted}>Contest Rating:</span>
+                      <span className={`font-bold ${textTitle}`}>{leetcode.rating}</span>
                     </div>
                   )}
 
@@ -319,11 +328,11 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
                       const percent = total > 0 ? ((item.count || 0) / total) * 100 : 0;
                       return (
                         <div key={i} className="flex items-center justify-between gap-2 text-[10px] font-semibold">
-                          <span className="w-10 text-zinc-500">{item.label}</span>
-                          <div className="flex-1 h-1 bg-zinc-800 rounded-full overflow-hidden">
+                          <span className={`w-10 ${textMuted}`}>{item.label}</span>
+                          <div className="flex-1 h-1 bg-current/10 rounded-full overflow-hidden">
                             <div className={`h-full rounded-full ${item.color}`} style={{ width: `${percent}%` }} />
                           </div>
-                          <span className="text-white font-bold">{item.count || 0}</span>
+                          <span className={`font-bold ${textTitle}`}>{item.count || 0}</span>
                         </div>
                       );
                     })}
@@ -334,15 +343,15 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
             
             {github_repos && github_repos.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-xs font-black uppercase tracking-wider text-white border-b border-zinc-800 pb-1">GitHub Repos</h3>
+                <h3 className={`text-xs font-black uppercase tracking-wider border-b border-current/10 pb-1 ${textTitle}`}>GitHub Repos</h3>
                 <div className="space-y-2">
                   {github_repos.slice(0, 3).map((repo, idx) => (
-                    <div key={idx} className="p-3 rounded-lg border border-zinc-800/80 bg-zinc-900/20 text-2xs">
+                    <div key={idx} className="p-3 rounded-lg border border-current/10 bg-current/[0.03] text-2xs">
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-white truncate max-w-[80%]">{repo.title}</span>
-                        {repo.stars !== undefined && <span className="text-zinc-500 font-bold text-[10px]">★ {repo.stars}</span>}
+                        <span className={`font-bold truncate max-w-[80%] ${textTitle}`}>{repo.title}</span>
+                        {repo.stars !== undefined && <span className={`${textMuted} font-bold text-[10px]`}>★ {repo.stars}</span>}
                       </div>
-                      <p className="text-[10px] text-zinc-500 mt-1 truncate">{repo.description}</p>
+                      <p className={`text-[10px] mt-1 truncate ${textMuted}`}>{repo.description}</p>
                     </div>
                   ))}
                 </div>
@@ -360,42 +369,42 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       title: 'Contact',
       render: () => (
         <div className="space-y-4 py-4">
-          <div className="flex items-center gap-2 border-b border-zinc-800 pb-2">
+          <div className="flex items-center gap-2 border-b border-current/10 pb-2">
             <Mail size={16} className="text-accent" />
-            <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">Send a Message</h2>
+            <h2 className={`text-xs sm:text-sm font-black uppercase tracking-wider ${textTitle}`}>Send a Message</h2>
           </div>
           <form onSubmit={handleMessageSubmit} className="space-y-3.5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1">
-                <label className="text-[9px] font-black uppercase tracking-wider text-zinc-500">Your Name</label>
+                <label className={`text-[9px] font-black uppercase tracking-wider ${textMuted}`}>Your Name</label>
                 <input
                   type="text"
                   required
                   value={visitorName}
                   onChange={(e) => setVisitorName(e.target.value)}
-                  className="w-full p-2.5 rounded-xl text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-accent bg-zinc-900 border border-zinc-800 text-white"
+                  className={`w-full p-2.5 rounded-xl text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-accent bg-current/[0.03] border border-current/10 ${textTitle}`}
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[9px] font-black uppercase tracking-wider text-zinc-500">Your Email</label>
+                <label className={`text-[9px] font-black uppercase tracking-wider ${textMuted}`}>Your Email</label>
                 <input
                   type="email"
                   required
                   value={visitorEmail}
                   onChange={(e) => setVisitorEmail(e.target.value)}
-                  className="w-full p-2.5 rounded-xl text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-accent bg-zinc-900 border border-zinc-800 text-white"
+                  className={`w-full p-2.5 rounded-xl text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-accent bg-current/[0.03] border border-current/10 ${textTitle}`}
                 />
               </div>
             </div>
 
             <div className="space-y-1">
-              <label className="text-[9px] font-black uppercase tracking-wider text-zinc-500">Message</label>
+              <label className={`text-[9px] font-black uppercase tracking-wider ${textMuted}`}>Message</label>
               <textarea
                 required
                 rows={3}
                 value={messageContent}
                 onChange={(e) => setMessageContent(e.target.value)}
-                className="w-full p-2.5 rounded-xl text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-accent bg-zinc-900 border border-zinc-800 text-white"
+                className={`w-full p-2.5 rounded-xl text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-accent bg-current/[0.03] border border-current/10 ${textTitle}`}
               />
             </div>
 
@@ -430,6 +439,8 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       btnAccent: "bg-zinc-900 hover:bg-zinc-800 text-white",
       inactiveBtn: "bg-zinc-200 hover:bg-zinc-300 text-zinc-700",
       accent: "text-zinc-900",
+      textTitle: "text-zinc-900",
+      textMuted: "text-zinc-600",
     },
     dark: {
       wrapper: "bg-zinc-950 text-zinc-200",
@@ -437,6 +448,8 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       btnAccent: "bg-emerald-500 hover:bg-emerald-400 text-zinc-950",
       inactiveBtn: "bg-zinc-900 hover:bg-zinc-850 text-zinc-400",
       accent: "text-emerald-400",
+      textTitle: "text-white",
+      textMuted: "text-zinc-400",
     },
     cyberpunk: {
       wrapper: "bg-zinc-950 text-zinc-50",
@@ -444,6 +457,8 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       btnAccent: "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black",
       inactiveBtn: "bg-zinc-900 border border-zinc-800 text-emerald-500/70 hover:text-emerald-400",
       accent: "text-emerald-400",
+      textTitle: "text-white",
+      textMuted: "text-zinc-400",
     },
     nord: {
       wrapper: "bg-[#2E3440] text-[#D8DEE9]",
@@ -451,6 +466,8 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       btnAccent: "bg-[#88C0D0] hover:bg-[#8FBCBB] text-[#2E3440]",
       inactiveBtn: "bg-[#434C5E] text-[#E5E9F0] hover:bg-[#4C566A]",
       accent: "text-[#88C0D0]",
+      textTitle: "text-[#E5E9F0]",
+      textMuted: "text-[#969fac]",
     },
     dracula: {
       wrapper: "bg-[#282a36] text-[#f8f8f2]",
@@ -458,6 +475,8 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       btnAccent: "bg-[#ff79c6] hover:bg-[#ff92df] text-[#282a36]",
       inactiveBtn: "bg-[#343746] text-[#f8f8f2] hover:bg-[#44475a]",
       accent: "text-[#ff79c6]",
+      textTitle: "text-[#f8f8f2]",
+      textMuted: "text-[#a4a9c6]",
     },
     synthwave: {
       wrapper: "bg-[#180a2b] text-[#f0e6ff]",
@@ -465,13 +484,17 @@ export default function DeckTemplate({ data, isDemo = false, onSubmitMessage }: 
       btnAccent: "bg-[#39ff14] hover:bg-[#5aff38] text-[#180a2b] font-extrabold",
       inactiveBtn: "bg-[#2d1b4c] text-[#ff007f] hover:bg-[#3d2766]",
       accent: "text-[#ff007f]",
+      textTitle: "text-white",
+      textMuted: "text-[#b89eff]",
     },
     latte: {
       wrapper: "bg-[#F5EBE6] text-[#5C4033]",
       card: "bg-[#FCF9F7] border border-[#E6D4CB] shadow-xs",
       btnAccent: "bg-[#A75D5D] hover:bg-[#C17A7A] text-[#FCF9F7]",
-      inactiveBtn: "bg-[#EAD8CD] text-[#5C403 brown] hover:bg-[#DFCABF]",
+      inactiveBtn: "bg-[#EAD8CD] text-[#5C4033] hover:bg-[#DFCABF]",
       accent: "text-[#A75D5D]",
+      textTitle: "text-[#3C2A21]",
+      textMuted: "text-[#8B7365]",
     }
   };
 

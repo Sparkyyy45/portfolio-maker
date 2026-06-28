@@ -89,6 +89,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
     : "bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:bg-white/10 transition duration-300";
 
   const textMutedClass = isLightMode ? "text-slate-650" : "text-slate-400";
+  const textTitleClass = isLightMode ? "text-slate-900" : "text-white";
   const pillClass = isLightMode
     ? "bg-sky-500/10 text-sky-700 border border-sky-500/20"
     : "bg-indigo-500/10 text-indigo-300 border border-indigo-500/20";
@@ -136,7 +137,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
 
           <div className="space-y-3 text-center md:text-left min-w-0 flex-1">
             <div className="space-y-1">
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight break-words">
+              <h1 className={`text-2xl sm:text-3xl font-black tracking-tight leading-tight break-words ${textTitleClass}`}>
                 {hero.name || 'Your Name'}
               </h1>
               <p className={`text-xs sm:text-sm font-semibold tracking-wide ${isLightMode ? "text-indigo-600" : "text-indigo-400"}`}>
@@ -178,7 +179,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
               <section className={`p-6 sm:p-8 rounded-3xl space-y-5 ${glassCardClass}`}>
                 <div className="flex items-center gap-2 border-b border-white/10 pb-2">
                   <Code2 size={16} className={isLightMode ? "text-indigo-600" : "text-indigo-400"} />
-                  <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">Featured Projects</h2>
+                  <h2 className={`text-xs sm:text-sm font-black uppercase tracking-wider ${textTitleClass}`}>Featured Projects</h2>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -188,7 +189,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
                     } transition duration-350`}>
                       <div className="space-y-2">
                         <div className="flex justify-between items-start gap-2">
-                          <h3 className="text-xs font-bold text-white leading-tight break-words">{proj.title}</h3>
+                          <h3 className={`text-xs font-bold leading-tight break-words ${textTitleClass}`}>{proj.title}</h3>
                           <div className="flex gap-1 shrink-0">
                             {proj.github && (
                               <a
@@ -235,7 +236,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
               <section className={`p-6 sm:p-8 rounded-3xl space-y-6 ${glassCardClass}`}>
                 <div className="flex items-center gap-2 border-b border-white/10 pb-2">
                   <Briefcase size={16} className={isLightMode ? "text-indigo-600" : "text-indigo-400"} />
-                  <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">Experience</h2>
+                  <h2 className={`text-xs sm:text-sm font-black uppercase tracking-wider ${textTitleClass}`}>Experience</h2>
                 </div>
 
                 <div className="space-y-6 relative border-l border-white/10 pl-4 ml-2.5">
@@ -247,7 +248,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
                       }`} />
 
                       <div className="flex flex-wrap justify-between items-baseline gap-2">
-                        <h3 className="text-xs font-extrabold text-white">{exp.role}</h3>
+                        <h3 className={`text-xs font-extrabold ${textTitleClass}`}>{exp.role}</h3>
                         <span className={`text-[10px] font-bold flex items-center gap-1 ${textMutedClass}`}>
                           <Calendar size={11} /> {exp.period}
                         </span>
@@ -280,7 +281,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
               <section className={`p-6 rounded-3xl space-y-4 ${glassCardClass}`}>
                 <div className="flex items-center gap-2 border-b border-white/10 pb-2">
                   <User size={15} className={isLightMode ? "text-indigo-600" : "text-indigo-400"} />
-                  <h2 className="text-xs font-black uppercase tracking-wider text-white">Skills</h2>
+                  <h2 className={`text-xs font-black uppercase tracking-wider ${textTitleClass}`}>Skills</h2>
                 </div>
 
                 <div className="space-y-3.5">
@@ -305,18 +306,18 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
               <section className={`p-6 rounded-3xl space-y-4 ${glassCardClass}`}>
                 <div className="flex items-center gap-2 border-b border-white/10 pb-2">
                   <Flame size={15} className="text-orange-400" />
-                  <h2 className="text-xs font-black uppercase tracking-wider text-white">Coding Stats</h2>
+                  <h2 className={`text-xs font-black uppercase tracking-wider ${textTitleClass}`}>Coding Stats</h2>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-2xs font-semibold">
                     <span className={textMutedClass}>Solved:</span>
-                    <span className="text-white font-bold">{leetcode.solved}</span>
+                    <span className={`font-bold ${textTitleClass}`}>{leetcode.solved}</span>
                   </div>
                   {leetcode.rating && (
                     <div className="flex justify-between items-center text-2xs font-semibold">
                       <span className={textMutedClass}>Contest Rating:</span>
-                      <span className="text-white font-bold">{leetcode.rating}</span>
+                      <span className={`font-bold ${textTitleClass}`}>{leetcode.rating}</span>
                     </div>
                   )}
 
@@ -334,7 +335,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
                           <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
                             <div className={`h-full rounded-full ${item.color}`} style={{ width: `${percent}%` }} />
                           </div>
-                          <span className="text-white font-bold">{item.count || 0}</span>
+                          <span className={`font-bold ${textTitleClass}`}>{item.count || 0}</span>
                         </div>
                       );
                     })}
@@ -348,13 +349,13 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
               <section className={`p-6 rounded-3xl space-y-4 ${glassCardClass}`}>
                 <div className="flex items-center gap-2 border-b border-white/10 pb-2">
                   <GraduationCap size={15} className={isLightMode ? "text-indigo-600" : "text-indigo-400"} />
-                  <h2 className="text-xs font-black uppercase tracking-wider text-white">Education</h2>
+                  <h2 className={`text-xs font-black uppercase tracking-wider ${textTitleClass}`}>Education</h2>
                 </div>
 
                 <div className="space-y-4">
                   {education.map((edu, idx) => (
                     <div key={idx} className="space-y-0.5">
-                      <h3 className="text-2xs font-bold text-white">{edu.institution}</h3>
+                      <h3 className={`text-2xs font-bold ${textTitleClass}`}>{edu.institution}</h3>
                       <p className={`text-[10px] font-semibold ${isLightMode ? "text-indigo-650" : "text-indigo-300"}`}>
                         {edu.degree} in {edu.field}
                       </p>
@@ -370,14 +371,14 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
               <section className={`p-6 rounded-3xl space-y-4 ${glassCardClass}`}>
                 <div className="flex items-center gap-2 border-b border-white/10 pb-2">
                   <Award size={15} className={isLightMode ? "text-indigo-600" : "text-indigo-400"} />
-                  <h2 className="text-xs font-black uppercase tracking-wider text-white">Certifications</h2>
+                  <h2 className={`text-xs font-black uppercase tracking-wider ${textTitleClass}`}>Certifications</h2>
                 </div>
 
                 <div className="space-y-3">
                   {certifications.map((cert, idx) => (
                     <div key={idx} className="space-y-0.5">
                       <div className="flex items-start justify-between gap-1">
-                        <h3 className="text-2xs font-bold text-white break-words">{cert.name}</h3>
+                        <h3 className={`text-2xs font-bold break-words ${textTitleClass}`}>{cert.name}</h3>
                         {cert.url && (
                           <a
                             href={cert.url}
@@ -405,7 +406,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
           <section className={`p-6 sm:p-8 rounded-3xl space-y-5 ${glassCardClass}`}>
             <div className="flex items-center gap-2 border-b border-white/10 pb-2">
               <Mail size={16} className={isLightMode ? "text-indigo-600" : "text-indigo-400"} />
-              <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">Send a Message</h2>
+              <h2 className={`text-xs sm:text-sm font-black uppercase tracking-wider ${textTitleClass}`}>Send a Message</h2>
             </div>
 
             <form onSubmit={handleMessageSubmit} className="space-y-4">

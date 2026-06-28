@@ -219,7 +219,7 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
 
           <div className="space-y-2.5 text-center sm:text-left min-w-0 flex-1">
             <div className="space-y-0.5">
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight break-words">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-current leading-tight break-words">
                 {hero.name || 'Your Name'}
               </h1>
               <p className={`text-xs sm:text-sm font-semibold tracking-wide ${style.accentText}`}>
@@ -228,20 +228,20 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
             </div>
             
             {hero.bio && (
-              <p className="text-xs sm:text-[13px] leading-relaxed text-zinc-400 break-words">
+              <p className="text-xs sm:text-[13px] leading-relaxed text-current/80 break-words">
                 {hero.bio}
               </p>
             )}
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
               {hero.location && (
-                <div className="flex items-center gap-1 text-2xs font-semibold text-zinc-500">
+                <div className="flex items-center gap-1 text-2xs font-semibold text-current/60">
                   <MapPin size={11} className="shrink-0" />
                   <span>{hero.location}</span>
                 </div>
               )}
               {hero.open_to_work && (
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-emerald-500/10 text-emerald-450 border border-emerald-500/20">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Open to work
                 </div>
@@ -253,11 +253,11 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
         {/* SKILLS CHIPS SECTION */}
         {showSkills && (
           <div className={`p-6 rounded-3xl ${style.card} space-y-4`}>
-            <h3 className="text-xs font-black uppercase tracking-wider text-white">Skills Matrix</h3>
+            <h3 className="text-xs font-black uppercase tracking-wider text-current">Skills Matrix</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {skills.map((cat, idx) => (
                 <div key={idx} className="space-y-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{cat.category}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-current/60">{cat.category}</span>
                   <div className="flex flex-wrap gap-1">
                     {cat.items.map((item, sIdx) => (
                       <span key={sIdx} className={`px-2 py-0.5 rounded text-[10px] font-bold ${style.pill}`}>
@@ -274,7 +274,7 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
         {/* TIMELINE PATHWAY */}
         {(timelineNodes.length > 0 || showProjects) && (
           <div className="space-y-6">
-            <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">Career Timeline & Work</h2>
+            <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-current">Career Timeline & Work</h2>
             
             <div className={`relative pl-6 sm:pl-8 border-l-2 border-dashed ${style.timelineLine} ml-3 sm:ml-4 space-y-8`}>
               
@@ -289,7 +289,7 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
 
                   <div className={`p-5 rounded-2xl ${style.card} space-y-2`}>
                     <div className="flex flex-wrap justify-between items-baseline gap-2">
-                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="text-[10px] font-bold text-current/60 uppercase tracking-wider flex items-center gap-1.5">
                         <Calendar size={11} /> {node.date}
                       </span>
                       <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${style.pill}`}>
@@ -297,13 +297,13 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
                       </span>
                     </div>
 
-                    <h3 className="text-xs font-black text-white">{node.title}</h3>
+                    <h3 className="text-xs font-black text-current">{node.title}</h3>
                     <p className={`text-2xs font-extrabold ${style.accentText}`}>{node.subtitle}</p>
 
                     {node.content && Array.isArray(node.content) && (
-                      <ul className="space-y-1 pt-2 border-t border-zinc-800/40 mt-2">
+                      <ul className="space-y-1 pt-2 border-t border-current/10 mt-2">
                         {node.content.map((b, bIdx) => (
-                          <li key={bIdx} className="text-[11px] leading-relaxed text-zinc-400 flex gap-2">
+                          <li key={bIdx} className="text-[11px] leading-relaxed text-current/80 flex gap-2">
                             <span className={`${style.accentText} select-none`}>•</span>
                             <span className="min-w-0">{b}</span>
                           </li>
@@ -319,37 +319,35 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
                 <div className="relative space-y-3">
                   <span className={`absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full border-2 flex items-center justify-center text-[9px] font-bold ${style.timelineDot}`}>
                     P
-                  </span>
-
-                  <div className={`p-5 rounded-2xl ${style.card} space-y-4`}>
-                    <div className="flex justify-between items-center border-b border-zinc-800/40 pb-2">
-                      <h3 className="text-xs font-black text-white">Launched Projects</h3>
+                  </span>                  <div className={`p-5 rounded-2xl ${style.card} space-y-4`}>
+                    <div className="flex justify-between items-center border-b border-current/10 pb-2">
+                      <h3 className="text-xs font-black text-current">Launched Projects</h3>
                       <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${style.pill}`}>Creations</span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       {projects.map((proj, idx) => (
-                        <div key={idx} className="p-3.5 rounded-xl bg-zinc-900/30 border border-zinc-800/80 flex flex-col justify-between">
+                        <div key={idx} className="p-3.5 rounded-xl bg-current/[0.03] border border-current/10 flex flex-col justify-between">
                           <div className="space-y-1.5">
                             <div className="flex justify-between items-start gap-1">
-                              <span className="font-bold text-white text-xs break-all">{proj.title}</span>
+                              <span className="font-bold text-current text-xs break-all">{proj.title}</span>
                               <div className="flex gap-1 shrink-0">
                                 {proj.github && (
-                                  <a href={proj.github.startsWith('http') ? proj.github : `https://github.com/${proj.github}`} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition">
+                                  <a href={proj.github.startsWith('http') ? proj.github : `https://github.com/${proj.github}`} target="_blank" rel="noopener noreferrer" className="text-current/60 hover:text-current transition">
                                     <Github size={11} />
                                   </a>
                                 )}
                                 {proj.live && (
-                                  <a href={proj.live.startsWith('http') ? proj.live : `https://${proj.live}`} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition">
+                                  <a href={proj.live.startsWith('http') ? proj.live : `https://${proj.live}`} target="_blank" rel="noopener noreferrer" className="text-current/60 hover:text-current transition">
                                     <ArrowUpRight size={11} />
                                   </a>
                                 )}
                               </div>
                             </div>
-                            <p className="text-[10px] text-zinc-550 leading-relaxed break-words">{proj.description}</p>
+                            <p className="text-[10px] text-current/80 leading-relaxed break-words">{proj.description}</p>
                           </div>
                           {proj.tech && proj.tech.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-2.5 pt-1.5 border-t border-zinc-800/20">
+                            <div className="flex flex-wrap gap-1 mt-2.5 pt-1.5 border-t border-current/10">
                               {proj.tech.map((t, tIdx) => (
                                 <span key={tIdx} className={`px-1 py-0.5 rounded text-[8px] font-bold ${style.pill}`}>
                                   {t}
@@ -371,14 +369,14 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
         {/* LEETCODE STATS CARD */}
         {leetcode && leetcode.username && (
           <div className={`p-6 rounded-3xl ${style.card} space-y-4`}>
-            <h3 className="text-xs font-black uppercase tracking-wider text-white">Coding Activity</h3>
+            <h3 className="text-xs font-black uppercase tracking-wider text-current">Coding Activity</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
               <div className="sm:col-span-1 space-y-1">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500">LeetCode Username</span>
-                <p className="text-xs font-bold text-white">{leetcode.username}</p>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-current/60">LeetCode Username</span>
+                <p className="text-xs font-bold text-current">{leetcode.username}</p>
                 {leetcode.rating && (
                   <div className="pt-2">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500">Contest Rating</span>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-current/60">Contest Rating</span>
                     <p className={`text-base font-black ${style.accentText}`}>{leetcode.rating}</p>
                   </div>
                 )}
@@ -394,11 +392,11 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
                   const percent = total > 0 ? ((item.count || 0) / total) * 100 : 0;
                   return (
                     <div key={i} className="flex items-center justify-between gap-2 text-[10px] font-semibold">
-                      <span className="w-12 text-zinc-500">{item.label}</span>
-                      <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                      <span className="w-12 text-current/60">{item.label}</span>
+                      <div className="flex-1 h-1.5 bg-current/10 rounded-full overflow-hidden">
                         <div className={`h-full rounded-full ${item.color}`} style={{ width: `${percent}%` }} />
                       </div>
-                      <span className="w-8 text-right text-white font-bold">{item.count || 0}</span>
+                      <span className="w-8 text-right text-current font-bold">{item.count || 0}</span>
                     </div>
                   );
                 })}
@@ -412,13 +410,13 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
           <section className={`p-6 sm:p-8 rounded-3xl ${style.card} space-y-5`}>
             <div className="flex items-center gap-2 border-b border-current/10 pb-2">
               <Mail size={16} className={style.accentText} />
-              <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">Send a Message</h2>
+              <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-current">Send a Message</h2>
             </div>
 
             <form onSubmit={handleMessageSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[9px] font-black uppercase tracking-wider text-zinc-550">Your Name</label>
+                  <label className="text-[9px] font-black uppercase tracking-wider text-current/60">Your Name</label>
                   <input
                     type="text"
                     required
@@ -428,7 +426,7 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[9px] font-black uppercase tracking-wider text-zinc-550">Your Email</label>
+                  <label className="text-[9px] font-black uppercase tracking-wider text-current/60">Your Email</label>
                   <input
                     type="email"
                     required
@@ -440,7 +438,7 @@ export default function TimelineTemplate({ data, isDemo = false, onSubmitMessage
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9px] font-black uppercase tracking-wider text-zinc-550">Message</label>
+                <label className="text-[9px] font-black uppercase tracking-wider text-current/60">Message</label>
                 <textarea
                   required
                   rows={4}
