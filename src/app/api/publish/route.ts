@@ -19,6 +19,11 @@ export async function POST(request: Request) {
 
     // Initialize server-side Supabase client with the user's JWT
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
       auth: {
         persistSession: false,
       },
