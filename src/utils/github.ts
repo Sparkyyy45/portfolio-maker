@@ -20,18 +20,30 @@ interface GitHubRepo {
   updated_at?: string;
 }
 
+async function fetchWithTimeout(resource: string, options: RequestInit & { timeout?: number } = {}) {
+  const { timeout = 8000 } = options;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal  
+  });
+  clearTimeout(id);
+  return response;
+}
+
 export async function fetchGitHubData(username: string): Promise<Partial<PortfolioContent>> {
   try {
-    const profileResponse = await fetch(`https://api.github.com/users/${username}`);
+    const profileResponse = await fetchWithTimeout(`https://api.github.com/users/${username}`);
     if (!profileResponse.ok) {
       if (profileResponse.status === 404) {
         throw new Error(`GitHub user "${username}" not found.`);
       }
-      throw new Error('Failed to fetch GitHub profile.');
+      throw new Error('Failed to fetch GitHub profile. GitHub API might be rate limiting you.');
     }
     const profile: GitHubProfile = await profileResponse.json();
 
-    const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=50`);
+    const reposResponse = await fetchWithTimeout(`https://api.github.com/users/${username}/repos?sort=updated&per_page=50`);
     if (!reposResponse.ok) {
       throw new Error('Failed to fetch GitHub repositories.');
     }

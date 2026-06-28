@@ -2,6 +2,7 @@ import { fetchPortfolioByUsername } from '@/utils/db';
 import PortfolioPreview from '@/components/PortfolioPreview';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 // Keep the page static but allow on-demand revalidation
 export const dynamic = 'force-static';
@@ -76,10 +77,16 @@ export default async function UsernamePortfolioPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <PortfolioPreview 
-        data={content} 
-        onSubmitMessage={handleMessageSubmitAction} 
-      />
+      <ErrorBoundary fallback={
+        <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white">
+          <p>Sorry, this portfolio could not be loaded.</p>
+        </div>
+      }>
+        <PortfolioPreview 
+          data={content} 
+          onSubmitMessage={handleMessageSubmitAction} 
+        />
+      </ErrorBoundary>
     </>
   );
 }

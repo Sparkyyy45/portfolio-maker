@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 
 import React, { useState } from 'react';
 import { PortfolioContent } from '@/types/portfolio';
@@ -227,11 +228,15 @@ export default function PortfolioPreview({ data, isDemo = false, onSubmitMessage
             <div className="space-y-3">
               {/* Avatar Photo */}
               {hero.avatar_url ? (
-                <img
-                  src={hero.avatar_url}
-                  alt={hero.name}
-                  className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full border shadow-sm object-cover ${style.cardBorder}`}
-                />
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0">
+                  <Image
+                    src={hero.avatar_url}
+                    alt={hero.name}
+                    fill
+                    className={`rounded-full border shadow-sm object-cover ${style.cardBorder}`}
+                    sizes="(max-width: 640px) 64px, 80px"
+                  />
+                </div>
               ) : (
                 <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full font-extrabold flex items-center justify-center text-lg sm:text-xl select-none shrink-0 ${
                   theme === 'cyberpunk' ? 'bg-emerald-500 text-zinc-950 shadow-[0_0_20px_rgba(16,185,129,0.15)]' : 'bg-zinc-900 text-white'

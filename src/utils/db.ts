@@ -1,45 +1,11 @@
 import { supabase } from './supabase';
 import { PortfolioContent, Profile } from '@/types/portfolio';
-
-// LocalStorage Mock Helpers
-const LOCAL_PROFILE_KEY = 'devport_mock_profile';
-const LOCAL_PORTFOLIO_KEY = 'devport_mock_portfolio';
-const LOCAL_MESSAGES_KEY = 'devport_mock_messages';
-
-const getMockProfile = (): Profile | null => {
-  if (typeof window === 'undefined') return null;
-  const data = localStorage.getItem(LOCAL_PROFILE_KEY);
-  return data ? JSON.parse(data) : null;
-};
-
-const saveMockProfile = (profile: Profile) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(LOCAL_PROFILE_KEY, JSON.stringify(profile));
-};
-
-const getMockPortfolioContent = (): PortfolioContent | null => {
-  if (typeof window === 'undefined') return null;
-  const data = localStorage.getItem(LOCAL_PORTFOLIO_KEY);
-  return data ? JSON.parse(data) : null;
-};
-
-const saveMockPortfolioContent = (content: PortfolioContent) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(LOCAL_PORTFOLIO_KEY, JSON.stringify(content));
-};
+import { cache } from 'react';
 
 export async function checkUsernameAvailable(username: string): Promise<boolean> {
   const cleanUsername = username.trim().toLowerCase();
   
-  if (!supabase) {
-    // Mock check
-    const mockProfile = getMockProfile();
-    if (mockProfile && mockProfile.username === cleanUsername) {
-      return true;
-    }
-    // Simulate availability
-    return cleanUsername !== 'admin' && cleanUsername !== 'login' && cleanUsername !== 'dashboard';
-  }
+  if (!supabase) return false;
 
   const { data, error } = await supabase
     .from('profiles')
@@ -56,20 +22,7 @@ export async function checkUsernameAvailable(username: string): Promise<boolean>
 }
 
 export async function fetchProfile(userId: string): Promise<Profile | null> {
-  if (!supabase) {
-    const mockProfile = getMockProfile();
-    if (mockProfile && mockProfile.id === userId) return mockProfile;
-    // Return a default mock profile if logged in
-    const defaultMock: Profile = {
-      id: userId,
-      email: 'mock@devport.com',
-      username: null,
-      is_published: false,
-      created_at: new Date().toISOString(),
-    };
-    saveMockProfile(defaultMock);
-    return defaultMock;
-  }
+  if (!supabase) return null;
 
   const { data, error } = await supabase
     .from('profiles')
@@ -86,18 +39,7 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
 }
 
 export async function updateProfile(userId: string, updates: Partial<Profile>): Promise<boolean> {
-  if (!supabase) {
-    const mockProfile = getMockProfile() || {
-      id: userId,
-      email: 'mock@devport.com',
-      username: null,
-      is_published: false,
-      created_at: new Date().toISOString(),
-    };
-    const updated = { ...mockProfile, ...updates };
-    saveMockProfile(updated);
-    return true;
-  }
+  if (!supabase) return false;
 
   const { error } = await supabase
     .from('profiles')
@@ -112,9 +54,7 @@ export async function updateProfile(userId: string, updates: Partial<Profile>): 
 }
 
 export async function fetchPortfolio(userId: string): Promise<PortfolioContent | null> {
-  if (!supabase) {
-    return getMockPortfolioContent();
-  }
+  if (!supabase) return null;
 
   const { data, error } = await supabase
     .from('portfolios')
@@ -131,10 +71,7 @@ export async function fetchPortfolio(userId: string): Promise<PortfolioContent |
 }
 
 export async function savePortfolio(userId: string, content: PortfolioContent): Promise<boolean> {
-  if (!supabase) {
-    saveMockPortfolioContent(content);
-    return true;
-  }
+  if (!supabase) return false;
 
   // Use upsert to insert or update the portfolio record
   const { error } = await supabase
@@ -152,18 +89,10 @@ export async function savePortfolio(userId: string, content: PortfolioContent): 
   return true;
 }
 
-export async function fetchPortfolioByUsername(username: string): Promise<{ profile: Profile; content: PortfolioContent } | null> {
+export const fetchPortfolioByUsername = cache(async (username: string): Promise<{ profile: Profile; content: PortfolioContent } | null> => {
   const cleanUsername = username.trim().toLowerCase();
 
-  if (!supabase) {
-    // Local storage mock resolver
-    const mockProfile = getMockProfile();
-    const mockContent = getMockPortfolioContent();
-    if (mockProfile && mockProfile.username === cleanUsername && mockProfile.is_published && mockContent) {
-      return { profile: mockProfile, content: mockContent };
-    }
-    return null;
-  }
+  if (!supabase) return null;
 
   // Get active profile by username
   const { data: profile, error: profileError } = await supabase
@@ -192,24 +121,10 @@ export async function fetchPortfolioByUsername(username: string): Promise<{ prof
     profile,
     content: portfolio.content as PortfolioContent,
   };
-}
+});
 
 export async function submitVisitorMessage(portfolioId: string, visitorName: string, visitorEmail: string, content: string): Promise<boolean> {
-  if (!supabase) {
-    if (typeof window !== 'undefined') {
-      const messages = JSON.parse(localStorage.getItem(LOCAL_MESSAGES_KEY) || '[]');
-      messages.push({
-        id: Math.random().toString(),
-        portfolio_id: portfolioId,
-        visitor_name: visitorName,
-        visitor_email: visitorEmail,
-        message_content: content,
-        created_at: new Date().toISOString(),
-      });
-      localStorage.setItem(LOCAL_MESSAGES_KEY, JSON.stringify(messages));
-    }
-    return true;
-  }
+  if (!supabase) return false;
 
   const { error } = await supabase
     .from('messages')
@@ -236,15 +151,7 @@ export interface VisitorMessage {
 }
 
 export async function fetchVisitorMessages(userId: string): Promise<VisitorMessage[]> {
-  if (!supabase) {
-    if (typeof window !== 'undefined') {
-      const messages = JSON.parse(localStorage.getItem(LOCAL_MESSAGES_KEY) || '[]');
-      return messages
-        .filter((msg: any) => msg.portfolio_id === userId)
-        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-    }
-    return [];
-  }
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('messages')

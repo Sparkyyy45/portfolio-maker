@@ -1,12 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
+    const now = Date.now();
+    const rateData = rateLimitMap.get(ip) || { count: 0, resetTime: now + 3600000 };
+    
+    if (now > rateData.resetTime) {
+      rateData.count = 0;
+      rateData.resetTime = now + 3600000;
+    }
+    if (rateData.count >= 5) {
+      return NextResponse.json({ error: 'Too many requests. Try again later.' }, { status: 429 });
+    }
+    rateData.count++;
+    rateLimitMap.set(ip, rateData);
+
     const body = await req.json();
     const { ownerEmail, visitorName, visitorEmail, message, portfolioName } = body;
 
     if (!ownerEmail || !visitorName || !visitorEmail || !message) {
       return NextResponse.json({ error: 'Missing required fields.' }, { status: 400 });
+    }
+    if (visitorName.length > 100 || visitorEmail.length > 100 || message.length > 5000) {
+      return NextResponse.json({ error: 'Input too long.' }, { status: 400 });
     }
 
     const apiKey = process.env.RESEND_API_KEY;

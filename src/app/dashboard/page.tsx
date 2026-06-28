@@ -10,6 +10,7 @@ import {
 import { PortfolioContent, ProjectData, ExperienceData, SkillCategory, EducationData, CertificationData, Profile, LeetCodeStats, GitHubRepoData, SectionsVisibility } from '@/types/portfolio';
 import PortfolioPreview from '@/components/PortfolioPreview';
 import { ToastContainer, ToastItem } from '@/components/Toast';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { extractTextFromPdf } from '@/utils/pdf';
 import { fetchGitHubData } from '@/utils/github';
 import { parseLinkedInExport } from '@/utils/linkedin';
@@ -22,7 +23,7 @@ import {
 } from 'lucide-react';
 
 export default function DashboardPage() {
-  const { user, loading, signOut, isMock } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const router = useRouter();
 
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -331,7 +332,7 @@ export default function DashboardPage() {
 
     setSaving(true);
     try {
-      if (isMock || !supabase) {
+      if (!supabase) {
         await savePortfolio(user.id, content);
         await updateProfile(user.id, { username: usernameInput, is_published: isPublishedInput });
         setProfile((prev) => prev ? ({ ...prev, username: usernameInput, is_published: isPublishedInput }) : null);
@@ -643,9 +644,9 @@ export default function DashboardPage() {
 
       {/* MAIN CONTAINER */}
       <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
-
-        {/* WORKSPACE AREA */}
-        <div
+        <ErrorBoundary>
+          {/* WORKSPACE AREA */}
+          <div
           className="w-full md:w-1/2 border-r border-border-primary flex flex-col overflow-y-auto h-full bg-bg-primary"
         >
 
@@ -1409,7 +1410,6 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
-      </main>
 
       {/* UPDATE MODALS POPUPS */}
       {updateModalSource && (
@@ -1558,7 +1558,8 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
-
+        </ErrorBoundary>
+      </main>
     </div>
   );
 }

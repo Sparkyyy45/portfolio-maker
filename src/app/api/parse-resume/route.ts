@@ -1,12 +1,31 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 
-export async function POST(request: Request) {
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
+    const now = Date.now();
+    const rateData = rateLimitMap.get(ip) || { count: 0, resetTime: now + 86400000 }; // 24 hours
+    
+    if (now > rateData.resetTime) {
+      rateData.count = 0;
+      rateData.resetTime = now + 86400000;
+    }
+    if (rateData.count >= 10) {
+      return NextResponse.json({ error: 'Too many requests. Limit is 10 resumes per day.' }, { status: 429 });
+    }
+    rateData.count++;
+    rateLimitMap.set(ip, rateData);
+
     const { text } = await request.json();
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: 'Text content is required' }, { status: 400 });
+    }
+    if (text.length > 50000) {
+      return NextResponse.json({ error: 'Resume text is too long (max 50,000 chars).' }, { status: 400 });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
