@@ -7,7 +7,6 @@ import TerminalTemplate from './templates/TerminalTemplate';
 import GlassTemplate from './templates/GlassTemplate';
 import DeckTemplate from './templates/DeckTemplate';
 import TimelineTemplate from './templates/TimelineTemplate';
-import RecruiterPanel from './RecruiterPanel';
 
 interface PortfolioPreviewProps {
   data: PortfolioContent;
@@ -56,7 +55,6 @@ export default function PortfolioPreview({ data, isDemo = false, onSubmitMessage
   return (
     <div className={`relative w-full h-full ${fontPairClass}`}>
       {renderTemplate()}
-      <RecruiterPanel data={data} isDemo={isDemo} onSubmitMessage={onSubmitMessage} />
     </div>
   );
 }
