@@ -1544,8 +1544,8 @@ export default function DashboardPage() {
           <div className="flex-1 flex items-center justify-center overflow-y-auto">
             <div className={`transition-all duration-300 ${
               previewMode === 'mobile' 
-                ? 'w-[375px] h-[667px] border-8 border-zinc-800 rounded-[2rem] shadow-2xl relative overflow-hidden shrink-0' 
-                : 'w-full h-full border border-border-primary rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] relative overflow-hidden'
+                ? 'w-[375px] h-[667px] border-10 border-zinc-900 rounded-[2.5rem] shadow-2xl relative overflow-y-auto shrink-0 scrollbar-thin' 
+                : 'w-full h-full border border-border-primary rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] relative overflow-y-auto'
             } bg-bg-primary`}>
               {content ? <PortfolioPreview data={content} isDemo={true} /> : (
                 <div className="absolute inset-0 flex items-center justify-center"><Loader2 size={18} className="animate-spin text-text-tertiary" /></div>

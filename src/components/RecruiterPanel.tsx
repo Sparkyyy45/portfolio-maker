@@ -64,7 +64,7 @@ export default function RecruiterPanel({ data, isDemo = false, onSubmitMessage }
   const latestEducation = education && education.length > 0 ? education[0].institution : null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 font-sans select-none print:hidden">
+    <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:right-5 sm:bottom-5 z-50 font-sans select-none print:hidden flex flex-col items-end">
       {!expanded ? (
         <button
           onClick={() => setExpanded(true)}
@@ -74,7 +74,7 @@ export default function RecruiterPanel({ data, isDemo = false, onSubmitMessage }
           <span>Recruiter Mode</span>
         </button>
       ) : (
-        <div className="w-[320px] bg-zinc-950 border border-zinc-850 rounded-2xl p-5 shadow-2xl space-y-4 animate-in slide-in-from-bottom-5 duration-200 text-zinc-100">
+        <div className="w-full sm:w-[320px] max-w-md bg-zinc-950 border border-zinc-850 rounded-2xl p-5 shadow-2xl space-y-4 animate-in slide-in-from-bottom-5 duration-200 text-zinc-100">
           {/* Header */}
           <div className="flex justify-between items-center border-b border-zinc-850 pb-2">
             <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400 flex items-center gap-1.5">

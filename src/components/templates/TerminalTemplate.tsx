@@ -348,7 +348,7 @@ export default function TerminalTemplate({ data, isDemo = false, onSubmitMessage
     <div className="min-h-screen bg-zinc-950 text-zinc-200 p-4 sm:p-6 md:p-8 flex items-center justify-center font-mono selection:bg-emerald-500/20 selection:text-emerald-300">
       
       {/* Terminal Window Wrapper */}
-      <div className="w-full max-w-4xl border border-zinc-800 rounded-xl bg-zinc-900/90 shadow-2xl overflow-hidden flex flex-col h-[85vh] sm:h-[80vh]">
+      <div className="w-full max-w-4xl border border-zinc-800 rounded-xl bg-zinc-900/90 shadow-2xl overflow-hidden flex flex-col h-[85vh] max-h-full md:h-[80vh]">
         
         {/* Top Control Bar */}
         <div className="px-4 py-3 bg-zinc-950 border-b border-zinc-850 flex items-center justify-between shrink-0 select-none">
