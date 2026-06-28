@@ -83,6 +83,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
     light: {
       bgMesh: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-100/40 via-indigo-50/50 to-white text-slate-800",
       glassCard: "bg-white/40 backdrop-blur-md border border-white/50 shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] hover:bg-white/50 transition duration-300",
+      glassCardInner: "bg-white/40 hover:bg-white/60 border border-white/50 shadow-[0_4px_20px_0_rgba(31,38,135,0.03)]",
       textTitle: "text-slate-900",
       textMuted: "text-slate-650",
       pill: "bg-indigo-500/10 text-indigo-700 border border-indigo-500/20",
@@ -91,10 +92,14 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
       input: "bg-white/30 border border-slate-200 focus:border-indigo-500 text-slate-900",
       button: "bg-indigo-600 hover:bg-indigo-500 text-white",
       isLight: true,
+      blob1: "bg-sky-300",
+      blob2: "bg-indigo-300",
+      blob3: "bg-amber-200",
     },
     dark: {
       bgMesh: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-black text-zinc-200",
       glassCard: "bg-zinc-900/30 backdrop-blur-md border border-zinc-800/50 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:bg-zinc-900/40 transition duration-300",
+      glassCardInner: "bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 shadow-[0_4px_20px_0_rgba(0,0,0,0.15)]",
       textTitle: "text-white",
       textMuted: "text-zinc-400",
       pill: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
@@ -103,10 +108,14 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
       input: "bg-zinc-950/40 border border-zinc-800 focus:border-emerald-500 text-zinc-200",
       button: "bg-emerald-600 hover:bg-emerald-550 text-zinc-950 font-bold",
       isLight: false,
+      blob1: "bg-indigo-900/60",
+      blob2: "bg-purple-900/45",
+      blob3: "bg-zinc-800/40",
     },
     cyberpunk: {
       bgMesh: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-950/30 via-zinc-950 to-slate-950 text-emerald-400",
       glassCard: "bg-zinc-900/40 backdrop-blur-md border-2 border-emerald-500/25 shadow-[0_8px_32px_0_rgba(16,185,129,0.05)] hover:bg-zinc-900/50 transition duration-300",
+      glassCardInner: "bg-emerald-500/[0.03] hover:bg-emerald-500/[0.07] border border-emerald-500/20 shadow-[0_4px_20px_0_rgba(16,185,129,0.02)]",
       textTitle: "text-white",
       textMuted: "text-emerald-500/80",
       pill: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
@@ -115,10 +124,14 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
       input: "bg-zinc-950/60 border border-emerald-900/50 focus:border-emerald-500 text-emerald-300",
       button: "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black",
       isLight: false,
+      blob1: "bg-emerald-900/50",
+      blob2: "bg-teal-900/40",
+      blob3: "bg-zinc-800/50",
     },
     nord: {
       bgMesh: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2E3440] via-[#3B4252] to-[#434C5E] text-[#D8DEE9]",
       glassCard: "bg-[#2E3440]/30 backdrop-blur-md border border-[#4C566A]/50 shadow-lg hover:bg-[#2E3440]/40 transition duration-300",
+      glassCardInner: "bg-[#D8DEE9]/[0.03] hover:bg-[#D8DEE9]/[0.07] border border-white/10 shadow-md",
       textTitle: "text-[#E5E9F0]",
       textMuted: "text-[#969fac]",
       pill: "bg-[#88C0D0]/10 text-[#88C0D0] border border-[#88C0D0]/20",
@@ -127,10 +140,14 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
       input: "bg-[#2E3440]/60 border border-[#4C566A] focus:border-[#88C0D0] text-[#E5E9F0]",
       button: "bg-[#88C0D0] hover:bg-[#8FBCBB] text-[#2E3440] font-bold",
       isLight: false,
+      blob1: "bg-[#88C0D0]/30",
+      blob2: "bg-[#8FBCBB]/20",
+      blob3: "bg-[#4C566A]/40",
     },
     dracula: {
-      bgMesh: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-950/40 via-[#1d1f27] to-[#282a36] text-[#f8f8f2]",
+      bgMesh: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1d1f27] via-[#282a36] to-purple-950/20 text-[#f8f8f2]",
       glassCard: "bg-[#282a36]/30 backdrop-blur-md border border-[#44475a]/50 shadow-xl hover:bg-[#282a36]/40 transition duration-300",
+      glassCardInner: "bg-[#f8f8f2]/[0.03] hover:bg-[#f8f8f2]/[0.07] border border-[#ff79c6]/20 shadow-lg",
       textTitle: "text-[#f8f8f2]",
       textMuted: "text-[#a4a9c6]",
       pill: "bg-[#ff79c6]/10 text-[#ff79c6] border border-[#ff79c6]/20",
@@ -139,10 +156,14 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
       input: "bg-[#1d1f27]/60 border border-[#44475a] focus:border-[#ff79c6] text-[#f8f8f2]",
       button: "bg-[#ff79c6] hover:bg-[#ff92df] text-[#282a36] font-bold",
       isLight: false,
+      blob1: "bg-[#bd93f9]/30",
+      blob2: "bg-[#ff79c6]/20",
+      blob3: "bg-[#6272a4]/20",
     },
     synthwave: {
       bgMesh: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#180a2b] via-[#24113a] to-[#0f051d] text-[#f0e6ff]",
       glassCard: "bg-[#24113a]/30 backdrop-blur-md border border-[#ff007f]/30 shadow-[0_8px_32px_rgba(255,0,127,0.1)] hover:bg-[#24113a]/40 transition duration-300",
+      glassCardInner: "bg-[#ff007f]/[0.03] hover:bg-[#ff007f]/[0.07] border border-[#ff007f]/20 shadow-[0_4px_20px_rgba(255,0,127,0.05)]",
       textTitle: "text-white",
       textMuted: "text-[#b89eff]",
       pill: "bg-[#39ff14]/10 text-[#39ff14] border border-[#39ff14]/20",
@@ -151,10 +172,14 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
       input: "bg-[#180a2b]/60 border border-[#ff007f]/30 focus:border-[#39ff14] text-white",
       button: "bg-[#39ff14] hover:bg-[#5aff38] text-[#180a2b] font-extrabold",
       isLight: false,
+      blob1: "bg-[#ff007f]/30",
+      blob2: "bg-[#39ff14]/15",
+      blob3: "bg-[#8a2be2]/30",
     },
     latte: {
       bgMesh: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#FCF9F7] via-[#F5EBE6] to-[#E6D4CB]/40 text-[#5C4033]",
       glassCard: "bg-[#FCF9F7]/40 backdrop-blur-md border border-[#E6D4CB] shadow-xs hover:bg-[#FCF9F7]/50 transition duration-300",
+      glassCardInner: "bg-[#FCF9F7]/45 hover:bg-[#FCF9F7]/65 border border-[#E6D4CB] shadow-[0_4px_15px_rgba(92,64,51,0.02)]",
       textTitle: "text-[#3C2A21]",
       textMuted: "text-[#8B7365]",
       pill: "bg-[#A75D5D]/10 text-[#A75D5D] border border-[#A75D5D]/20",
@@ -163,6 +188,9 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
       input: "bg-[#FCF9F7]/60 border border-[#E6D4CB] focus:border-[#A75D5D] text-[#5C4033]",
       button: "bg-[#A75D5D] hover:bg-[#C17A7A] text-[#FCF9F7] font-bold",
       isLight: true,
+      blob1: "bg-[#A75D5D]/20",
+      blob2: "bg-[#DFCABF]/60",
+      blob3: "bg-[#E6D4CB]/40",
     }
   };
 
@@ -170,13 +198,21 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
   const isLightMode = style.isLight;
   const bgMeshClass = style.bgMesh;
   const glassCardClass = style.glassCard;
+  const glassCardInnerClass = style.glassCardInner;
   const textMutedClass = style.textMuted;
   const textTitleClass = style.textTitle;
   const pillClass = style.pill;
 
   return (
-    <div className={`w-full min-h-screen py-10 px-4 sm:px-6 md:py-16 transition-all duration-500 ${bgMeshClass}`}>
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className={`w-full min-h-screen py-10 px-4 sm:px-6 md:py-16 transition-all duration-500 relative overflow-hidden ${bgMeshClass}`}>
+      {/* Drifting background glass blobs for frosting dispersion */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] opacity-40 animate-blob ${style.blob1}`} />
+        <div className={`absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] opacity-35 animate-blob animation-delay-2000 ${style.blob2}`} />
+        <div className={`absolute top-[40%] right-[20%] w-[40%] h-[40%] rounded-full blur-[130px] opacity-25 animate-blob animation-delay-4000 ${style.blob3}`} />
+      </div>
+
+      <div className="max-w-4xl mx-auto space-y-8 relative z-10">
         
         {/* Top Header Bar */}
         <div className={`flex justify-between items-center p-3 rounded-2xl ${glassCardClass}`}>
@@ -262,9 +298,7 @@ export default function GlassTemplate({ data, isDemo = false, onSubmitMessage }:
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {projects.map((proj, idx) => (
-                    <div key={idx} className={`p-4.5 rounded-2xl flex flex-col justify-between ${
-                      isLightMode ? "bg-white/30 border border-white/40 hover:bg-white/50" : "bg-white/5 border border-white/10 hover:bg-white/10"
-                    } transition duration-350`}>
+                    <div key={idx} className={`p-4.5 rounded-2xl flex flex-col justify-between ${glassCardInnerClass} transition duration-350`}>
                       <div className="space-y-2">
                         <div className="flex justify-between items-start gap-2">
                           <h3 className={`text-xs font-bold leading-tight break-words ${textTitleClass}`}>{proj.title}</h3>
