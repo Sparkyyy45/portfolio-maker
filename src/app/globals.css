@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Light theme — restrained but visible */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-surface: #F7F7F8;
+  --color-bg-code: #F2F2F3;
+  --color-bg-terminal: #18181B;
+
+  --color-border-primary: #E4E4E7;
+  --color-border-subtle: #F0F0F2;
+
+  --color-text-primary: #09090B;
+  --color-text-secondary: #52525B;
+  --color-text-tertiary: #A1A1AA;
+  --color-text-inverse: #FAFAFA;
+
+  --color-accent: #18181B;
+  --color-accent-hover: #27272A;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: rgba(9, 9, 11, 0.08);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@utility bg-grid-pattern {
+  background-image: radial-gradient(var(--color-border-primary) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+@utility text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, #09090B, #52525B);
+}
+
+/* Skeleton pulse animation */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@utility skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background: linear-gradient(90deg, var(--color-bg-surface) 0%, var(--color-bg-code) 50%, var(--color-bg-surface) 100%);
+  background-size: 200% 100%;
+  border-radius: 0.5rem;
+}
+
+/* Smooth reveal for scroll-triggered elements */
+@utility reveal-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Timeline connector animation */
+@keyframes timeline-grow {
+  from { height: 0; }
+  to { height: 100%; }
+}
+
+/* Focus ring utility */
+@utility focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-bg-primary), 0 0 0 4px var(--color-accent);
+}
