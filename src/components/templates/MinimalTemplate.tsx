@@ -72,14 +72,81 @@ export default function MinimalTemplate({ data, isDemo = false, onSubmitMessage 
   const showContact = (sections_visibility?.contact ?? true);
 
   // Style mapping based on theme
-  const isDark = theme === 'cyberpunk';
-  const bgClass = isDark ? 'bg-zinc-950 text-zinc-100' : 'bg-[#FAFAF9] text-zinc-850';
-  const cardClass = isDark ? 'bg-zinc-900/40 border-zinc-800' : 'bg-white border-zinc-200/80 shadow-xs';
-  const textMuted = isDark ? 'text-zinc-400' : 'text-zinc-500';
-  const textTitle = isDark ? 'text-white font-semibold' : 'text-zinc-900 font-bold';
-  const borderClass = isDark ? 'border-zinc-850' : 'border-zinc-200/60';
-  const accentText = isDark ? 'text-emerald-400' : 'text-zinc-900';
-  const badgeClass = isDark ? 'bg-zinc-900 text-zinc-200 border-zinc-850' : 'bg-zinc-100 text-zinc-800 border-zinc-200/50';
+  const themeStyles = {
+    light: {
+      bgClass: 'bg-[#FAFAF9] text-zinc-850',
+      cardClass: 'bg-white border-zinc-200/80 shadow-xs',
+      textMuted: 'text-zinc-550',
+      textTitle: 'text-zinc-900 font-bold',
+      borderClass: 'border-zinc-200/60',
+      accentText: 'text-zinc-900',
+      badgeClass: 'bg-zinc-100 text-zinc-800 border-zinc-200/50',
+    },
+    dark: {
+      bgClass: 'bg-zinc-950 text-zinc-100',
+      cardClass: 'bg-zinc-900/40 border-zinc-800',
+      textMuted: 'text-zinc-400',
+      textTitle: 'text-white font-semibold',
+      borderClass: 'border-zinc-850',
+      accentText: 'text-emerald-400',
+      badgeClass: 'bg-zinc-900 text-zinc-200 border-zinc-850',
+    },
+    cyberpunk: {
+      bgClass: 'bg-zinc-950 text-zinc-100',
+      cardClass: 'bg-zinc-900/60 border-2 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.03)]',
+      textMuted: 'text-zinc-400',
+      textTitle: 'text-white font-semibold',
+      borderClass: 'border-zinc-800',
+      accentText: 'text-emerald-400',
+      badgeClass: 'bg-zinc-900 text-emerald-400 border-emerald-900/40',
+    },
+    nord: {
+      bgClass: 'bg-[#2E3440] text-[#D8DEE9]',
+      cardClass: 'bg-[#3B4252] border border-[#4C566A]',
+      textMuted: 'text-[#969fac]',
+      textTitle: 'text-[#E5E9F0] font-semibold',
+      borderClass: 'border-[#4C566A]',
+      accentText: 'text-[#88C0D0]',
+      badgeClass: 'bg-[#434C5E] text-[#E5E9F0] border border-[#4C566A]',
+    },
+    dracula: {
+      bgClass: 'bg-[#282a36] text-[#f8f8f2]',
+      cardClass: 'bg-[#1d1f27] border border-[#44475a]',
+      textMuted: 'text-[#a4a9c6]',
+      textTitle: 'text-[#f8f8f2] font-semibold',
+      borderClass: 'border-[#44475a]',
+      accentText: 'text-[#ff79c6]',
+      badgeClass: 'bg-[#282a36] text-[#ff79c6] border border-[#44475a]',
+    },
+    synthwave: {
+      bgClass: 'bg-[#180a2b] text-[#f0e6ff]',
+      cardClass: 'bg-[#24113a] border-2 border-[#ff007f]/20',
+      textMuted: 'text-[#b89eff]',
+      textTitle: 'text-white font-semibold',
+      borderClass: 'border-[#ff007f]/25',
+      accentText: 'text-[#39ff14]',
+      badgeClass: 'bg-[#2d1b4c] text-[#ff007f] border border-[#ff007f]/30',
+    },
+    latte: {
+      bgClass: 'bg-[#F5EBE6] text-[#5C4033]',
+      cardClass: 'bg-[#FCF9F7] border border-[#E6D4CB]',
+      textMuted: 'text-[#8B7365]',
+      textTitle: 'text-[#3C2A21] font-bold',
+      borderClass: 'border-[#E6D4CB]',
+      accentText: 'text-[#A75D5D]',
+      badgeClass: 'bg-[#FCF9F7] text-[#5C4033] border border-[#E6D4CB]',
+    }
+  };
+
+  const style = themeStyles[theme] || themeStyles.light;
+  const isDark = theme !== 'light' && theme !== 'latte';
+  const bgClass = style.bgClass;
+  const cardClass = style.cardClass;
+  const textMuted = style.textMuted;
+  const textTitle = style.textTitle;
+  const borderClass = style.borderClass;
+  const accentText = style.accentText;
+  const badgeClass = style.badgeClass;
 
   const getInitials = (nameStr: string) => {
     if (!nameStr) return 'DP';

@@ -92,8 +92,8 @@ export interface PortfolioContent {
   certifications: CertificationData[];
   leetcode?: LeetCodeStats;
   github_repos?: GitHubRepoData[];
-  theme?: 'light' | 'cyberpunk';
-  template?: 'bento' | 'brutalist' | 'minimal' | 'terminal';
+  theme?: 'light' | 'dark' | 'cyberpunk' | 'nord' | 'dracula' | 'synthwave' | 'latte';
+  template?: 'bento' | 'brutalist' | 'minimal' | 'terminal' | 'glass' | 'deck' | 'timeline';
   accent_color?: string;
   font_pair?: string;
   sections_visibility?: SectionsVisibility;

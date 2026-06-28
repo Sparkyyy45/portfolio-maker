@@ -152,3 +152,48 @@ html {
     color: #52525b !important;
   }
 }
+
+/* Dynamic Typography Overrides */
+.font-pair-modern-tech {
+  font-family: var(--font-geist-sans), sans-serif;
+}
+.font-pair-modern-tech h1, 
+.font-pair-modern-tech h2, 
+.font-pair-modern-tech h3, 
+.font-pair-modern-tech h4,
+.font-pair-modern-tech .font-heading {
+  font-family: var(--font-outfit), sans-serif;
+}
+
+.font-pair-elegant-serif {
+  font-family: var(--font-inter), sans-serif;
+}
+.font-pair-elegant-serif h1, 
+.font-pair-elegant-serif h2, 
+.font-pair-elegant-serif h3, 
+.font-pair-elegant-serif h4,
+.font-pair-elegant-serif .font-heading {
+  font-family: var(--font-playfair), serif;
+}
+
+.font-pair-dev-mono {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+.font-pair-dev-mono h1, 
+.font-pair-dev-mono h2, 
+.font-pair-dev-mono h3, 
+.font-pair-dev-mono h4,
+.font-pair-dev-mono .font-heading {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+.font-pair-editorial {
+  font-family: var(--font-jakarta), sans-serif;
+}
+.font-pair-editorial h1, 
+.font-pair-editorial h2, 
+.font-pair-editorial h3, 
+.font-pair-editorial h4,
+.font-pair-editorial .font-heading {
+  font-family: var(--font-jakarta), sans-serif;
+}

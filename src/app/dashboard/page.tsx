@@ -120,14 +120,19 @@ export default function DashboardPage() {
   };
 
   // Design/Theme changes
-  const handleThemeChange = (selectedTheme: 'light' | 'cyberpunk') => {
+  const handleThemeChange = (selectedTheme: 'light' | 'dark' | 'cyberpunk' | 'nord' | 'dracula' | 'synthwave' | 'latte') => {
     if (!content) return;
     setContent((prev) => prev ? ({ ...prev, theme: selectedTheme }) : null);
   };
 
-  const handleTemplateChange = (selectedTemplate: 'minimal' | 'bento' | 'brutalist' | 'terminal') => {
+  const handleTemplateChange = (selectedTemplate: 'minimal' | 'bento' | 'brutalist' | 'terminal' | 'glass' | 'deck' | 'timeline') => {
     if (!content) return;
     setContent((prev) => prev ? ({ ...prev, template: selectedTemplate }) : null);
+  };
+
+  const handleFontPairChange = (selectedFontPair: string) => {
+    if (!content) return;
+    setContent((prev) => prev ? ({ ...prev, font_pair: selectedFontPair }) : null);
   };
 
   const handleSectionVisibilityToggle = (section: keyof SectionsVisibility) => {
@@ -1356,7 +1361,10 @@ export default function DashboardPage() {
                         { id: 'minimal' as const, name: 'Minimalist Document', desc: 'Airy, single-column focused on clean typography.', icon: '📜' },
                         { id: 'bento' as const, name: 'Bento Grid Dashboard', desc: 'Responsive dashboard of cards with stats and repos.', icon: '🍱' },
                         { id: 'brutalist' as const, name: 'Neo-Brutalist Pop', desc: 'Thick black borders, offset solid shadows, and high contrast.', icon: '⚡' },
-                        { id: 'terminal' as const, name: 'Retro UNIX Terminal', desc: 'Interactive developer console styling with CLI commands.', icon: '💻' }
+                        { id: 'terminal' as const, name: 'Retro UNIX Terminal', desc: 'Interactive developer console styling with CLI commands.', icon: '💻' },
+                        { id: 'glass' as const, name: 'Glassmorphism Grid', desc: 'Frosted cards over a moving radial mesh gradient background.', icon: '💎' },
+                        { id: 'deck' as const, name: 'Presentation Slides', desc: 'Sleek pitch deck UI with Left/Right arrow transitions.', icon: '🎴' },
+                        { id: 'timeline' as const, name: 'Career Timeline', desc: 'Narrative central vertical timeline path layout.', icon: '⏳' }
                       ].map((t) => (
                         <button
                           key={t.id}
@@ -1382,10 +1390,15 @@ export default function DashboardPage() {
                       <p className="text-2xs text-text-tertiary mt-0.5">Choose a design aesthetic for your page.</p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-3 mb-6">
                       {[
                         { id: 'light' as const, name: 'Light Minimalist', desc: 'Clean, clean slate design with soft zinc cards.', border: 'border-zinc-200 bg-white text-zinc-800' },
-                        { id: 'cyberpunk' as const, name: 'Cyberpunk Green', desc: 'Retro terminal green look with dark slate background.', border: 'border-emerald-500/20 bg-zinc-950 text-emerald-400' }
+                        { id: 'dark' as const, name: 'Midnight Obsidian', desc: 'Stealthy gray-black dark theme.', border: 'border-zinc-800 bg-zinc-950 text-zinc-100' },
+                        { id: 'cyberpunk' as const, name: 'Cyberpunk Green', desc: 'Retro terminal green look with dark slate background.', border: 'border-emerald-500/20 bg-zinc-950 text-emerald-400' },
+                        { id: 'nord' as const, name: 'Nordic Frost', desc: 'Slate blue and grey-blue tones with pale blue accents.', border: 'border-[#4C566A]/20 bg-[#2E3440] text-[#88C0D0]' },
+                        { id: 'dracula' as const, name: 'Dracula Vampire', desc: 'Deep purple-black look with hot pink accents.', border: 'border-[#44475a]/25 bg-[#282a36] text-[#ff79c6]' },
+                        { id: 'synthwave' as const, name: 'Retro Synthwave', desc: 'Neon grid lines and glowing pink/blue text.', border: 'border-[#ff007f]/20 bg-[#180a2b] text-[#39ff14]' },
+                        { id: 'latte' as const, name: 'Rosewood Latte', desc: 'Warm cream, sand, and cozy terracotta accents.', border: 'border-[#E6D4CB]/20 bg-[#F5EBE6] text-[#A75D5D]' }
                       ].map((t) => (
                         <button
                           key={t.id}
@@ -1401,6 +1414,36 @@ export default function DashboardPage() {
                           {content.theme === t.id && (
                             <span className="absolute right-3 top-3 bg-accent text-text-inverse p-0.5 rounded-full"><Check size={11} /></span>
                           )}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="border-b border-border-primary pb-2">
+                      <h3 className={sectionHeaderCls}>Typography Pairings</h3>
+                      <p className="text-2xs text-text-tertiary mt-0.5">Select a font pairing for headings and paragraphs.</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { id: 'modern', name: 'Sleek Tech', desc: 'Outfit & Geist', preview: 'Aa' },
+                        { id: 'serif', name: 'Elegant Serif', desc: 'Playfair Display & Inter', preview: 'Aa' },
+                        { id: 'mono', name: 'Dev Console', desc: 'JetBrains Mono & Fira Code', preview: 'Aa' },
+                        { id: 'editorial', name: 'Modern Agency', desc: 'Plus Jakarta Sans & Plus Jakarta Sans', preview: 'Aa' }
+                      ].map((t) => (
+                        <button
+                          key={t.id}
+                          onClick={() => handleFontPairChange(t.id)}
+                          className={`p-3.5 rounded-xl border text-left flex items-center justify-between transition cursor-pointer select-none bg-bg-surface border-border-primary ${
+                            (content?.font_pair || 'modern') === t.id ? 'ring-2 ring-accent border-accent bg-accent/5' : 'hover:scale-[1.01]'
+                          }`}
+                        >
+                          <div className="min-w-0">
+                            <span className="text-xs font-bold block text-text-primary leading-tight">{t.name}</span>
+                            <span className="text-[10px] text-text-secondary mt-0.5 block truncate">{t.desc}</span>
+                          </div>
+                          <div className="w-8 h-8 rounded-lg bg-bg-primary border border-border-primary flex items-center justify-center font-bold text-xs shrink-0 select-none text-text-secondary">
+                            {t.preview}
+                          </div>
                         </button>
                       ))}
                     </div>

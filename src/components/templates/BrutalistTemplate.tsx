@@ -71,20 +71,72 @@ export default function BrutalistTemplate({ data, isDemo = false, onSubmitMessag
   const showCertifications = (sections_visibility?.certifications ?? true) && certifications && certifications.length > 0;
   const showContact = (sections_visibility?.contact ?? true);
 
-  const isDark = theme === 'cyberpunk';
-  
-  // Neo-brutalist theme palettes
-  const bgClass = isDark ? 'bg-[#0E0E10] text-zinc-100' : 'bg-[#FFFBEB] text-zinc-900';
-  const borderClass = isDark ? 'border-emerald-500' : 'border-zinc-950';
-  const shadowClass = isDark ? 'shadow-[4px_4px_0px_#10B981]' : 'shadow-[5px_5px_0px_#000000]';
-  const accentCard = isDark ? 'bg-zinc-900/60' : 'bg-white';
-  const tagColors = [
-    isDark ? 'bg-[#064E3B] text-emerald-300' : 'bg-cyan-200 text-zinc-900',
-    isDark ? 'bg-[#5B21B6] text-purple-200' : 'bg-purple-200 text-zinc-900',
-    isDark ? 'bg-[#991B1B] text-rose-200' : 'bg-rose-200 text-zinc-900',
-    isDark ? 'bg-[#92400E] text-amber-200' : 'bg-amber-200 text-zinc-900',
-    isDark ? 'bg-[#1E3A8A] text-blue-200' : 'bg-emerald-200 text-zinc-900',
-  ];
+  const themeStyles = {
+    light: {
+      bgClass: 'bg-[#FFFBEB] text-zinc-900',
+      borderClass: 'border-zinc-950',
+      shadowClass: 'shadow-[5px_5px_0px_#000000]',
+      accentCard: 'bg-white',
+      tagColors: ['bg-cyan-200 text-zinc-900', 'bg-purple-200 text-zinc-900', 'bg-rose-200 text-zinc-900', 'bg-amber-200 text-zinc-900', 'bg-emerald-200 text-zinc-900'],
+      shareBtn: 'border-zinc-950 bg-amber-300 text-zinc-950 shadow-[3px_3px_0px_#000000] active:shadow-[1px_1px_0px_#000000]',
+    },
+    dark: {
+      bgClass: 'bg-[#0E0E10] text-zinc-100',
+      borderClass: 'border-zinc-800',
+      shadowClass: 'shadow-[4px_4px_0px_#27272a]',
+      accentCard: 'bg-zinc-900/60',
+      tagColors: ['bg-zinc-850 text-zinc-300', 'bg-zinc-800 text-zinc-300', 'bg-zinc-900 text-zinc-400', 'bg-zinc-850 text-zinc-400', 'bg-zinc-800 text-zinc-300'],
+      shareBtn: 'border-zinc-800 bg-zinc-900 text-zinc-300 shadow-[2px_2px_0px_#27272a] active:shadow-[1px_1px_0px_#27272a]',
+    },
+    cyberpunk: {
+      bgClass: 'bg-[#0E0E10] text-zinc-100',
+      borderClass: 'border-emerald-500',
+      shadowClass: 'shadow-[4px_4px_0px_#10B981]',
+      accentCard: 'bg-zinc-900/60',
+      tagColors: ['bg-[#064E3B] text-emerald-300', 'bg-[#5B21B6] text-purple-200', 'bg-[#991B1B] text-rose-200', 'bg-[#92400E] text-amber-200', 'bg-[#1E3A8A] text-blue-200'],
+      shareBtn: 'border-emerald-500 bg-zinc-900 text-emerald-400 shadow-[2px_2px_0px_#10B981] active:shadow-[1px_1px_0px_#10B981]',
+    },
+    nord: {
+      bgClass: 'bg-[#2E3440] text-[#D8DEE9]',
+      borderClass: 'border-[#4C566A]',
+      shadowClass: 'shadow-[4px_4px_0px_#88C0D0]',
+      accentCard: 'bg-[#3B4252]',
+      tagColors: ['bg-[#434C5E] text-[#88C0D0]', 'bg-[#4C566A] text-[#8FBCBB]', 'bg-[#3B4252] text-[#E5E9F0]', 'bg-[#434C5E] text-[#D8DEE9]', 'bg-[#4C566A] text-[#88C0D0]'],
+      shareBtn: 'border-[#4C566A] bg-[#434C5E] text-[#88C0D0] shadow-[2px_2px_0px_#88C0D0] active:shadow-[1px_1px_0px_#88C0D0]',
+    },
+    dracula: {
+      bgClass: 'bg-[#282a36] text-[#f8f8f2]',
+      borderClass: 'border-[#44475a]',
+      shadowClass: 'shadow-[4px_4px_0px_#ff79c6]',
+      accentCard: 'bg-[#1d1f27]',
+      tagColors: ['bg-[#282a36] text-[#ff79c6]', 'bg-[#343746] text-[#50fa7b]', 'bg-[#44475a] text-[#bd93f9]', 'bg-[#1d1f27] text-[#ffb86c]', 'bg-[#282a36] text-[#8be9fd]'],
+      shareBtn: 'border-[#44475a] bg-[#1d1f27] text-[#ff79c6] shadow-[2px_2px_0px_#ff79c6] active:shadow-[1px_1px_0px_#ff79c6]',
+    },
+    synthwave: {
+      bgClass: 'bg-[#180a2b] text-[#f0e6ff]',
+      borderClass: 'border-[#ff007f]',
+      shadowClass: 'shadow-[4px_4px_0px_#39ff14]',
+      accentCard: 'bg-[#24113a]',
+      tagColors: ['bg-[#2d1b4c] text-[#ff007f]', 'bg-[#24113a] text-[#39ff14]', 'bg-[#1d0d3a] text-[#f0e6ff]', 'bg-[#2d1b4c] text-[#b89eff]', 'bg-[#24113a] text-[#ff007f]'],
+      shareBtn: 'border-[#ff007f] bg-[#24113a] text-[#ff007f] shadow-[2px_2px_0px_#39ff14] active:shadow-[1px_1px_0px_#39ff14]',
+    },
+    latte: {
+      bgClass: 'bg-[#F5EBE6] text-[#5C4033]',
+      borderClass: 'border-[#E6D4CB]',
+      shadowClass: 'shadow-[4px_4px_0px_#A75D5D]',
+      accentCard: 'bg-[#FCF9F7]',
+      tagColors: ['bg-[#EAD8CD] text-[#A75D5D]', 'bg-[#FCF9F7] text-[#5C4033]', 'bg-[#DFCABF] text-[#8B7365]', 'bg-[#EAD8CD] text-[#3C2A21]', 'bg-[#FCF9F7] text-[#A75D5D]'],
+      shareBtn: 'border-[#E6D4CB] bg-[#FCF9F7] text-[#A75D5D] shadow-[2px_2px_0px_#A75D5D] active:shadow-[1px_1px_0px_#A75D5D]',
+    }
+  };
+
+  const style = themeStyles[theme] || themeStyles.light;
+  const isDark = theme !== 'light' && theme !== 'latte';
+  const bgClass = style.bgClass;
+  const borderClass = style.borderClass;
+  const shadowClass = style.shadowClass;
+  const accentCard = style.accentCard;
+  const tagColors = style.tagColors;
 
   const getInitials = (nameStr: string) => {
     if (!nameStr) return 'DP';
@@ -101,11 +153,7 @@ export default function BrutalistTemplate({ data, isDemo = false, onSubmitMessag
         <div className="flex justify-end">
           <button
             onClick={handleShareClick}
-            className={`flex items-center gap-1.5 px-4 py-2 border-3 font-bold select-none active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer ${
-              isDark 
-                ? 'border-emerald-500 bg-zinc-900 text-emerald-400 shadow-[2px_2px_0px_#10B981] active:shadow-[1px_1px_0px_#10B981]' 
-                : 'border-zinc-950 bg-amber-300 text-zinc-950 shadow-[3px_3px_0px_#000000] active:shadow-[1px_1px_0px_#000000]'
-            }`}
+            className={`flex items-center gap-1.5 px-4 py-2 border-3 font-bold select-none active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer ${style.shareBtn}`}
           >
             {copiedShare ? <Check size={14} className="stroke-[3]" /> : <Share2 size={14} className="stroke-[3]" />}
             <span className="uppercase text-xs tracking-wider">{copiedShare ? 'Copied' : 'Share Portfolio'}</span>
