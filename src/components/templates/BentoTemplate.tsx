@@ -270,123 +270,125 @@ export default function BentoTemplate({ data, isDemo = false, onSubmitMessage }:
               )}
             </div>
 
-            {/* Quick Stats box */}
-            <div className={`p-3.5 sm:p-4 rounded-xl space-y-2.5 ${style.leftCardBg}`}>
-              <h3 className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${style.textLight}`}>Quick Stats</h3>
-              <div className="space-y-1.5 text-xs font-semibold">
-                {repoCount > 0 && (
-                  <div className="flex justify-between items-center gap-2">
-                    <span className={style.textMuted}>Repositories</span>
-                    <span className="text-current shrink-0">{repoCount} public</span>
-                  </div>
-                )}
-                {starsCount > 0 && (
-                  <div className="flex justify-between items-center gap-2">
-                    <span className={style.textMuted}>Stars received</span>
-                    <span className="text-current shrink-0">★ {starsCount} total</span>
-                  </div>
-                )}
-                {leetcode && leetcode.username && (
-                  <div className="flex justify-between items-center gap-2">
-                    <span className={style.textMuted}>LeetCode Solved</span>
-                    <span className="text-current shrink-0">{leetcode.solved} problems</span>
-                  </div>
-                )}
-                {leetcode && leetcode.rating && (
-                  <div className="flex justify-between items-center gap-2">
-                    <span className={style.textMuted}>CP Rating</span>
-                    <span className="text-current shrink-0">{leetcode.rating}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Core Tech Stack */}
-            {coreStack.length > 0 && (
-              <div className="space-y-2">
-                <h3 className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${style.textLight}`}>Core Stack</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {coreStack.map((tech, idx) => (
-                    <span key={idx} className={`px-2 py-0.5 rounded text-[10px] font-bold ${style.pillBg}`}>
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Find me AT socials list */}
-            {hasSocials && (
-              <div className="space-y-2">
-                <h3 className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${style.textLight}`}>Find me at</h3>
-                <div className="space-y-1.5 text-xs font-bold min-w-0">
-                  {hero.socials?.github && (
-                    <a
-                      href={`https://github.com/${hero.socials.github}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
-                    >
-                      <Github size={13} className={`shrink-0 ${style.textLight}`} />
-                      <span className="truncate min-w-0">github.com/{hero.socials.github}</span>
-                    </a>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4 w-full">
+              {/* Quick Stats box */}
+              <div className={`p-3.5 sm:p-4 rounded-xl space-y-2.5 ${style.leftCardBg}`}>
+                <h3 className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${style.textLight}`}>Quick Stats</h3>
+                <div className="space-y-1.5 text-xs font-semibold">
+                  {repoCount > 0 && (
+                    <div className="flex justify-between items-center gap-2">
+                      <span className={style.textMuted}>Repositories</span>
+                      <span className="text-current shrink-0">{repoCount} public</span>
+                    </div>
                   )}
-                  {hero.socials?.linkedin && (
-                    <a
-                      href={`https://linkedin.com/in/${hero.socials.linkedin}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
-                    >
-                      <Linkedin size={13} className={`shrink-0 ${style.textLight}`} />
-                      <span className="truncate min-w-0">linkedin.com/in/{hero.socials.linkedin}</span>
-                    </a>
+                  {starsCount > 0 && (
+                    <div className="flex justify-between items-center gap-2">
+                      <span className={style.textMuted}>Stars received</span>
+                      <span className="text-current shrink-0">★ {starsCount} total</span>
+                    </div>
                   )}
                   {leetcode && leetcode.username && (
-                    <a
-                      href={`https://leetcode.com/${leetcode.username}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
-                    >
-                      <Terminal size={13} className={`shrink-0 ${style.textLight}`} />
-                      <span className="truncate min-w-0">leetcode.com/{leetcode.username}</span>
-                    </a>
+                    <div className="flex justify-between items-center gap-2">
+                      <span className={style.textMuted}>LeetCode Solved</span>
+                      <span className="text-current shrink-0">{leetcode.solved} problems</span>
+                    </div>
                   )}
-                  {hero.socials?.twitter && (
-                    <a
-                      href={`https://twitter.com/${hero.socials.twitter}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
-                    >
-                      <Twitter size={13} className={`shrink-0 ${style.textLight}`} />
-                      <span className="truncate min-w-0">@{hero.socials.twitter}</span>
-                    </a>
-                  )}
-                  {hero.socials?.website && (
-                    <a
-                      href={hero.socials.website.startsWith('http') ? hero.socials.website : `https://${hero.socials.website}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
-                    >
-                      <Globe size={13} className={`shrink-0 ${style.textLight}`} />
-                      <span className="truncate min-w-0">{hero.socials.website.replace(/https?:\/\//, '')}</span>
-                    </a>
-                  )}
-                  {hero.socials?.email && (
-                    <a
-                      href={`mailto:${hero.socials.email}`}
-                      className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
-                    >
-                      <Mail size={13} className={`shrink-0 ${style.textLight}`} />
-                      <span className="truncate min-w-0">{hero.socials.email}</span>
-                    </a>
+                  {leetcode && leetcode.rating && (
+                    <div className="flex justify-between items-center gap-2">
+                      <span className={style.textMuted}>CP Rating</span>
+                      <span className="text-current shrink-0">{leetcode.rating}</span>
+                    </div>
                   )}
                 </div>
               </div>
-            )}
+
+              {/* Core Tech Stack */}
+              {coreStack.length > 0 && (
+                <div className={`p-3.5 sm:p-4 rounded-xl space-y-2.5 ${style.leftCardBg}`}>
+                  <h3 className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${style.textLight}`}>Core Stack</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {coreStack.map((tech, idx) => (
+                      <span key={idx} className={`px-2 py-0.5 rounded text-[10px] font-bold ${style.pillBg}`}>
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Find me AT socials list */}
+              {hasSocials && (
+                <div className={`p-3.5 sm:p-4 rounded-xl space-y-2.5 sm:col-span-2 md:col-span-1 ${style.leftCardBg}`}>
+                  <h3 className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${style.textLight}`}>Find me at</h3>
+                  <div className="space-y-1.5 text-xs font-bold min-w-0">
+                    {hero.socials?.github && (
+                      <a
+                        href={`https://github.com/${hero.socials.github}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
+                      >
+                        <Github size={13} className={`shrink-0 ${style.textLight}`} />
+                        <span className="truncate min-w-0">github.com/{hero.socials.github}</span>
+                      </a>
+                    )}
+                    {hero.socials?.linkedin && (
+                      <a
+                        href={`https://linkedin.com/in/${hero.socials.linkedin}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
+                      >
+                        <Linkedin size={13} className={`shrink-0 ${style.textLight}`} />
+                        <span className="truncate min-w-0">linkedin.com/in/{hero.socials.linkedin}</span>
+                      </a>
+                    )}
+                    {leetcode && leetcode.username && (
+                      <a
+                        href={`https://leetcode.com/${leetcode.username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
+                      >
+                        <Terminal size={13} className={`shrink-0 ${style.textLight}`} />
+                        <span className="truncate min-w-0">leetcode.com/{leetcode.username}</span>
+                      </a>
+                    )}
+                    {hero.socials?.twitter && (
+                      <a
+                        href={`https://twitter.com/${hero.socials.twitter}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
+                      >
+                        <Twitter size={13} className={`shrink-0 ${style.textLight}`} />
+                        <span className="truncate min-w-0">@{hero.socials.twitter}</span>
+                      </a>
+                    )}
+                    {hero.socials?.website && (
+                      <a
+                        href={hero.socials.website.startsWith('http') ? hero.socials.website : `https://${hero.socials.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
+                      >
+                        <Globe size={13} className={`shrink-0 ${style.textLight}`} />
+                        <span className="truncate min-w-0">{hero.socials.website.replace(/https?:\/\//, '')}</span>
+                      </a>
+                    )}
+                    {hero.socials?.email && (
+                      <a
+                        href={`mailto:${hero.socials.email}`}
+                        className="flex items-center gap-2 hover:opacity-85 transition min-w-0"
+                      >
+                        <Mail size={13} className={`shrink-0 ${style.textLight}`} />
+                        <span className="truncate min-w-0">{hero.socials.email}</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </aside>
 
           {/* RIGHT MAIN COLUMN (col-span-8) - Scrolls down smoothly on desktop */}

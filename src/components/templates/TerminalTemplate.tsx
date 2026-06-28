@@ -34,14 +34,16 @@ export default function TerminalTemplate({ data, isDemo = false, onSubmitMessage
         command: 'system_init',
         output: (
           <div className="space-y-1 text-emerald-400/90 font-mono text-xs">
-            <p>=========================================================</p>
-            <p>██████╗ ███████╗██╗   ██╗██████╗  ██████╗ ██████╗ ████████╗</p>
-            <p>██╔══██╗██╔════╝██║   ██║██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝</p>
-            <p>██║  ██║█████╗  ██║   ██║██████╔╝██║   ██║██████╔╝   ██║   </p>
-            <p>██║  ██║██╔══╝  ╚██╗ ██╔╝██╔═══╝ ██║   ██║██╔══██╗   ██║   </p>
-            <p>██████╔╝███████╗ ╚████╔╝ ██║     ╚██████╔╝██║  ██║   ██║   </p>
-            <p>╚═════╝ ╚══════╝  ╚═══╝  ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   </p>
-            <p>=========================================================</p>
+            <pre className="font-mono text-[5px] min-[380px]:text-[6px] min-[480px]:text-[8px] sm:text-[10px] md:text-xs leading-none tracking-tight select-none whitespace-pre overflow-x-visible">
+{`=========================================================
+██████╗ ███████╗██╗   ██╗██████╗  ██████╗ ██████╗ ████████╗
+██╔══██╗██╔════╝██║   ██║██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝
+██║  ██║█████╗  ██║   ██║██████╔╝██║   ██║██████╔╝   ██║   
+██║  ██║██╔══╝  ╚██╗ ██╔╝██╔═══╝ ██║   ██║██╔══██╗   ██║   
+██████╔╝███████╗ ╚████╔╝ ██║     ╚██████╔╝██║  ██║   ██║   
+╚═════╝ ╚══════╝  ╚═══╝  ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
+=========================================================`}
+            </pre>
             <p className="mt-2 text-zinc-300 font-bold">Welcome to {hero.name || 'User'}'s Terminal Portfolio OS v1.0.0</p>
             <p className="text-zinc-400">Type <span className="text-emerald-400 font-bold">help</span> to view available commands and explore my profile.</p>
             <p className="text-zinc-500">---------------------------------------------------------</p>
