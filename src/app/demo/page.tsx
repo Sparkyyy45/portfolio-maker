@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Github, FileText, Sparkles, Plus, ArrowRight, Check, Loader2, 
-  BarChart2, MessageSquare, Palette, User, Globe
+  BarChart2, MessageSquare, Palette, User, Globe, Eye
 } from 'lucide-react';
 import DemoTourBanner from '@/components/DemoTourBanner';
 import PortfolioPreview from '@/components/PortfolioPreview';
@@ -16,6 +16,7 @@ export default function DemoPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [activeTab, setActiveTab] = useState<'github' | 'resume' | 'blank'>('github');
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
   
   // Custom Portfolio State
   const [content, setContent] = useState<PortfolioContent>(INITIAL_PORTFOLIO_CONTENT);
@@ -352,7 +353,9 @@ export default function DemoPage() {
         {step === 2 && (
           <div className="flex flex-col lg:flex-row min-h-[calc(100vh-5rem)] border-t border-border-primary relative z-10">
             {/* Editor Sidebar */}
-            <div className="w-full lg:w-96 bg-bg-surface border-r border-border-primary flex flex-col shrink-0">
+            <div className={`w-full lg:w-96 bg-bg-surface border-r border-border-primary flex flex-col shrink-0 ${
+              showMobilePreview ? 'hidden lg:flex' : 'flex'
+            }`}>
               {/* Tab Selector */}
               <div className="flex border-b border-border-primary p-1.5 bg-bg-primary/30">
                 <button
@@ -529,7 +532,9 @@ export default function DemoPage() {
             </div>
 
             {/* Sandbox Live Frame Render */}
-            <div className="flex-1 bg-bg-primary/30 overflow-y-auto p-4 sm:p-8 flex items-start justify-center max-h-[calc(100vh-4rem)]">
+            <div className={`flex-1 bg-bg-primary/30 overflow-y-auto p-4 sm:p-8 ${
+              showMobilePreview ? 'flex' : 'hidden lg:flex'
+            } items-start justify-center max-h-[calc(100vh-4rem)]`}>
               <div className="w-full max-w-4xl bg-bg-surface border border-border-primary rounded-xl overflow-hidden shadow-sm relative">
                 <div className="absolute top-0 inset-x-0 h-1 bg-accent/20 z-10" />
                 <div className="p-3 bg-bg-surface border-b border-border-primary flex items-center justify-between text-3xs font-bold text-text-tertiary select-none">
@@ -546,6 +551,21 @@ export default function DemoPage() {
                 </div>
               </div>
             </div>
+            <button
+              type="button"
+              onClick={() => setShowMobilePreview((prev) => !prev)}
+              className="fixed bottom-6 right-6 z-40 lg:hidden flex items-center gap-1.5 px-4 py-2.5 bg-accent hover:bg-accent-hover text-text-inverse text-xs font-bold rounded-full shadow-lg shadow-accent/20 border border-accent/10 transition active:scale-95 cursor-pointer"
+            >
+              {showMobilePreview ? (
+                <>
+                  <Palette size={14} /> Show Editor
+                </>
+              ) : (
+                <>
+                  <Eye size={14} /> Show Preview
+                </>
+              )}
+            </button>
           </div>
         )}
 

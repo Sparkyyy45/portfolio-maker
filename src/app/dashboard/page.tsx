@@ -69,6 +69,7 @@ export default function DashboardPage() {
 
   // Copy URL state
   const [copied, setCopied] = useState(false);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) router.push('/login');
@@ -679,7 +680,9 @@ export default function DashboardPage() {
         <ErrorBoundary>
           {/* WORKSPACE AREA */}
           <div
-          className="w-full md:w-1/2 border-r border-border-primary flex flex-col overflow-y-auto h-full bg-bg-primary"
+          className={`w-full md:w-1/2 border-r border-border-primary flex flex-col overflow-y-auto h-full bg-bg-primary ${
+            activeDashboardTab === 'edit' && showMobilePreview ? 'hidden md:flex' : 'flex'
+          }`}
         >
 
           {/* OVERVIEW DASHBOARD VIEW */}
@@ -1515,7 +1518,9 @@ export default function DashboardPage() {
 
         {/* RIGHT PREVIEW */}
         <div
-          className="overflow-y-auto hidden md:flex md:w-1/2 flex-col relative bg-bg-surface/30 p-5 shrink-0"
+          className={`overflow-y-auto ${
+            activeDashboardTab === 'edit' && showMobilePreview ? 'flex w-full h-full' : 'hidden md:flex md:w-1/2'
+          } flex-col relative bg-bg-surface/30 p-5 shrink-0`}
         >
           <div className="flex justify-between items-center mb-3 shrink-0 gap-4">
             <div className="flex items-center gap-4">
@@ -1656,6 +1661,23 @@ export default function DashboardPage() {
 
           </div>
         </div>
+      )}
+      {activeDashboardTab === 'edit' && (
+        <button
+          type="button"
+          onClick={() => setShowMobilePreview((prev) => !prev)}
+          className="fixed bottom-6 right-6 z-40 md:hidden flex items-center gap-1.5 px-4 py-2.5 bg-accent hover:bg-accent-hover text-text-inverse text-xs font-bold rounded-full shadow-lg shadow-accent/20 border border-accent/10 transition active:scale-95 cursor-pointer"
+        >
+          {showMobilePreview ? (
+            <>
+              <Edit size={14} /> Show Editor
+            </>
+          ) : (
+            <>
+              <Eye size={14} /> Show Preview
+            </>
+          )}
+        </button>
       )}
         </ErrorBoundary>
       </main>

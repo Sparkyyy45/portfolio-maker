@@ -11,7 +11,7 @@ import { PortfolioContent, ProjectData, ExperienceData, SkillCategory, Education
 import { ToastContainer, ToastItem } from '@/components/Toast';
 import {
   FileText, Github, FilePlus, Sparkles, Loader2, Save, ArrowLeft, Plus, Trash2, CheckCircle2, AlertCircle,
-  ChevronLeft, ChevronRight, Sliders, Palette, RefreshCw, X, ArrowUpRight, Check
+  ChevronLeft, ChevronRight, Sliders, Palette, RefreshCw, X, ArrowUpRight, Check, Eye, Edit
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -22,6 +22,7 @@ export default function OnboardingPage() {
   // Onboarding Stage: 'method' | 'editor' | 'username'
   const [stage, setStage] = useState<'method' | 'editor' | 'username'>('method');
   const [loadingState, setLoadingState] = useState<string>(''); // empty if not loading
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
 
   // Portfolio Content State
   const [content, setContent] = useState<PortfolioContent>(INITIAL_PORTFOLIO_CONTENT);
@@ -623,7 +624,9 @@ export default function OnboardingPage() {
         <main className="flex-1 flex flex-col md:flex-row overflow-hidden relative z-10">
 
           {/* LEFT PANEL: FORM EDITOR */}
-          <div className="w-full md:w-[45%] border-r border-border-primary flex flex-col overflow-y-auto bg-bg-surface/30">
+          <div className={`w-full md:w-[45%] border-r border-border-primary flex flex-col overflow-y-auto bg-bg-surface/30 ${
+            showMobilePreview ? 'hidden md:flex' : 'flex'
+          }`}>
             {/* Editor Navigation */}
             <div className="flex border-b border-border-primary bg-bg-surface p-2 overflow-x-auto gap-1 shrink-0">
               {(['design', 'hero', 'experience', 'projects', 'skills', 'education', 'certifications'] as const).map((tab) => (
@@ -1201,7 +1204,9 @@ export default function OnboardingPage() {
           </div>
 
           {/* RIGHT PANEL: LIVE PORTFOLIO PREVIEW */}
-          <div className="flex-1 overflow-y-auto border-t md:border-t-0 border-border-primary flex flex-col relative bg-bg-primary min-h-[500px]">
+          <div className={`flex-1 overflow-y-auto border-t md:border-t-0 border-border-primary flex flex-col relative bg-bg-primary min-h-[500px] ${
+            showMobilePreview ? 'flex' : 'hidden md:flex'
+          }`}>
             <div className="flex justify-between items-center px-6 py-3 border-b border-border-primary bg-bg-surface shrink-0 z-20">
               <div className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -1256,6 +1261,23 @@ export default function OnboardingPage() {
             </div>
           </div>
 
+          {stage === 'editor' && (
+            <button
+              type="button"
+              onClick={() => setShowMobilePreview((prev) => !prev)}
+              className="fixed bottom-6 right-6 z-40 md:hidden flex items-center gap-1.5 px-4 py-2.5 bg-accent hover:bg-accent-hover text-text-inverse text-xs font-bold rounded-full shadow-lg shadow-accent/20 border border-accent/10 transition active:scale-95 cursor-pointer"
+            >
+              {showMobilePreview ? (
+                <>
+                  <Edit size={14} /> Show Editor
+                </>
+              ) : (
+                <>
+                  <Eye size={14} /> Show Preview
+                </>
+              )}
+            </button>
+          )}
         </main>
       )}
 
