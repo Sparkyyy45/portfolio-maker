@@ -41,10 +41,19 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
 export async function updateProfile(userId: string, updates: Partial<Profile>): Promise<boolean> {
   if (!supabase) return false;
 
+  let email = updates.email;
+  if (!email) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.email) {
+      email = user.email;
+    }
+  }
+
   const { error } = await supabase
     .from('profiles')
     .upsert({
       id: userId,
+      ...(email ? { email } : {}),
       ...updates
     });
 

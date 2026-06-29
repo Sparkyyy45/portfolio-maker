@@ -47,6 +47,7 @@ export async function POST(request: Request) {
         .from('profiles')
         .upsert({
           id: user.id,
+          email: user.email,
           ...profileUpdates
         });
 
