@@ -13,8 +13,6 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
-  Github,
-  Code2,
   Zap,
   Palette
 } from 'lucide-react';
@@ -127,98 +125,7 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* FLOATING PRODUCT SHOWCASE */}
-      <section className="px-6 max-w-6xl mx-auto mb-32 relative">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative"
-        >
-          {/* Decorative blur behind the mockup */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-transparent to-warm/10 blur-3xl -z-10 rounded-[3rem]"></div>
-          
-          {/* Main Mockup Window */}
-          <div className="bg-white rounded-2xl md:rounded-[2rem] border border-border-primary shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] overflow-hidden relative z-10 transform md:-rotate-1 hover:rotate-0 transition-transform duration-700 ease-out">
-            <div className="bg-bg-surface border-b border-border-primary px-4 py-3 flex items-center justify-between">
-              <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-border-primary/80"></div>
-                <div className="w-3 h-3 rounded-full bg-border-primary/80"></div>
-                <div className="w-3 h-3 rounded-full bg-border-primary/80"></div>
-              </div>
-              <div className="flex items-center gap-1.5 bg-white text-text-tertiary text-xs px-3 py-1.5 rounded-md border border-border-primary shadow-sm font-mono tracking-tight">
-                <LinkIcon size={12}/> devport.com/priyasharma
-              </div>
-              <div className="w-12"></div> {/* Spacer for flex balance */}
-            </div>
-            
-            {/* Inner Portfolio Layout */}
-            <div className="p-8 md:p-14 bg-bg-primary flex flex-col md:flex-row gap-12 text-left relative overflow-hidden">
-              <div className="flex-1 relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full text-xs font-semibold mb-6">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                  Open to work
-                </div>
-                <h2 className="text-4xl md:text-5xl font-fraunces font-bold text-text-primary mb-3">Priya Sharma</h2>
-                <p className="text-text-secondary text-xl mb-6 font-medium">Frontend Engineer</p>
-                <p className="text-text-secondary leading-relaxed mb-10 max-w-lg text-lg">
-                  I build beautiful, performant web applications using React and Tailwind CSS. Previously interned at Amazon. Passionate about UX and open source.
-                </p>
-                
-                <h3 className="font-bold text-text-primary mb-4 flex items-center gap-2"><Code2 size={18}/> Featured Projects</h3>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="p-5 bg-white border border-border-primary rounded-xl hover:shadow-lg transition-shadow duration-300 group cursor-pointer">
-                    <h4 className="font-bold text-text-primary group-hover:text-accent transition-colors">E-Commerce Dashboard</h4>
-                    <p className="text-sm text-text-tertiary mt-1 mb-3">Next.js · Tailwind · Prisma</p>
-                    <div className="w-full h-1 bg-border-primary rounded-full overflow-hidden">
-                       <div className="w-3/4 h-full bg-accent"></div>
-                    </div>
-                  </div>
-                  <div className="p-5 bg-white border border-border-primary rounded-xl hover:shadow-lg transition-shadow duration-300 group cursor-pointer">
-                    <h4 className="font-bold text-text-primary group-hover:text-accent transition-colors">Real-time Chat App</h4>
-                    <p className="text-sm text-text-tertiary mt-1 mb-3">React · Socket.io · Node</p>
-                    <div className="w-full h-1 bg-border-primary rounded-full overflow-hidden">
-                       <div className="w-1/2 h-full bg-warm"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="w-full md:w-72 bg-white rounded-2xl p-6 border border-border-primary shadow-sm h-fit relative z-10">
-                <h3 className="font-bold text-text-primary mb-4 flex items-center gap-2"><Github size={18}/> GitHub Stats</h3>
-                <div className="space-y-4">
-                  <div>
-                    <div className="text-sm text-text-tertiary mb-1">Top Languages</div>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-semibold">TypeScript</span>
-                      <span className="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-semibold">JavaScript</span>
-                      <span className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-semibold">CSS</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-text-tertiary mb-1">Stars Earned</div>
-                    <div className="text-2xl font-bold font-fraunces">128 ✨</div>
-                  </div>
-                </div>
-              </div>
 
-              {/* Decorative floating code snippet */}
-              <div className="hidden lg:block absolute -right-6 top-1/2 transform -translate-y-1/2 rotate-3 bg-[#1e1e1e] text-gray-300 p-4 rounded-xl shadow-2xl font-mono text-xs w-64 border border-gray-700 opacity-90">
-                <div className="flex gap-1.5 mb-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-gray-600"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-gray-600"></div>
-                </div>
-                <div className="text-pink-400">const <span className="text-blue-300">portfolio</span> = {'{'}</div>
-                <div className="pl-4 text-green-300">status: <span className="text-yellow-300">"Deployed"</span>,</div>
-                <div className="pl-4 text-green-300">timeToBuild: <span className="text-purple-300">"60s"</span>,</div>
-                <div className="pl-4 text-green-300">looks: <span className="text-yellow-300">"Amazing"</span></div>
-                <div>{'}'};</div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
 
       {/* PROBLEM / SOLUTION CONTRAST */}
       <section className="py-24 px-6 max-w-5xl mx-auto">
