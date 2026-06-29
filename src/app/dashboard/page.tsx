@@ -5,15 +5,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/utils/supabase';
 import {
-  fetchProfile, fetchPortfolio, updateProfile, savePortfolio, checkUsernameAvailable
+  fetchProfile, fetchPortfolio, updateProfile, savePortfolio, checkUsernameAvailable,
+  fetchPortfolioStats, PortfolioStats
 } from '@/utils/db';
 import { PortfolioContent, ProjectData, ExperienceData, SkillCategory, EducationData, CertificationData, Profile, LeetCodeStats, GitHubRepoData, SectionsVisibility } from '@/types/portfolio';
 import PortfolioPreview from '@/components/PortfolioPreview';
 import { ToastContainer, ToastItem } from '@/components/Toast';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { extractTextFromPdf } from '@/utils/pdf';
 import { fetchGitHubData } from '@/utils/github';
-import { parseLinkedInExport } from '@/utils/linkedin';
 import { fetchLeetCodeData } from '@/utils/leetcode';
 import {
   Sparkles, Loader2, Save, LogOut, Settings, Edit, Plus, Trash2, Globe, Eye, EyeOff,
@@ -28,6 +27,7 @@ export default function DashboardPage() {
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [content, setContent] = useState<PortfolioContent | null>(null);
+  const [stats, setStats] = useState<PortfolioStats>({ views: 0, clicks: 0, emails: 0 });
 
   const [activeDashboardTab, setActiveDashboardTab] = useState<'overview' | 'edit' | 'settings'>('overview');
   const [activeEditTab, setActiveEditTab] = useState<'hero' | 'experience' | 'projects' | 'skills' | 'leetcode' | 'education' | 'certifications' | 'design'>('hero');
@@ -50,11 +50,9 @@ export default function DashboardPage() {
   }, []);
 
   // Source updates modal states
-  const [updateModalSource, setUpdateModalSource] = useState<'github' | 'linkedin' | 'resume' | 'leetcode' | null>(null);
+  const [updateModalSource, setUpdateModalSource] = useState<'github' | 'resume' | 'leetcode' | null>(null);
   const [modalGitUsername, setModalGitUsername] = useState('');
-  const [modalLinkedinUrl, setModalLinkedinUrl] = useState('');
-  const [modalLinkedinZip, setModalLinkedinZip] = useState<File | null>(null);
-  const [modalPdfFile, setModalPdfFile] = useState<File | null>(null);
+  const [modalResumeText, setModalResumeText] = useState('');
   const [modalLeetcodeUsername, setModalLeetcodeUsername] = useState('');
   const [syncingSource, setSyncingSource] = useState(false);
   const [modalError, setModalError] = useState('');
@@ -100,6 +98,10 @@ export default function DashboardPage() {
           };
         }
         setContent(portContent);
+        
+        // Fetch real analytics statistics
+        const portfolioStats = await fetchPortfolioStats(user.id);
+        setStats(portfolioStats);
       } catch (err) {
         console.error('Error loading dashboard data:', err);
       } finally {
@@ -500,74 +502,37 @@ export default function DashboardPage() {
     }
   };
 
-  const handleModalLinkedinUrlSync = async (e: React.FormEvent) => {
+  const handleModalResumeTextSync = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!modalLinkedinUrl.trim() || !content) return;
+    if (!modalResumeText.trim() || !content) return;
     setSyncingSource(true);
     setModalError('');
     try {
-      const res = await fetch('/api/linkedin-import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: modalLinkedinUrl.trim() }),
-      });
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || 'Failed to parse LinkedIn URL.');
-      }
-      const data = await res.json();
-      const updatedContent = { ...content, ...data };
-      setContent(updatedContent);
-      await savePortfolio(user!.id, updatedContent);
-      addToast('LinkedIn URL details synced successfully!', 'success');
-      setUpdateModalSource(null);
-    } catch (err: any) {
-      setModalError(err.message || 'Sync failed.');
-    } finally {
-      setSyncingSource(false);
-    }
-  };
-
-  const handleModalLinkedinZipSync = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!modalLinkedinZip || !content) return;
-    setSyncingSource(true);
-    setModalError('');
-    try {
-      const data = await parseLinkedInExport(modalLinkedinZip);
-      const updatedContent = { ...content, ...data };
-      setContent(updatedContent);
-      await savePortfolio(user!.id, updatedContent);
-      addToast('Parsed and merged LinkedIn ZIP data export!', 'success');
-      setUpdateModalSource(null);
-    } catch (err: any) {
-      setModalError(err.message || 'Failed to parse ZIP.');
-    } finally {
-      setSyncingSource(false);
-    }
-  };
-
-  const handleModalResumeSync = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!modalPdfFile || !content) return;
-    setSyncingSource(true);
-    setModalError('');
-    try {
-      const text = await extractTextFromPdf(modalPdfFile);
       const res = await fetch('/api/parse-resume', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: modalResumeText.trim() }),
       });
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData.error || 'Failed parsing resume.');
       }
       const data = await res.json();
-      const updatedContent = { ...content, ...data };
+      const updatedContent = {
+        ...content,
+        ...data,
+        hero: {
+          ...content.hero,
+          ...data.hero,
+          socials: {
+            ...content.hero?.socials,
+            ...data.hero?.socials,
+          }
+        }
+      };
       setContent(updatedContent);
       await savePortfolio(user!.id, updatedContent);
-      addToast('Resume PDF parsed and imported successfully!', 'success');
+      addToast('Resume text parsed and imported successfully!', 'success');
       setUpdateModalSource(null);
     } catch (err: any) {
       setModalError(err.message || 'Resume parsing failed.');
@@ -806,15 +771,15 @@ export default function DashboardPage() {
                     
                     <div className="grid grid-cols-3 gap-2 pt-3">
                       <div className="text-center">
-                        <div className="text-lg font-black">284</div>
+                        <div className="text-lg font-black">{stats.views}</div>
                         <div className="text-[10px] font-bold text-text-secondary uppercase">Total views</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-lg font-black">47</div>
+                        <div className="text-lg font-black">{stats.clicks}</div>
                         <div className="text-[10px] font-bold text-text-secondary uppercase">Recruiter Click</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-lg font-black">12</div>
+                        <div className="text-lg font-black">{stats.emails}</div>
                         <div className="text-[10px] font-bold text-text-secondary uppercase">Emails sent</div>
                       </div>
                     </div>
@@ -835,19 +800,13 @@ export default function DashboardPage() {
                       type: 'github' as const
                     },
                     {
-                      name: 'LinkedIn Milestones',
-                      desc: content?.hero.socials?.linkedin ? `@${content.hero.socials.linkedin} · imported` : 'Not synced',
-                      connected: !!content?.hero.socials?.linkedin,
-                      type: 'linkedin' as const
-                    },
-                    {
                       name: 'LeetCode Competitive stats',
                       connected: !!content?.leetcode?.username,
                       desc: content?.leetcode?.username ? `@${content.leetcode.username} · ${content.leetcode.solved} solved` : 'Not synced',
                       type: 'leetcode' as const
                     },
                     {
-                      name: 'Resume PDF',
+                      name: 'Resume Text',
                       desc: content?.experience && content.experience.length > 0 ? 'Milestones extracted via AI' : 'Not parsed',
                       connected: !!content?.experience && content.experience.length > 0,
                       type: 'resume' as const
@@ -987,6 +946,17 @@ export default function DashboardPage() {
                           <label htmlFor="open-to-work-check" className="text-xs font-bold text-text-secondary">Open to work</label>
                         </div>
                       </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className={labelCls}>Recruiter Card Availability Date</label>
+                      <input
+                        type="text"
+                        value={content.hero.availability_date || ''}
+                        placeholder="Available from June 2025"
+                        onChange={(e) => handleHeroChange('availability_date', e.target.value)}
+                        className={inputCls}
+                      />
                     </div>
 
                     <h3 className={`${sectionHeaderCls} pt-3`}>Contact Handles</h3>
@@ -1590,7 +1560,7 @@ export default function DashboardPage() {
                 ? 'w-[375px] h-[667px] border-10 border-zinc-900 rounded-[2.5rem] shadow-2xl relative overflow-y-auto shrink-0 scrollbar-thin' 
                 : 'w-full h-full border border-border-primary rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] relative overflow-y-auto'
             } bg-bg-primary`}>
-              {content ? <PortfolioPreview data={content} isDemo={true} /> : (
+              {content ? <PortfolioPreview data={content} isDemo={true} viewsCount={stats.views} /> : (
                 <div className="absolute inset-0 flex items-center justify-center"><Loader2 size={18} className="animate-spin text-text-tertiary" /></div>
               )}
             </div>
@@ -1611,7 +1581,6 @@ export default function DashboardPage() {
 
             <h3 className="text-sm font-extrabold flex items-center gap-1.5 capitalize border-b border-border-primary pb-2.5">
               {updateModalSource === 'github' && <><Github size={16} /> Update GitHub Source</>}
-              {updateModalSource === 'linkedin' && <><Linkedin size={16} /> Update LinkedIn Source</>}
               {updateModalSource === 'resume' && <><FileText size={16} /> Update Resume Source</>}
               {updateModalSource === 'leetcode' && <><Terminal size={16} /> Update LeetCode Source</>}
             </h3>
@@ -1646,53 +1615,7 @@ export default function DashboardPage() {
               </form>
             )}
 
-            {/* LINKEDIN UPDATE FORM */}
-            {updateModalSource === 'linkedin' && (
-              <div className="space-y-4">
-                <form onSubmit={handleModalLinkedinUrlSync} className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-2xs font-semibold text-text-secondary uppercase font-bold">Sync via Profile URL</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="linkedin.com/in/username"
-                      value={modalLinkedinUrl}
-                      onChange={(e) => setModalLinkedinUrl(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-lg border border-border-primary bg-bg-primary text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={syncingSource || !modalLinkedinUrl.trim()}
-                    className="w-full py-2 bg-accent hover:bg-accent-hover text-text-inverse disabled:opacity-50 font-bold text-xs rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
-                  >
-                    {syncingSource ? <><Loader2 size={12} className="animate-spin" /> Syncing URL...</> : 'Sync via URL'}
-                  </button>
-                </form>
 
-                <div className="text-[10px] font-bold text-text-tertiary text-center uppercase tracking-wider">or upload data export</div>
-
-                <form onSubmit={handleModalLinkedinZipSync} className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-2xs font-semibold text-text-secondary uppercase">ZIP Export File</label>
-                    <input
-                      type="file"
-                      accept=".zip"
-                      required
-                      onChange={(e) => setModalLinkedinZip(e.target.files?.[0] || null)}
-                      className="block w-full text-xs text-text-secondary file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-border-primary file:text-xs file:font-semibold file:bg-bg-primary file:text-text-primary hover:file:bg-bg-surface cursor-pointer"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={syncingSource || !modalLinkedinZip}
-                    className="w-full py-2 bg-bg-surface hover:bg-bg-code border border-border-primary text-text-primary disabled:opacity-50 font-bold text-xs rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    {syncingSource ? <><Loader2 size={12} className="animate-spin" /> Parsing ZIP...</> : 'Parse ZIP Export'}
-                  </button>
-                </form>
-              </div>
-            )}
 
             {/* LEETCODE UPDATE FORM */}
             {updateModalSource === 'leetcode' && (
@@ -1720,23 +1643,23 @@ export default function DashboardPage() {
 
             {/* RESUME UPDATE FORM */}
             {updateModalSource === 'resume' && (
-              <form onSubmit={handleModalResumeSync} className="space-y-3">
+              <form onSubmit={handleModalResumeTextSync} className="space-y-3">
                 <div className="space-y-1">
-                  <label className="text-2xs font-semibold text-text-secondary uppercase">Upload Resume PDF</label>
-                  <input
-                    type="file"
-                    accept=".pdf"
+                  <label className="text-2xs font-semibold text-text-secondary uppercase">Paste Resume Text</label>
+                  <textarea
                     required
-                    onChange={(e) => setModalPdfFile(e.target.files?.[0] || null)}
-                    className="block w-full text-xs text-text-secondary file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-border-primary file:text-xs file:font-semibold file:bg-bg-primary file:text-text-primary hover:file:bg-bg-surface cursor-pointer"
+                    placeholder="Paste your resume text here..."
+                    value={modalResumeText}
+                    onChange={(e) => setModalResumeText(e.target.value)}
+                    className="w-full h-32 px-3 py-2 text-xs rounded-lg border border-border-primary bg-bg-primary text-text-primary focus:outline-none focus:ring-1 focus:ring-accent resize-none"
                   />
                 </div>
                 <button
                   type="submit"
-                  disabled={syncingSource || !modalPdfFile}
+                  disabled={syncingSource || !modalResumeText.trim()}
                   className="w-full py-2 bg-accent hover:bg-accent-hover text-text-inverse disabled:opacity-50 font-bold text-xs rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                 >
-                  {syncingSource ? <><Loader2 size={12} className="animate-spin" /> Extracting PDF...</> : 'Parse Resume PDF'}
+                  {syncingSource ? <><Loader2 size={12} className="animate-spin" /> Parsing...</> : 'Parse Resume Text'}
                 </button>
               </form>
             )}

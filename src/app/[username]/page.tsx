@@ -1,5 +1,6 @@
 import { fetchPortfolioByUsername } from '@/utils/db';
 import PortfolioPreview from '@/components/PortfolioPreview';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -116,17 +117,27 @@ export default async function UsernamePortfolioPage({ params }: PageProps) {
 
   const profileId = data.profile.id;
   const content = data.content;
+  
+  // Fetch views count for the recruiter card dynamically
+  const isDemo = username.toLowerCase() === 'suyash23';
+  let viewsCount = 43; // default fallback matching screenshot
+  if (!isDemo) {
+    const { fetchPortfolioStats } = await import('@/utils/db');
+    const stats = await fetchPortfolioStats(profileId);
+    viewsCount = stats.views;
+  }
 
   // Server Action for contact form — emails directly to owner
   async function handleMessageSubmitAction(msg: { name: string; email: string; content: string }) {
     'use server';
     const ownerEmail = data!.profile.email;
-    if (!ownerEmail) {
-      // Fallback: still save to DB if no email on profile
-      const { submitVisitorMessage } = await import('@/utils/db');
-      await submitVisitorMessage(profileId, msg.name, msg.email, msg.content);
-      return;
-    }
+    
+    // Always submit and save the visitor message to the database first
+    const { submitVisitorMessage } = await import('@/utils/db');
+    await submitVisitorMessage(profileId, msg.name, msg.email, msg.content);
+
+    if (!ownerEmail) return;
+
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const res = await fetch(`${baseUrl}/api/contact`, {
       method: 'POST',
@@ -175,8 +186,10 @@ export default async function UsernamePortfolioPage({ params }: PageProps) {
           <p>Sorry, this portfolio could not be loaded.</p>
         </div>
       }>
+        <AnalyticsTracker portfolioId={profileId} isDemo={isDemo} />
         <PortfolioPreview 
           data={content} 
+          viewsCount={viewsCount}
           onSubmitMessage={handleMessageSubmitAction} 
         />
       </ErrorBoundary>

@@ -3,16 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { extractTextFromPdf } from '@/utils/pdf';
 import { fetchGitHubData } from '@/utils/github';
-import { parseLinkedInExport } from '@/utils/linkedin';
 import { INITIAL_PORTFOLIO_CONTENT } from '@/utils/constants';
 import { checkUsernameAvailable, updateProfile, savePortfolio } from '@/utils/db';
 import PortfolioPreview from '@/components/PortfolioPreview';
 import { PortfolioContent, ProjectData, ExperienceData, SkillCategory, EducationData, CertificationData, SectionsVisibility } from '@/types/portfolio';
 import { ToastContainer, ToastItem } from '@/components/Toast';
 import {
-  FileText, Github, FilePlus, Sparkles, Loader2, Save, ArrowLeft, Plus, Trash2, CheckCircle2, AlertCircle, Linkedin,
+  FileText, Github, FilePlus, Sparkles, Loader2, Save, ArrowLeft, Plus, Trash2, CheckCircle2, AlertCircle,
   ChevronLeft, ChevronRight, Sliders, Palette, RefreshCw, X, ArrowUpRight, Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,13 +48,9 @@ export default function OnboardingPage() {
   // Input states for parser/github
   const [gitUsername, setGitUsername] = useState('');
   const [gitError, setGitError] = useState('');
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [pdfError, setPdfError] = useState('');
+  const [resumeText, setResumeText] = useState('');
+  const [resumeError, setResumeError] = useState('');
 
-  // LinkedIn states
-  const [linkedinUrl, setLinkedinUrl] = useState('');
-  const [linkedinError, setLinkedinError] = useState('');
-  const [linkedinZipFile, setLinkedinZipFile] = useState<File | null>(null);
 
   // Username selection states
   const [username, setUsername] = useState('');
@@ -183,48 +177,7 @@ export default function OnboardingPage() {
     setStage('editor');
   };
 
-  // Handle LinkedIn URL Import
-  const handleLinkedInUrlImport = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!linkedinUrl.trim()) return;
-    setLoadingState('Importing from LinkedIn...');
-    setLinkedinError('');
-    try {
-      const response = await fetch('/api/linkedin-import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: linkedinUrl.trim() }),
-      });
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || 'Failed to import from LinkedIn.');
-      }
-      const data = await response.json();
-      setContent({ ...INITIAL_PORTFOLIO_CONTENT, ...data });
-      setStage('editor');
-    } catch (err: any) {
-      setLinkedinError(err.message || 'LinkedIn import failed.');
-    } finally {
-      setLoadingState('');
-    }
-  };
 
-  // Handle LinkedIn ZIP Import
-  const handleLinkedInZipImport = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!linkedinZipFile) return;
-    setLoadingState('Parsing LinkedIn data export...');
-    setLinkedinError('');
-    try {
-      const data = await parseLinkedInExport(linkedinZipFile);
-      setContent({ ...INITIAL_PORTFOLIO_CONTENT, ...data });
-      setStage('editor');
-    } catch (err: any) {
-      setLinkedinError(err.message || 'Failed to parse LinkedIn export.');
-    } finally {
-      setLoadingState('');
-    }
-  };
 
   // Handle GitHub Sync
   const handleGitHubImport = async (e: React.FormEvent) => {
@@ -246,20 +199,17 @@ export default function OnboardingPage() {
     }
   };
 
-  // Handle Resume Upload & Parse
-  const handleResumeUpload = async (e: React.FormEvent) => {
+  // Handle Resume Text Paste
+  const handleResumeTextSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!pdfFile) return;
-    setLoadingState('Reading PDF resume...');
-    setPdfError('');
+    if (!resumeText.trim()) return;
+    setLoadingState('Analyzing resume with Gemini AI...');
+    setResumeError('');
     try {
-      const extractedText = await extractTextFromPdf(pdfFile);
-      setLoadingState('Analyzing resume with Gemini AI...');
-
       const response = await fetch('/api/parse-resume', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: extractedText }),
+        body: JSON.stringify({ text: resumeText.trim() }),
       });
 
       if (!response.ok) {
@@ -268,11 +218,26 @@ export default function OnboardingPage() {
       }
 
       const parsedJSON: PortfolioContent = await response.json();
-      setContent(parsedJSON);
+      setContent({
+        ...INITIAL_PORTFOLIO_CONTENT,
+        ...parsedJSON,
+        hero: {
+          ...INITIAL_PORTFOLIO_CONTENT.hero,
+          ...parsedJSON.hero,
+          socials: {
+            ...INITIAL_PORTFOLIO_CONTENT.hero.socials,
+            ...parsedJSON.hero?.socials,
+          }
+        },
+        sections_visibility: {
+          ...INITIAL_PORTFOLIO_CONTENT.sections_visibility,
+          ...parsedJSON.sections_visibility,
+        }
+      });
       setStage('editor');
     } catch (err: any) {
       console.error(err);
-      setPdfError(err.message || 'Error occurred while parsing resume.');
+      setResumeError(err.message || 'Error occurred while parsing resume.');
     } finally {
       setLoadingState('');
     }
@@ -556,32 +521,32 @@ export default function OnboardingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4">
 
-            {/* AI Resume Upload Card */}
+            {/* AI Resume Parser Card */}
             <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 transition flex flex-col justify-between space-y-4 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
               <div className="space-y-3">
                 <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit shadow-2xs">
                   <FileText size={20} />
                 </div>
-                <h3 className="text-base font-bold text-text-primary">AI Resume Parser</h3>
+                <h3 className="text-base font-bold text-text-primary">Paste Resume Text</h3>
                 <p className="text-xs text-text-secondary leading-relaxed">
-                  Upload your PDF resume. Gemini will parse layout texts, extract credentials, and format your timeline in seconds.
+                  Paste your resume content. Gemini will extract credentials, skills, and format your timeline in seconds.
                 </p>
               </div>
-              <form onSubmit={handleResumeUpload} className="space-y-3 pt-3">
-                <input
-                  type="file"
-                  accept=".pdf"
+              <form onSubmit={handleResumeTextSubmit} className="space-y-3 pt-3 flex flex-col h-full">
+                <textarea
                   required
-                  onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
-                  className="block w-full text-xs text-text-secondary file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-border-primary file:text-xs file:font-semibold file:bg-bg-primary file:text-text-primary hover:file:bg-bg-surface cursor-pointer"
+                  placeholder="Paste your resume text here..."
+                  value={resumeText}
+                  onChange={(e) => setResumeText(e.target.value)}
+                  className="w-full h-24 px-3 py-2 text-xs rounded-lg border border-border-primary bg-bg-primary text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-1 focus:ring-accent resize-none flex-1"
                 />
-                {pdfError && <p className="text-rose-500 text-2xs">{pdfError}</p>}
+                {resumeError && <p className="text-rose-500 text-2xs">{resumeError}</p>}
                 <button
                   type="submit"
-                  disabled={!pdfFile}
-                  className="w-full py-2 bg-accent hover:bg-accent-hover disabled:opacity-50 text-text-inverse font-semibold text-xs rounded-lg transition cursor-pointer"
+                  disabled={!resumeText.trim()}
+                  className="w-full py-2 bg-accent hover:bg-accent-hover disabled:opacity-50 text-text-inverse font-semibold text-xs rounded-lg transition cursor-pointer mt-auto"
                 >
                   Parse Resume
                 </button>
@@ -617,54 +582,6 @@ export default function OnboardingPage() {
                   Fetch Data
                 </button>
               </form>
-            </div>
-
-            {/* LinkedIn Import Card */}
-            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 transition flex flex-col justify-between space-y-4 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
-              <div className="space-y-3">
-                <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit shadow-2xs">
-                  <Linkedin size={20} />
-                </div>
-                <h3 className="text-base font-bold text-text-primary">Import LinkedIn</h3>
-                <p className="text-xs text-text-secondary leading-relaxed">
-                  Paste your LinkedIn profile URL for instant import, or upload your data export ZIP for complete details.
-                </p>
-              </div>
-              <div className="space-y-3 pt-3">
-                <form onSubmit={handleLinkedInUrlImport} className="space-y-2">
-                  <input
-                    type="text"
-                    placeholder="linkedin.com/in/username"
-                    value={linkedinUrl}
-                    onChange={(e) => setLinkedinUrl(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-border-primary bg-bg-primary text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-1 focus:ring-accent"
-                  />
-                  <button
-                    type="submit"
-                    disabled={!linkedinUrl.trim()}
-                    className="w-full py-2 bg-accent hover:bg-accent-hover disabled:opacity-50 text-text-inverse font-semibold text-xs rounded-lg transition cursor-pointer"
-                  >
-                    Import via URL
-                  </button>
-                </form>
-                <div className="text-[10px] font-bold text-text-tertiary text-center uppercase">or upload data export</div>
-                <form onSubmit={handleLinkedInZipImport}>
-                  <input
-                    type="file"
-                    accept=".zip"
-                    onChange={(e) => setLinkedinZipFile(e.target.files?.[0] || null)}
-                    className="block w-full text-xs text-text-secondary file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-border-primary file:text-xs file:font-semibold file:bg-bg-primary file:text-text-primary hover:file:bg-bg-surface cursor-pointer"
-                  />
-                  <button
-                    type="submit"
-                    disabled={!linkedinZipFile}
-                    className="w-full mt-2 py-2 bg-bg-surface hover:bg-bg-code border border-border-primary text-text-primary font-semibold text-xs rounded-lg transition cursor-pointer disabled:opacity-50"
-                  >
-                    Parse ZIP Export
-                  </button>
-                </form>
-                {linkedinError && <p className="text-rose-500 text-2xs">{linkedinError}</p>}
-              </div>
             </div>
 
             {/* Blank Sheet Card */}

@@ -7,7 +7,7 @@ import { ArrowRight, Lock, Mail, Loader2, Sparkles, Github } from 'lucide-react'
 import Link from 'next/link';
 
 export default function LoginPage() {
-  const { user, signIn, signUp, loading, signInWithOAuth } = useAuth();
+  const { user, signIn, signUp, loading } = useAuth();
   const router = useRouter();
 
   const [isSignUp, setIsSignUp] = useState(false);
@@ -48,19 +48,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleSocialSignIn = async (provider: 'google' | 'github') => {
-    setError('');
-    setSubmitLoading(true);
-    try {
-      const { error: oAuthError } = await signInWithOAuth(provider);
-      if (oAuthError) throw oAuthError;
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || `${provider} sign in failed. Please try again.`);
-    } finally {
-      setSubmitLoading(false);
-    }
-  };
+
 
   if (loading) {
     return (

@@ -23,6 +23,7 @@ export interface HeroData {
   avatar_url?: string;
   location?: string;
   open_to_work?: boolean;
+  availability_date?: string;
   socials: SocialLinks;
 }
 

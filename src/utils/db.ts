@@ -165,3 +165,71 @@ export async function fetchVisitorMessages(userId: string): Promise<VisitorMessa
   }
   return data || [];
 }
+
+export interface PortfolioStats {
+  views: number;
+  clicks: number;
+  emails: number;
+}
+
+export async function fetchPortfolioStats(userId: string): Promise<PortfolioStats> {
+  if (!supabase) return { views: 0, clicks: 0, emails: 0 };
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const dateStr = thirtyDaysAgo.toISOString();
+
+  let views = 0;
+  let clicks = 0;
+  let emails = 0;
+
+  try {
+    const { count: viewsCount, error: viewsError } = await supabase
+      .from('analytics')
+      .select('id', { count: 'exact', head: true })
+      .eq('portfolio_id', userId)
+      .eq('event_type', 'view')
+      .gte('created_at', dateStr);
+
+    if (viewsError) {
+      if (viewsError.code === '42P01' || viewsError.message.includes('does not exist')) {
+        console.warn('Analytics table does not exist yet. Please run SQL migration.');
+      } else {
+        console.error('Error fetching views count:', viewsError);
+      }
+    } else {
+      views = viewsCount || 0;
+    }
+
+    const { count: clicksCount, error: clicksError } = await supabase
+      .from('analytics')
+      .select('id', { count: 'exact', head: true })
+      .eq('portfolio_id', userId)
+      .eq('event_type', 'recruiter_click')
+      .gte('created_at', dateStr);
+
+    if (!clicksError) {
+      clicks = clicksCount || 0;
+    }
+  } catch (e) {
+    console.error('Failed querying analytics table:', e);
+  }
+
+  try {
+    const { count: emailsCount, error: emailsError } = await supabase
+      .from('messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('portfolio_id', userId)
+      .gte('created_at', dateStr);
+
+    if (!emailsError) {
+      emails = emailsCount || 0;
+    } else {
+      console.error('Error fetching emails count:', emailsError);
+    }
+  } catch (e) {
+    console.error('Failed querying messages table:', e);
+  }
+
+  return { views, clicks, emails };
+}

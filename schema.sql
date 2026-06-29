@@ -117,3 +117,28 @@ $$ language plpgsql security definer;
 create or replace trigger on_auth_user_created
     after insert on auth.users
     for each row execute procedure public.handle_new_user();
+
+-- 6. Create ANALYTICS Table
+create table public.analytics (
+    id uuid default gen_random_uuid() primary key,
+    portfolio_id uuid references public.profiles(id) on delete cascade not null,
+    event_type text not null, -- 'view', 'recruiter_click'
+    visitor_ip text,
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable RLS for analytics
+alter table public.analytics enable row level security;
+
+-- Analytics Policies
+create policy "Allow public to insert analytics" 
+    on public.analytics for insert 
+    with check (true); -- Anyone visiting a profile can trigger page view / click events
+
+create policy "Allow users to view their own analytics" 
+    on public.analytics for select 
+    using (auth.uid() = portfolio_id);
+
+-- Indices for performance
+create index idx_analytics_portfolio_id on public.analytics(portfolio_id);
+create index idx_analytics_created_at on public.analytics(created_at);

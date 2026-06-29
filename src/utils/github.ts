@@ -43,7 +43,7 @@ export async function fetchGitHubData(username: string): Promise<Partial<Portfol
     }
     const profile: GitHubProfile = await profileResponse.json();
 
-    const reposResponse = await fetchWithTimeout(`https://api.github.com/users/${username}/repos?sort=updated&per_page=50`);
+    const reposResponse = await fetchWithTimeout(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
     if (!reposResponse.ok) {
       throw new Error('Failed to fetch GitHub repositories.');
     }

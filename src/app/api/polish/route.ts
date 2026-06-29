@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
+import Groq from 'groq-sdk';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
@@ -25,12 +26,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Text content is required' }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey === 'your-gemini-api-key') {
-      return NextResponse.json({ error: 'Gemini API key is not configured' }, { status: 500 });
-    }
+    const geminiKey = process.env.GEMINI_API_KEY;
+    const groqKey = process.env.GROQ_API_KEY;
 
-    const ai = new GoogleGenAI({ apiKey });
+    if ((!geminiKey || geminiKey === 'your-gemini-api-key') && (!groqKey || groqKey === 'your-groq-api-key-here')) {
+      return NextResponse.json({ 
+        error: 'AI API key is not configured. Please set GEMINI_API_KEY or GROQ_API_KEY in .env.local.' 
+      }, { status: 500 });
+    }
 
     const prompt = `
       You are an elite resume builder and recruiter coach.
@@ -51,17 +54,49 @@ export async function POST(request: NextRequest) {
       Provide ONLY the polished text without any additional conversational introduction or markdown wrapper blocks.
     `;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-    });
+    let polishedText = '';
 
-    const resultText = response.text;
-    if (!resultText) {
-      return NextResponse.json({ error: 'Failed to generate polished text from Gemini' }, { status: 500 });
+    // 1. Try Gemini first if key exists
+    if (geminiKey && geminiKey !== 'your-gemini-api-key') {
+      try {
+        const ai = new GoogleGenAI({ apiKey: geminiKey });
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: prompt,
+        });
+        polishedText = response.text?.trim() || '';
+      } catch (err: any) {
+        console.error('Gemini error during polishing, trying Groq fallback:', err);
+        if (!groqKey || groqKey === 'your-groq-api-key-here') {
+          throw err;
+        }
+      }
     }
 
-    return NextResponse.json({ polishedText: resultText.trim() });
+    // 2. Fallback to Groq if Gemini failed or key not present
+    if (!polishedText && groqKey && groqKey !== 'your-groq-api-key-here') {
+      const groq = new Groq({ apiKey: groqKey });
+      const completion = await groq.chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an elite resume builder and recruiter coach. Polish and rewrite the user input text.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      });
+      polishedText = completion.choices[0]?.message?.content?.trim() || '';
+    }
+
+    if (!polishedText) {
+      return NextResponse.json({ error: 'Failed to generate polished text from AI' }, { status: 500 });
+    }
+
+    return NextResponse.json({ polishedText });
   } catch (error: any) {
     console.error('Error in polish route:', error);
     return NextResponse.json(
