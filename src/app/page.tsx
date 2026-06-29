@@ -119,8 +119,8 @@ export default function LandingPage() {
             <Link href="/login" className="group w-full sm:w-auto flex items-center justify-center gap-2 bg-accent text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-accent-hover transition-all shadow-xl shadow-accent/25 hover:shadow-accent/40 hover:-translate-y-0.5">
               Build your portfolio <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link href="/suyash23" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-text-primary border border-border-primary px-8 py-4 rounded-full text-base font-semibold hover:bg-bg-surface transition-colors shadow-sm">
-              See what it builds
+            <Link href="/demo" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-text-primary border border-border-primary px-8 py-4 rounded-full text-base font-semibold hover:bg-bg-surface transition-colors shadow-sm">
+              View how it works (Demo)
             </Link>
           </motion.div>
 
