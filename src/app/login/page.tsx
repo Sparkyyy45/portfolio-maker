@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Lock, Mail, Loader2, Sparkles, Github } from 'lucide-react';
+import { ArrowRight, Lock, Mail, Loader2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -32,10 +32,13 @@ export default function LoginPage() {
     setSubmitLoading(true);
 
     try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const handle = searchParams.get('handle');
+      
       if (isSignUp) {
         const { error: signUpError } = await signUp(email, password);
         if (signUpError) throw signUpError;
-        router.push('/onboarding');
+        router.push(handle ? `/onboarding?handle=${handle}` : '/onboarding');
       } else {
         const { error: signInError } = await signIn(email, password);
         if (signInError) throw signInError;

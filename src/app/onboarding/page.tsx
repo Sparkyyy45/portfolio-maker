@@ -171,6 +171,17 @@ export default function OnboardingPage() {
     }
   }, [user, loading, router]);
 
+  // Pre-populate username handle parameter if present in URL search params
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const claimedHandle = params.get('handle');
+      if (claimedHandle) {
+        setUsername(claimedHandle.toLowerCase().replace(/[^a-z0-9_-]/g, ''));
+      }
+    }
+  }, []);
+
   // Handle Blank Start
   const handleStartBlank = () => {
     setContent(INITIAL_PORTFOLIO_CONTENT);
