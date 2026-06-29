@@ -12,7 +12,11 @@ import {
   Share2,
   CheckCircle2,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Github,
+  Code2,
+  Zap,
+  Palette
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -39,6 +43,16 @@ const FAQ_ITEMS = [
   }
 ];
 
+const FADE_UP = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
+
+const STAGGER = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [handle, setHandle] = useState("");
@@ -48,290 +62,472 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary font-sans">
+    <div className="min-h-screen bg-bg-primary text-text-primary font-sans overflow-x-hidden selection:bg-accent/20">
+      
+      {/* Subtle Ambient Background Gradients */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden flex justify-center -z-10">
+        <div className="absolute -top-1/2 -left-1/4 w-[1000px] h-[1000px] rounded-full bg-warm-light/40 blur-[100px] opacity-50"></div>
+        <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-accent-light/40 blur-[120px] opacity-40"></div>
+      </div>
+
       {/* NAV */}
-      <nav className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto border-b border-border-primary/50">
-        <div className="font-fraunces font-bold text-xl tracking-tight text-text-primary flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-accent text-white flex items-center justify-center">
+      <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto backdrop-blur-md sticky top-0 z-50">
+        <div className="font-fraunces font-bold text-xl tracking-tight text-text-primary flex items-center gap-2 group cursor-pointer">
+          <div className="w-7 h-7 rounded-lg bg-accent text-white flex items-center justify-center shadow-md shadow-accent/20 group-hover:scale-105 transition-transform">
             <Sparkles size={14} />
           </div>
           DevPort
         </div>
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-text-secondary">
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-text-secondary bg-white/50 px-6 py-2.5 rounded-full border border-border-primary/50 shadow-sm backdrop-blur-md">
           <a href="#how-it-works" className="hover:text-text-primary transition-colors">How it works</a>
           <a href="#features" className="hover:text-text-primary transition-colors">Features</a>
+          <a href="#testimonials" className="hover:text-text-primary transition-colors">Wall of Love</a>
           <a href="#faq" className="hover:text-text-primary transition-colors">FAQ</a>
         </div>
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="text-sm font-medium text-text-secondary hover:text-text-primary hidden sm:block">
-            Sign In
+        <div className="flex items-center gap-3">
+          <Link href="/login" className="text-sm font-semibold text-text-secondary hover:text-text-primary hidden sm:block px-4 py-2">
+            Log in
           </Link>
-          <Link href="/login" className="flex items-center gap-2 bg-text-primary text-bg-primary px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity">
-            Claim your link <ArrowRight size={14} />
+          <Link href="/login" className="flex items-center gap-2 bg-text-primary text-bg-primary px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-text-secondary transition-colors shadow-lg shadow-text-primary/10 hover:shadow-xl hover:shadow-text-primary/20 hover:-translate-y-0.5 active:translate-y-0">
+            Start for free <ArrowRight size={14} />
           </Link>
         </div>
       </nav>
 
       {/* HERO */}
-      <header className="pt-24 pb-16 px-6 text-center max-w-4xl mx-auto">
-        <div className="inline-block bg-warm-light text-warm px-4 py-1.5 rounded-full text-sm font-medium mb-6 border border-warm/20">
-          ✨ Free forever · No credit card required
-        </div>
-        
-        <h1 className="font-fraunces text-5xl md:text-7xl font-bold text-text-primary leading-[1.1] mb-6 tracking-tight">
-          Your portfolio, <br className="hidden md:block" />
-          <span className="text-text-tertiary">built while you sleep.</span>
-        </h1>
-        
-        <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed">
-          Stop tweaking CSS and fighting with hosting. Connect your GitHub or upload your resume, and get a premium, recruiter-ready developer portfolio in 60 seconds.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <Link href="/login" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-accent text-white px-8 py-3.5 rounded-full text-base font-medium hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20">
-            Build my portfolio free <ArrowRight size={16} />
-          </Link>
-          <Link href="/suyash23" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-bg-surface text-text-primary border border-border-primary px-8 py-3.5 rounded-full text-base font-medium hover:bg-bg-code transition-colors">
-            See an example
-          </Link>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-text-secondary font-medium">
-          <span className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Auto-syncs with GitHub</span>
-          <span className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> AI Resume Parsing</span>
-          <span className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Zero maintenance</span>
-        </div>
-      </header>
-
-      {/* PRODUCT PREVIEW */}
-      <section className="px-6 max-w-5xl mx-auto mb-32">
-        <div className="bg-bg-primary rounded-2xl border border-border-primary shadow-2xl overflow-hidden">
-          {/* Browser Chrome */}
-          <div className="bg-bg-surface border-b border-border-primary px-4 py-3 flex items-center gap-4">
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-400"></div>
-              <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-              <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
-            </div>
-            <div className="bg-bg-primary text-text-secondary text-xs px-4 py-1.5 rounded flex-1 text-center font-mono border border-border-primary max-w-md mx-auto">
-              devport.com/priyasharma
-            </div>
-          </div>
+      <section className="pt-20 pb-24 px-6 text-center max-w-5xl mx-auto relative">
+        <motion.div variants={STAGGER} initial="hidden" animate="show" className="relative z-10 flex flex-col items-center">
           
-          {/* Mock Portfolio Content */}
-          <div className="p-8 md:p-12 bg-white flex flex-col md:flex-row gap-12 items-start text-left">
-            <div className="flex-1">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Priya Sharma</h2>
-              <p className="text-gray-500 text-lg mb-6">Full Stack Developer · React & Node.js</p>
-              <p className="text-gray-600 leading-relaxed mb-8 max-w-lg">
-                Building scalable web applications and intuitive user interfaces. Previously interned at Amazon. Passionate about open source and web accessibility.
-              </p>
-              
-              <div className="space-y-4">
-                <div className="p-4 border border-gray-100 rounded-lg hover:shadow-md transition">
-                  <h3 className="font-semibold text-gray-900">E-Commerce Dashboard</h3>
-                  <p className="text-sm text-gray-500 mt-1">Next.js · Tailwind · Prisma</p>
-                </div>
-                <div className="p-4 border border-gray-100 rounded-lg hover:shadow-md transition">
-                  <h3 className="font-semibold text-gray-900">Real-time Chat App</h3>
-                  <p className="text-sm text-gray-500 mt-1">React · Socket.io · Express</p>
-                </div>
+          <motion.div variants={FADE_UP} className="inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-full text-xs font-semibold mb-8 border border-border-primary shadow-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            Join 500+ developers shipping portfolios faster
+          </motion.div>
+          
+          <motion.h1 variants={FADE_UP} className="font-fraunces text-[3.5rem] md:text-[5.5rem] font-bold text-text-primary leading-[1.05] tracking-tight mb-6 max-w-4xl mx-auto">
+            Your developer portfolio, <br className="hidden md:block" />
+            <span className="text-text-tertiary italic font-medium">built while you sleep.</span>
+          </motion.h1>
+          
+          <motion.p variants={FADE_UP} className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed">
+            You're a developer, not a web designer. Stop fighting with CSS layouts and custom domains. Import your GitHub or resume, pick a premium theme, and launch a recruiter-magnet site in 60 seconds.
+          </motion.p>
+          
+          <motion.div variants={FADE_UP} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14 w-full sm:w-auto">
+            <Link href="/login" className="group w-full sm:w-auto flex items-center justify-center gap-2 bg-accent text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-accent-hover transition-all shadow-xl shadow-accent/25 hover:shadow-accent/40 hover:-translate-y-0.5">
+              Build your portfolio <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link href="/suyash23" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-text-primary border border-border-primary px-8 py-4 rounded-full text-base font-semibold hover:bg-bg-surface transition-colors shadow-sm">
+              See what it builds
+            </Link>
+          </motion.div>
+
+        </motion.div>
+      </section>
+
+      {/* FLOATING PRODUCT SHOWCASE */}
+      <section className="px-6 max-w-6xl mx-auto mb-32 relative">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative"
+        >
+          {/* Decorative blur behind the mockup */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-transparent to-warm/10 blur-3xl -z-10 rounded-[3rem]"></div>
+          
+          {/* Main Mockup Window */}
+          <div className="bg-white rounded-2xl md:rounded-[2rem] border border-border-primary shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] overflow-hidden relative z-10 transform md:-rotate-1 hover:rotate-0 transition-transform duration-700 ease-out">
+            <div className="bg-bg-surface border-b border-border-primary px-4 py-3 flex items-center justify-between">
+              <div className="flex gap-2">
+                <div className="w-3 h-3 rounded-full bg-border-primary/80"></div>
+                <div className="w-3 h-3 rounded-full bg-border-primary/80"></div>
+                <div className="w-3 h-3 rounded-full bg-border-primary/80"></div>
               </div>
+              <div className="flex items-center gap-1.5 bg-white text-text-tertiary text-xs px-3 py-1.5 rounded-md border border-border-primary shadow-sm font-mono tracking-tight">
+                <LinkIcon size={12}/> devport.com/priyasharma
+              </div>
+              <div className="w-12"></div> {/* Spacer for flex balance */}
             </div>
             
-            <div className="w-full md:w-64 bg-gray-50 rounded-xl p-6 border border-gray-100">
-              <h3 className="font-semibold text-gray-900 mb-4">Tech Stack</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">TypeScript</span>
-                <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">React</span>
-                <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">Node.js</span>
-                <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">PostgreSQL</span>
+            {/* Inner Portfolio Layout */}
+            <div className="p-8 md:p-14 bg-bg-primary flex flex-col md:flex-row gap-12 text-left relative overflow-hidden">
+              <div className="flex-1 relative z-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full text-xs font-semibold mb-6">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                  Open to work
+                </div>
+                <h2 className="text-4xl md:text-5xl font-fraunces font-bold text-text-primary mb-3">Priya Sharma</h2>
+                <p className="text-text-secondary text-xl mb-6 font-medium">Frontend Engineer</p>
+                <p className="text-text-secondary leading-relaxed mb-10 max-w-lg text-lg">
+                  I build beautiful, performant web applications using React and Tailwind CSS. Previously interned at Amazon. Passionate about UX and open source.
+                </p>
+                
+                <h3 className="font-bold text-text-primary mb-4 flex items-center gap-2"><Code2 size={18}/> Featured Projects</h3>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="p-5 bg-white border border-border-primary rounded-xl hover:shadow-lg transition-shadow duration-300 group cursor-pointer">
+                    <h4 className="font-bold text-text-primary group-hover:text-accent transition-colors">E-Commerce Dashboard</h4>
+                    <p className="text-sm text-text-tertiary mt-1 mb-3">Next.js · Tailwind · Prisma</p>
+                    <div className="w-full h-1 bg-border-primary rounded-full overflow-hidden">
+                       <div className="w-3/4 h-full bg-accent"></div>
+                    </div>
+                  </div>
+                  <div className="p-5 bg-white border border-border-primary rounded-xl hover:shadow-lg transition-shadow duration-300 group cursor-pointer">
+                    <h4 className="font-bold text-text-primary group-hover:text-accent transition-colors">Real-time Chat App</h4>
+                    <p className="text-sm text-text-tertiary mt-1 mb-3">React · Socket.io · Node</p>
+                    <div className="w-full h-1 bg-border-primary rounded-full overflow-hidden">
+                       <div className="w-1/2 h-full bg-warm"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="w-full md:w-72 bg-white rounded-2xl p-6 border border-border-primary shadow-sm h-fit relative z-10">
+                <h3 className="font-bold text-text-primary mb-4 flex items-center gap-2"><Github size={18}/> GitHub Stats</h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-sm text-text-tertiary mb-1">Top Languages</div>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-semibold">TypeScript</span>
+                      <span className="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-semibold">JavaScript</span>
+                      <span className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-semibold">CSS</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-text-tertiary mb-1">Stars Earned</div>
+                    <div className="text-2xl font-bold font-fraunces">128 ✨</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Decorative floating code snippet */}
+              <div className="hidden lg:block absolute -right-6 top-1/2 transform -translate-y-1/2 rotate-3 bg-[#1e1e1e] text-gray-300 p-4 rounded-xl shadow-2xl font-mono text-xs w-64 border border-gray-700 opacity-90">
+                <div className="flex gap-1.5 mb-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-gray-600"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-gray-600"></div>
+                </div>
+                <div className="text-pink-400">const <span className="text-blue-300">portfolio</span> = {'{'}</div>
+                <div className="pl-4 text-green-300">status: <span className="text-yellow-300">"Deployed"</span>,</div>
+                <div className="pl-4 text-green-300">timeToBuild: <span className="text-purple-300">"60s"</span>,</div>
+                <div className="pl-4 text-green-300">looks: <span className="text-yellow-300">"Amazing"</span></div>
+                <div>{'}'};</div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* SOCIAL PROOF */}
-      <section className="border-y border-border-primary bg-bg-surface py-12 px-6 text-center">
-        <p className="text-sm font-semibold text-text-secondary uppercase tracking-widest mb-8">Trusted by students and fresh grads at</p>
-        <div className="flex flex-wrap justify-center gap-8 md:gap-16 items-center max-w-4xl mx-auto opacity-60 grayscale font-fraunces font-bold text-xl md:text-2xl text-text-primary">
-          <span>IIT Delhi</span>
-          <span>BITS Pilani</span>
-          <span>NIT Trichy</span>
-          <span>VIT Vellore</span>
-          <span>IIIT Hyderabad</span>
-        </div>
-      </section>
-
-      {/* PROBLEM */}
+      {/* PROBLEM / SOLUTION CONTRAST */}
       <section className="py-24 px-6 max-w-5xl mx-auto">
-        <h2 className="font-fraunces text-3xl md:text-4xl font-bold text-center mb-16">
-          Building a portfolio takes weeks you don't have.
-        </h2>
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={STAGGER}
+          className="text-center mb-16"
+        >
+          <motion.h2 variants={FADE_UP} className="font-fraunces text-3xl md:text-5xl font-bold mb-4">
+            Building a portfolio is a chore.
+          </motion.h2>
+          <motion.p variants={FADE_UP} className="text-text-secondary text-lg max-w-2xl mx-auto">
+            You've got code to write and interviews to prep for. You shouldn't be fighting with margins and flexbox just to show off your work.
+          </motion.p>
+        </motion.div>
         
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-bg-surface p-8 rounded-2xl border border-border-primary">
-            <h3 className="font-semibold text-lg mb-2">The Template Trap</h3>
-            <p className="text-text-secondary leading-relaxed">You buy a React template, but it's full of complex code. You spend 3 days just trying to figure out how to change the primary color and update the projects list.</p>
-          </div>
-          <div className="bg-bg-surface p-8 rounded-2xl border border-border-primary">
-            <h3 className="font-semibold text-lg mb-2">The Design Struggle</h3>
-            <p className="text-text-secondary leading-relaxed">You try to code it from scratch. You spend 4 hours tweaking margins and drop shadows, and it still doesn't look as good as the ones on Awwwards.</p>
-          </div>
-          <div className="bg-bg-surface p-8 rounded-2xl border border-border-primary">
-            <h3 className="font-semibold text-lg mb-2">The Update Chore</h3>
-            <p className="text-text-secondary leading-relaxed">You finally build it, but then you finish a new project. You have to open VS Code, write the HTML, compress the image, and push to Vercel just to add one item.</p>
-          </div>
-          <div className="bg-accent-light p-8 rounded-2xl border border-accent-border">
-            <h3 className="font-semibold text-lg mb-2 text-accent">The DevPort Solution</h3>
-            <p className="text-text-secondary leading-relaxed">You give us your GitHub username or upload your PDF resume. We generate a stunning, deployed portfolio in 60 seconds. You never touch HTML again.</p>
-          </div>
+        <div className="grid md:grid-cols-2 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-bg-surface p-8 md:p-10 rounded-[2rem] border border-border-primary"
+          >
+            <div className="inline-block px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full mb-6">The Old Way</div>
+            <h3 className="font-fraunces font-bold text-2xl mb-4">Wasted Weekends</h3>
+            <ul className="space-y-4 text-text-secondary">
+              <li className="flex items-start gap-3">
+                <span className="text-red-400 mt-1">✗</span> Buy a bloated template and spend hours ripping out code you don't need.
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-red-400 mt-1">✗</span> Code from scratch and struggle to make it look professional.
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-red-400 mt-1">✗</span> Manually update HTML every time you finish a new project or internship.
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-accent-light p-8 md:p-10 rounded-[2rem] border border-accent-border relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 -mr-8 -mt-8 opacity-10">
+              <Sparkles size={160} />
+            </div>
+            <div className="inline-block px-3 py-1 bg-accent text-white text-xs font-bold rounded-full mb-6 relative z-10">The DevPort Way</div>
+            <h3 className="font-fraunces font-bold text-2xl mb-4 text-accent relative z-10">Shipped in Seconds</h3>
+            <ul className="space-y-4 text-text-secondary relative z-10">
+              <li className="flex items-start gap-3">
+                <span className="text-accent font-bold mt-1">✓</span> Type in your GitHub username or upload a PDF resume.
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-accent font-bold mt-1">✓</span> Select a premium, designer-crafted theme that actually looks good.
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-accent font-bold mt-1">✓</span> Hit publish. Your live link is instantly ready to share.
+              </li>
+            </ul>
+          </motion.div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how-it-works" className="py-24 px-6 bg-bg-primary border-t border-border-primary">
+      <section id="how-it-works" className="py-24 px-6 border-y border-border-primary bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-fraunces text-3xl md:text-4xl font-bold text-center mb-16">
-            From zero to deployed in 3 steps.
-          </h2>
+          <div className="text-center mb-20">
+            <h2 className="font-fraunces text-3xl md:text-5xl font-bold mb-4">
+              How the magic works
+            </h2>
+          </div>
 
-          <div className="space-y-12 relative before:absolute before:inset-0 before:ml-[28px] md:before:ml-[50%] before:-translate-x-px md:before:translate-x-0 before:w-0.5 before:bg-border-primary before:z-0">
+          <div className="space-y-16 relative before:absolute before:inset-0 before:ml-[28px] md:before:ml-[50%] before:-translate-x-px md:before:translate-x-0 before:w-0.5 before:bg-border-primary before:z-0">
             
-            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 group">
-              <div className="w-full md:w-5/12 md:text-right order-2 md:order-1">
-                <span className="inline-block px-3 py-1 bg-accent-light text-accent text-xs font-bold rounded-full mb-3">Step 1</span>
-                <h3 className="text-xl font-bold mb-2">Import your data</h3>
-                <p className="text-text-secondary">Enter your GitHub username or upload your latest PDF resume. Our AI extracts your experience, skills, and top projects automatically.</p>
-              </div>
-              <div className="w-14 h-14 rounded-full bg-white border-4 border-border-primary flex items-center justify-center font-fraunces font-bold text-xl text-text-tertiary group-hover:border-accent group-hover:text-accent transition-colors order-1 md:order-2 shrink-0 relative z-10 shadow-sm ml-0 md:ml-0">
-                1
-              </div>
-              <div className="w-full md:w-5/12 order-3">
-                <div className="bg-bg-surface p-4 rounded-xl border border-border-primary text-sm font-mono text-text-secondary">
-                  &gt; Extracting PDF text...<br/>
-                  &gt; Identifying work history...<br/>
-                  &gt; Found 3 projects on GitHub
+            {[
+              { 
+                step: 1, 
+                tag: "Step 1", 
+                tagColor: "bg-accent-light text-accent",
+                title: "Import your context", 
+                desc: "Don't type out your bio again. Give us your GitHub or upload your resume, and our parser pulls your best work instantly.",
+                visual: (
+                  <div className="bg-bg-surface p-5 rounded-xl border border-border-primary shadow-sm text-sm font-mono text-text-secondary">
+                    <span className="text-accent">❯</span> Analyzing github.com/suyash<br/>
+                    <span className="text-accent">❯</span> Found 18 public repositories<br/>
+                    <span className="text-emerald-500">✔</span> Extracted top languages & stats
+                  </div>
+                )
+              },
+              { 
+                step: 2, 
+                tag: "Step 2", 
+                tagColor: "bg-warm-light text-warm",
+                title: "Pick a premium theme", 
+                desc: "Choose from our curated collection of themes. Whether you want minimal typography or dark mode glassmorphism, it's one click away.",
+                visual: (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-white rounded-lg border-2 border-accent p-2 shadow-sm">
+                      <div className="w-full h-16 bg-gray-100 rounded mb-2"></div>
+                      <div className="w-2/3 h-2 bg-gray-200 rounded"></div>
+                    </div>
+                    <div className="bg-gray-900 rounded-lg border border-gray-800 p-2 opacity-50 hover:opacity-100 transition-opacity">
+                      <div className="w-full h-16 bg-gray-800 rounded mb-2"></div>
+                      <div className="w-2/3 h-2 bg-gray-700 rounded"></div>
+                    </div>
+                  </div>
+                )
+              },
+              { 
+                step: 3, 
+                tag: "Step 3", 
+                tagColor: "bg-emerald-50 text-emerald-600 border border-emerald-200",
+                title: "Claim your dev link", 
+                desc: "Publish your site and instantly get a clean devport.com/yourname link to put on your resume and LinkedIn.",
+                visual: (
+                  <div className="bg-white p-5 rounded-xl border border-border-primary shadow-sm flex items-center justify-center gap-2 font-medium text-lg">
+                    <LinkIcon size={20} className="text-text-tertiary"/> devport.com/<span className="text-accent">suyash</span>
+                  </div>
+                )
+              }
+            ].map((item, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 group"
+              >
+                <div className={`w-full md:w-5/12 ${i % 2 === 0 ? 'md:text-right order-2 md:order-1' : 'order-2 md:order-3'}`}>
+                  <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full mb-4 ${item.tagColor}`}>{item.tag}</span>
+                  <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
+                  <p className="text-text-secondary text-lg leading-relaxed">{item.desc}</p>
                 </div>
-              </div>
-            </div>
-
-            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 group">
-              <div className="w-full md:w-5/12 md:text-right order-2 md:order-1 md:invisible">
-                {/* Spacer for layout */}
-              </div>
-              <div className="w-14 h-14 rounded-full bg-white border-4 border-border-primary flex items-center justify-center font-fraunces font-bold text-xl text-text-tertiary group-hover:border-accent group-hover:text-accent transition-colors order-1 md:order-2 shrink-0 relative z-10 shadow-sm ml-0 md:ml-0">
-                2
-              </div>
-              <div className="w-full md:w-5/12 order-3 md:-ml-0">
-                <span className="inline-block px-3 py-1 bg-warm-light text-warm text-xs font-bold rounded-full mb-3">Step 2</span>
-                <h3 className="text-xl font-bold mb-2">Pick a premium theme</h3>
-                <p className="text-text-secondary">Choose from our curated list of designer-crafted themes. From minimal typography to dark mode glassmorphism, they all look incredible.</p>
-              </div>
-            </div>
-
-            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 group">
-              <div className="w-full md:w-5/12 md:text-right order-2 md:order-1">
-                <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200 text-xs font-bold rounded-full mb-3">Step 3</span>
-                <h3 className="text-xl font-bold mb-2">Claim your link</h3>
-                <p className="text-text-secondary">Hit publish and instantly get a professional devport.com/yourname link to put on your resume and share with recruiters.</p>
-              </div>
-              <div className="w-14 h-14 rounded-full bg-white border-4 border-border-primary flex items-center justify-center font-fraunces font-bold text-xl text-text-tertiary group-hover:border-accent group-hover:text-accent transition-colors order-1 md:order-2 shrink-0 relative z-10 shadow-sm ml-0 md:ml-0">
-                3
-              </div>
-              <div className="w-full md:w-5/12 order-3">
-                <div className="bg-bg-surface p-4 rounded-xl border border-border-primary flex items-center justify-center gap-2 font-medium">
-                  <LinkIcon size={16} className="text-text-tertiary"/> devport.com/suyash
+                
+                <div className={`w-14 h-14 rounded-full bg-white border-4 border-border-primary flex items-center justify-center font-fraunces font-bold text-xl text-text-tertiary group-hover:border-accent group-hover:text-accent group-hover:scale-110 transition-all duration-300 ${i % 2 === 0 ? 'order-1 md:order-2' : 'order-1 md:order-2'} shrink-0 relative z-10 shadow-sm ml-0 md:ml-0`}>
+                  {item.step}
                 </div>
-              </div>
-            </div>
-
+                
+                <div className={`w-full md:w-5/12 ${i % 2 === 0 ? 'order-3 md:order-3' : 'order-3 md:order-1'}`}>
+                  {item.visual}
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
+      {/* FEATURES - BENTO BOX GRID */}
       <section id="features" className="py-24 px-6 max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="font-fraunces text-3xl md:text-4xl font-bold mb-4">Everything you need. Nothing you don't.</h2>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto">We cut out the bloat so you can focus on what matters: looking good and getting hired.</p>
-        </div>
+        <motion.div 
+          initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={STAGGER}
+          className="text-center mb-16"
+        >
+          <motion.h2 variants={FADE_UP} className="font-fraunces text-3xl md:text-5xl font-bold mb-4">Everything you need.</motion.h2>
+          <motion.p variants={FADE_UP} className="text-text-secondary text-lg max-w-2xl mx-auto">
+            We cut out the complex dashboard bloat. Just the absolute essentials to make you look like a top-tier engineer.
+          </motion.p>
+        </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            { icon: <Clock size={24} className="text-accent"/>, title: "60-Second Setup", desc: "No coding required. Just import, pick a theme, and publish." },
-            { icon: <Layout size={24} className="text-accent"/>, title: "Premium Themes", desc: "Designed by professionals. Ensure you stand out from the crowd." },
-            { icon: <Globe size={24} className="text-accent"/>, title: "Free Global Hosting", desc: "Your site is hosted on our edge network, blazing fast and always online." },
-            { icon: <Share2 size={24} className="text-accent"/>, title: "Auto-Sync GitHub", desc: "Connect your account once, and your top repos update automatically." },
-            { icon: <Sparkles size={24} className="text-accent"/>, title: "AI Resume Parser", desc: "Upload your PDF and our AI turns it into structured portfolio data." },
-            { icon: <LinkIcon size={24} className="text-accent"/>, title: "Custom Links", desc: "Get a clean, memorable devport.com/name handle instantly." },
-          ].map((feat, i) => (
-            <div key={i} className="bg-bg-surface p-6 rounded-2xl border border-border-primary hover:border-accent/30 transition-colors">
-              <div className="w-12 h-12 bg-white rounded-xl border border-border-primary flex items-center justify-center text-2xl mb-4 shadow-sm">
-                {feat.icon}
-              </div>
-              <h3 className="font-bold text-lg mb-2">{feat.title}</h3>
-              <p className="text-text-secondary text-sm leading-relaxed">{feat.desc}</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-min">
+          {/* Large Card 1 */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
+            className="md:col-span-2 bg-bg-surface p-8 rounded-3xl border border-border-primary hover:border-accent/40 transition-colors flex flex-col justify-between overflow-hidden relative group"
+          >
+            <div className="absolute -right-10 -bottom-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
+              <Layout size={200} />
             </div>
-          ))}
+            <div className="relative z-10 mb-20 md:mb-32">
+              <div className="w-12 h-12 bg-white rounded-xl border border-border-primary flex items-center justify-center mb-6 shadow-sm">
+                <Palette size={24} className="text-accent"/>
+              </div>
+              <h3 className="font-fraunces font-bold text-3xl mb-3">Designer-Crafted Themes</h3>
+              <p className="text-text-secondary text-lg max-w-md">Stop browsing Awwwards feeling inadequate. Our themes are built by product designers, guaranteeing you look incredibly polished.</p>
+            </div>
+          </motion.div>
+
+          {/* Square Card 1 */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}
+            className="bg-bg-surface p-8 rounded-3xl border border-border-primary hover:border-accent/40 transition-colors"
+          >
+            <div className="w-12 h-12 bg-white rounded-xl border border-border-primary flex items-center justify-center mb-6 shadow-sm">
+              <Zap size={24} className="text-accent"/>
+            </div>
+            <h3 className="font-bold text-xl mb-3">60-Second Setup</h3>
+            <p className="text-text-secondary">No coding, no dragging and dropping. Connect your data and you're done.</p>
+          </motion.div>
+
+          {/* Square Card 2 */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
+            className="bg-bg-surface p-8 rounded-3xl border border-border-primary hover:border-accent/40 transition-colors"
+          >
+            <div className="w-12 h-12 bg-white rounded-xl border border-border-primary flex items-center justify-center mb-6 shadow-sm">
+              <Globe size={24} className="text-accent"/>
+            </div>
+            <h3 className="font-bold text-xl mb-3">Global Edge Hosting</h3>
+            <p className="text-text-secondary">Your site is deployed on Vercel's edge network. Always fast, always up.</p>
+          </motion.div>
+
+          {/* Large Card 2 */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }}
+            className="md:col-span-2 bg-text-primary text-bg-primary p-8 rounded-3xl border border-text-secondary hover:border-text-tertiary transition-colors flex flex-col justify-between overflow-hidden relative group"
+          >
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 opacity-10 group-hover:translate-x-0 transition-transform duration-700">
+              <Sparkles size={250} />
+            </div>
+            <div className="relative z-10 mb-8 md:mb-12">
+              <div className="w-12 h-12 bg-white/10 rounded-xl border border-white/20 flex items-center justify-center mb-6 backdrop-blur-sm">
+                <Share2 size={24} className="text-white"/>
+              </div>
+              <h3 className="font-fraunces font-bold text-3xl mb-3">Auto-Syncing Resumes</h3>
+              <p className="text-text-tertiary text-lg max-w-md">Our intelligence engine parses your uploaded PDFs or reads your GitHub to keep your portfolio automatically updated with your latest wins.</p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-24 px-6 bg-bg-surface border-y border-border-primary">
+      {/* TESTIMONIALS - MASONRY / STAGGERED */}
+      <section id="testimonials" className="py-24 px-6 bg-white border-y border-border-primary">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-fraunces text-3xl md:text-4xl font-bold text-center mb-16">Loved by developers</h2>
+          <div className="text-center mb-20">
+            <h2 className="font-fraunces text-3xl md:text-5xl font-bold mb-4">Loved by engineers</h2>
+            <p className="text-text-secondary text-lg">Don't just take our word for it.</p>
+          </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white p-8 rounded-2xl border border-border-primary shadow-sm">
-              <div className="flex text-warm mb-4">
+          <div className="grid md:grid-cols-3 gap-6 items-start">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
+              className="bg-bg-surface p-8 rounded-3xl border border-border-primary shadow-sm"
+            >
+              <div className="flex text-warm mb-6">
                 {[1,2,3,4,5].map(i => <Sparkles key={i} size={16} className="fill-current"/>)}
               </div>
-              <p className="text-text-primary mb-6 leading-relaxed">"I spent a week trying to build a portfolio with Three.js. It looked cool but performed terribly. DevPort gave me a clean, recruiter-friendly site in exactly 2 minutes."</p>
-              <div className="font-medium text-sm">
-                <div className="text-text-primary">Arjun K.</div>
-                <div className="text-text-secondary">Frontend Engineer</div>
+              <p className="text-text-primary text-lg mb-8 leading-relaxed font-medium">
+                "I spent a week trying to build a portfolio with Three.js. It looked cool but performed terribly on mobile. <span className="bg-warm-light px-1">DevPort gave me a beautiful site in 2 minutes.</span>"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">AK</div>
+                <div>
+                  <div className="text-text-primary font-bold">Arjun K.</div>
+                  <div className="text-text-tertiary text-sm">Frontend Engineer</div>
+                </div>
               </div>
-            </div>
+            </motion.div>
             
-            <div className="bg-white p-8 rounded-2xl border border-border-primary shadow-sm relative md:-top-4">
-              <div className="flex text-warm mb-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.15 }}
+              className="bg-bg-surface p-8 rounded-3xl border border-border-primary shadow-sm md:mt-12"
+            >
+              <div className="flex text-warm mb-6">
                 {[1,2,3,4,5].map(i => <Sparkles key={i} size={16} className="fill-current"/>)}
               </div>
-              <p className="text-text-primary mb-6 leading-relaxed">"The AI resume parser is literal magic. I uploaded the PDF I used for placements, and it extracted all my internships and projects perfectly. Easiest setup ever."</p>
-              <div className="font-medium text-sm">
-                <div className="text-text-primary">Sneha M.</div>
-                <div className="text-text-secondary">New Grad SWE</div>
+              <p className="text-text-primary text-lg mb-8 leading-relaxed font-medium">
+                "The PDF parser is literal magic. I uploaded the resume I used for placements, and <span className="bg-emerald-100 px-1">it extracted all my internships and projects perfectly</span>. Easiest setup ever."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">SM</div>
+                <div>
+                  <div className="text-text-primary font-bold">Sneha M.</div>
+                  <div className="text-text-tertiary text-sm">New Grad SWE</div>
+                </div>
               </div>
-            </div>
+            </motion.div>
             
-            <div className="bg-white p-8 rounded-2xl border border-border-primary shadow-sm">
-              <div className="flex text-warm mb-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }}
+              className="bg-bg-surface p-8 rounded-3xl border border-border-primary shadow-sm md:mt-4"
+            >
+              <div className="flex text-warm mb-6">
                 {[1,2,3,4,5].map(i => <Sparkles key={i} size={16} className="fill-current"/>)}
               </div>
-              <p className="text-text-primary mb-6 leading-relaxed">"I don't have time to maintain a custom website. DevPort auto-syncs with my GitHub so my latest repos are always there. It's set-and-forget."</p>
-              <div className="font-medium text-sm">
-                <div className="text-text-primary">Rohit P.</div>
-                <div className="text-text-secondary">Full Stack Developer</div>
+              <p className="text-text-primary text-lg mb-8 leading-relaxed font-medium">
+                "I don't have time to maintain a custom website. <span className="bg-accent-light text-accent-hover px-1">DevPort auto-syncs with my GitHub</span> so my latest repos are always there. It's set-and-forget."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold">RP</div>
+                <div>
+                  <div className="text-text-primary font-bold">Rohit P.</div>
+                  <div className="text-text-tertiary text-sm">Full Stack Developer</div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* FAQ */}
       <section id="faq" className="py-24 px-6 max-w-3xl mx-auto">
-        <h2 className="font-fraunces text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+        <h2 className="font-fraunces text-3xl md:text-5xl font-bold text-center mb-16">Frequently Asked Questions</h2>
         <div className="space-y-4">
           {FAQ_ITEMS.map((item, index) => (
-            <div key={index} className="border border-border-primary rounded-xl overflow-hidden bg-bg-primary transition-all duration-200">
+            <div key={index} className="border border-border-primary rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
               <button 
                 onClick={() => toggleFaq(index)}
-                className="w-full px-6 py-4 text-left font-semibold flex items-center justify-between focus:outline-none hover:bg-bg-surface transition-colors"
+                className="w-full px-6 md:px-8 py-5 md:py-6 text-left font-bold text-lg flex items-center justify-between focus:outline-none"
               >
                 {item.q}
-                {openFaq === index ? <ChevronUp size={20} className="text-text-tertiary shrink-0"/> : <ChevronDown size={20} className="text-text-tertiary shrink-0"/>}
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${openFaq === index ? 'bg-bg-surface text-text-primary' : 'bg-transparent text-text-tertiary'}`}>
+                  {openFaq === index ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
+                </div>
               </button>
               <AnimatePresence>
                 {openFaq === index && (
@@ -339,10 +535,10 @@ export default function LandingPage() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-5 text-text-secondary leading-relaxed border-t border-border-subtle pt-3">
+                    <div className="px-6 md:px-8 pb-6 text-text-secondary text-lg leading-relaxed pt-2">
                       {item.a}
                     </div>
                   </motion.div>
@@ -355,48 +551,56 @@ export default function LandingPage() {
 
       {/* FINAL CTA */}
       <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto bg-text-primary text-bg-primary rounded-[2rem] p-12 md:p-20 text-center shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
-            <Sparkles size={120} />
-          </div>
-          <h2 className="font-fraunces text-4xl md:text-5xl font-bold mb-6 relative z-10">Claim your link before someone else does.</h2>
-          <p className="text-text-tertiary text-lg mb-10 max-w-xl mx-auto relative z-10">Join thousands of developers building beautiful portfolios without writing a single line of code.</p>
+        <div className="max-w-5xl mx-auto bg-text-primary text-bg-primary rounded-[3rem] p-12 md:p-24 text-center shadow-2xl relative overflow-hidden">
+          {/* Decorative Background for CTA */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/20 via-transparent to-transparent opacity-50"></div>
+          
+          <h2 className="font-fraunces text-4xl md:text-6xl font-bold mb-6 relative z-10 tracking-tight">
+            Claim your link before <br className="hidden md:block"/> someone else does.
+          </h2>
+          <p className="text-text-tertiary text-xl mb-12 max-w-2xl mx-auto relative z-10">
+            Join the developers building beautiful, fast portfolios without touching a single line of CSS.
+          </p>
           
           <form 
             onSubmit={(e) => {
               e.preventDefault();
               window.location.href = `/login?handle=${handle}`;
             }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto relative z-10"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto relative z-10"
           >
             <div className="relative w-full">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary font-medium select-none pointer-events-none">devport.com/</span>
+              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-text-tertiary font-medium select-none pointer-events-none">devport.com/</span>
               <input 
                 type="text" 
                 value={handle}
                 onChange={(e) => setHandle(e.target.value)}
-                placeholder="username" 
-                className="w-full bg-white/10 border border-white/20 rounded-full py-3.5 pl-32 pr-6 text-white placeholder-white/40 focus:outline-none focus:border-accent transition-colors"
+                placeholder="yourname" 
+                className="w-full bg-white/10 border border-white/20 rounded-full py-4 pl-36 pr-6 text-white placeholder-white/40 focus:outline-none focus:border-accent focus:bg-white/15 transition-all text-lg font-medium"
                 required
               />
             </div>
-            <button type="submit" className="w-full sm:w-auto shrink-0 bg-accent hover:bg-accent-hover text-white px-8 py-3.5 rounded-full font-bold transition-colors">
-              Claim <ArrowRight size={16} className="inline ml-1"/>
+            <button type="submit" className="w-full sm:w-auto shrink-0 bg-accent hover:bg-accent-hover text-white px-10 py-4 rounded-full font-bold text-lg transition-colors shadow-lg hover:-translate-y-0.5 active:translate-y-0">
+              Claim <ArrowRight size={18} className="inline ml-1 -mt-0.5"/>
             </button>
           </form>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-border-primary py-12 px-6 text-center text-text-tertiary">
-        <div className="flex items-center justify-center gap-2 mb-4 text-text-primary font-bold font-fraunces">
-          <Sparkles size={16} className="text-accent" /> DevPort
+      <footer className="border-t border-border-primary py-16 px-6 text-center text-text-tertiary">
+        <div className="flex items-center justify-center gap-2 mb-4 text-text-primary font-bold font-fraunces text-xl">
+          <div className="w-6 h-6 rounded bg-text-primary text-white flex items-center justify-center">
+            <Sparkles size={12} />
+          </div>
+          DevPort
         </div>
-        <p className="mb-6">Portfolios for everyone.</p>
-        <div className="flex items-center justify-center gap-6 text-sm">
+        <p className="mb-8 font-medium">Portfolios for everyone.</p>
+        <div className="flex items-center justify-center gap-8 text-sm font-semibold">
           <a href="#" className="hover:text-text-primary transition-colors">Privacy</a>
           <a href="#" className="hover:text-text-primary transition-colors">Terms</a>
-          <a href="#" className="hover:text-text-primary transition-colors">Contact</a>
+          <a href="#" className="hover:text-text-primary transition-colors">Twitter</a>
+          <a href="#" className="hover:text-text-primary transition-colors">GitHub</a>
         </div>
       </footer>
     </div>
