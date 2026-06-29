@@ -115,11 +115,11 @@ export default function Home() {
           </div>
 
           <h1 className="text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1.08] tracking-[-0.04em] text-gradient mx-auto max-w-4xl">
-            Your developer portfolio,<br className="hidden md:block" /> built by AI in 60 seconds
+            Get a stunning developer portfolio, in 60 seconds.
           </h1>
 
           <p className="text-[17px] md:text-[19px] leading-[1.6] text-text-secondary max-w-2xl mx-auto">
-            Upload your resume PDF or link your GitHub username. We parse your history, fetch repository stats, and deploy a premium, recruiter-ready profile at a custom link.
+            Stop fighting with HTML/CSS layouts. Just import your GitHub or upload a resume PDF, pick a gorgeous designer preset, and share a premium recruiter-magnet site hosted completely free.
           </p>
 
           {/* Claim Handle Bar */}
@@ -145,7 +145,7 @@ export default function Home() {
           {/* Secondary Hero Actions */}
           <div className="flex flex-wrap justify-center gap-3 pt-2">
             <Link
-              href="/suyash"
+              href="/suyash23"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border-primary bg-bg-surface hover:bg-bg-code text-xs font-semibold text-text-secondary hover:text-text-primary transition shadow-2xs cursor-pointer select-none"
             >
               View Demo Profile <Globe size={13} />
@@ -255,7 +255,7 @@ export default function Home() {
                 template: "Bento Grid Dashboard",
                 theme: "Midnight Obsidian",
                 tags: ["Bento Layout", "Dark Mode", "Interactive Charts"],
-                link: "/suyash",
+                link: "/suyash23",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
                 quote: "The Bento Grid layout grouped my side projects and GitHub stars in a way that regular resume templates never could."
               },
@@ -494,78 +494,78 @@ export default function Home() {
         <section className="space-y-12 border-t border-border-primary pt-20">
           <div className="max-w-2xl space-y-4">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary leading-tight">
-              A high performance, modern architecture stack
+              Everything you need to stand out to recruiters
             </h2>
             <p className="text-sm md:text-base text-text-secondary leading-relaxed font-normal">
-              We combined lightweight database routers, secure authorization frameworks, and edge invalidations.
+              DevPort automates layout design, database syncs, and responsive styling so you can focus on your code.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            {/* Supabase JSONB Records */}
+            {/* Stunning Layout Presets */}
             <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
               <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
                 <Database size={18} />
               </div>
-              <h4 className="text-base font-bold text-text-primary">Supabase JSONB Records</h4>
+              <h4 className="text-base font-bold text-text-primary">Stunning Designer Presets</h4>
               <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                We store details inside a Postgres JSONB document. This allows flexible portfolios with varying project and skill configurations without altering sql table setups.
+                Choose from Bento Grid dashboards, Unix terminal simulations, minimal resumes, or frosted glassmorphism templates. Switch layouts instantly in one click.
               </p>
             </div>
 
-            {/* PostgreSQL RLS Policies */}
-            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
-              <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <Shield size={18} />
-              </div>
-              <h4 className="text-base font-bold text-text-primary">PostgreSQL RLS Policies</h4>
-              <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                Row-Level Security guarantees that only the authenticated user account holds write permission to their handle. Public guests are restricted to read-only queries on published routes.
-              </p>
-            </div>
-
-            {/* Client-Side Storage Fallback */}
+            {/* Ingestion */}
             <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
               <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
                 <Cpu size={18} />
               </div>
-              <h4 className="text-base font-bold text-text-primary">Client-Side Storage Fallback</h4>
+              <h4 className="text-base font-bold text-text-primary">1-Click PDF &amp; GitHub Sync</h4>
               <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                If credentials are omitted, the application automatically pivots to LocalStorage mode, allowing full functionality tests completely client-side.
+                Upload your resume PDF or link your GitHub username. We parse your employment milestones and fetch repository stats automatically with no manual typing.
               </p>
             </div>
 
-            {/* Built-in visitor mailbox */}
+            {/* ATS Resumes */}
+            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
+              <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
+                <FileText size={18} />
+              </div>
+              <h4 className="text-base font-bold text-text-primary">ATS-Friendly PDF Resumes</h4>
+              <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
+                Your public page includes a built-in clean CSS print layout. Recruiters can hit Ctrl+P to export your portfolio into an ATS-friendly, clean 1-page paper resume.
+              </p>
+            </div>
+
+            {/* Visitor Mailbox */}
             <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
               <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
                 <Inbox size={18} />
               </div>
-              <h4 className="text-base font-bold text-text-primary">Built-in visitor mailbox</h4>
+              <h4 className="text-base font-bold text-text-primary">Direct Recruiter Inbox</h4>
               <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                Portfolios include active message forms that store recruiter submissions directly inside database mailboxes, keeping correspondence organized.
+                Avoid public email scrapers. Recruiters can send you messages directly through your page forms. Submissions are securely routed straight to your email inbox.
               </p>
             </div>
 
-            {/* Edge Cached Subdomains */}
+            {/* AI Polish */}
             <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
               <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <RefreshCw size={18} />
+                <Sparkles size={18} />
               </div>
-              <h4 className="text-base font-bold text-text-primary">Edge Cached Subdomains</h4>
+              <h4 className="text-base font-bold text-text-primary">Real-Time AI Polishing</h4>
               <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                Subpaths (<code className="bg-bg-code text-text-primary px-1.5 py-0.5 rounded text-xs border border-border-primary">/[username]</code>) use dynamic routes compiled statically on request (<code className="bg-bg-code text-text-primary px-1.5 py-0.5 rounded text-xs border border-border-primary">force-static</code>), resolving queries at local edge hubs rather than database servers.
+                Unsure about your project summaries or employment descriptions? Let our integrated AI assistant instantly polish them to sound metric-oriented and punchy.
               </p>
             </div>
 
-            {/* Zero cost hosting */}
+            {/* Free Hosting */}
             <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
               <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <Code size={18} />
+                <Globe size={18} />
               </div>
-              <h4 className="text-base font-bold text-text-primary">Zero cost hosting</h4>
+              <h4 className="text-base font-bold text-text-primary">100% Free Lifetime Hosting</h4>
               <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                By utilizing Next.js, Vercel edge routes, and Supabase free-tier database limits, your portfolio runs at absolute zero cost indefinitely.
+                DevPort handles all deployment configurations. Your claimed subdomain is served globally on local edge CDNs at zero cost to you, forever.
               </p>
             </div>
 

@@ -17,11 +17,11 @@ export default async function UsernamePortfolioPage({ params }: PageProps) {
   
   let data = await fetchPortfolioByUsername(username);
   
-  if (!data && username.toLowerCase() === 'suyash') {
+  if (!data && username.toLowerCase() === 'suyash23') {
     data = {
       profile: {
         id: 'demo-user-uuid',
-        username: 'suyash',
+        username: 'suyash23',
         email: 'suyashyadav1709@gmail.com',
         is_published: true,
         created_at: new Date().toISOString()
@@ -188,9 +188,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { username } = await params;
   let data = await fetchPortfolioByUsername(username);
   
-  if (!data && username.toLowerCase() === 'suyash') {
+  if (!data && username.toLowerCase() === 'suyash23') {
     data = {
-      profile: { id: 'demo', username: 'suyash', email: '', is_published: true, created_at: '' },
+      profile: { id: 'demo', username: 'suyash23', email: '', is_published: true, created_at: '' },
       content: {
         template: 'bento',
         theme: 'dark',
