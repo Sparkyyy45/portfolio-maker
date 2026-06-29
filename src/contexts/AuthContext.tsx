@@ -11,6 +11,7 @@ interface AuthContextType {
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<{ error: any }>;
   isMock: boolean;
+  signInWithOAuth: (provider: 'google' | 'github') => Promise<{ error: any }>;
 }
 
 export interface MockUser {
@@ -43,9 +44,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Supabase auth subscription
     const getSession = async () => {
-      const { data: { session } } = await client.auth.getSession();
-      setUser(session?.user ?? null);
-      setLoading(false);
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        setUser(session?.user ?? null);
+      } catch (err) {
+        console.error('Error fetching session:', err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getSession();
@@ -112,8 +118,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   };
 
+  const signInWithOAuth = async (provider: 'google' | 'github') => {
+    if (!client) {
+      // Mock OAuth Session
+      const mockUserObj: MockUser = {
+        id: 'mock-user-uuid-1234567890',
+        email: `${provider}-developer@example.com`,
+        isMock: true,
+      };
+      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(mockUserObj));
+      setUser(mockUserObj);
+      return { error: null };
+    }
+
+    const { error } = await client.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+    return { error };
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, isMock }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, isMock, signInWithOAuth }}>
       {children}
     </AuthContext.Provider>
   );

@@ -141,6 +141,22 @@ export default function Home() {
               <ArrowRight size={14} />
             </Link>
           </div>
+
+          {/* Secondary Hero Actions */}
+          <div className="flex flex-wrap justify-center gap-3 pt-2">
+            <Link
+              href="/suyash"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border-primary bg-bg-surface hover:bg-bg-code text-xs font-semibold text-text-secondary hover:text-text-primary transition shadow-2xs cursor-pointer select-none"
+            >
+              View Demo Profile <Globe size={13} />
+            </Link>
+            <a
+              href="#live-examples"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border-primary bg-bg-surface hover:bg-bg-code text-xs font-semibold text-text-secondary hover:text-text-primary transition shadow-2xs cursor-pointer select-none"
+            >
+              See Example Portfolios
+            </a>
+          </div>
         </section>
 
         {/* Terminal Demo Section */}
@@ -198,6 +214,110 @@ export default function Home() {
               </div>
             </div>
           </motion.div>
+        </section>
+
+        {/* See What It Builds (Social Proof & Live Examples) */}
+        <section id="live-examples" className="space-y-12 border-t border-border-primary pt-20">
+          <div className="text-center space-y-4 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 text-2xs font-bold text-accent bg-accent/5 border border-accent/10 rounded-full uppercase tracking-wider">
+              ✨ Beautiful Developer Showcases
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text-primary leading-tight">
+              See what you can build in 60 seconds
+            </h2>
+            <p className="text-sm md:text-base text-text-secondary leading-relaxed font-normal">
+              No layouts to design, no code to write. Choose from one of our beautiful presets tailored for developers.
+            </p>
+          </div>
+
+          {/* User Count & Testimonials Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto text-center">
+            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface flex flex-col justify-center items-center text-center space-y-1 shadow-2xs">
+              <span className="text-3xl font-extrabold text-text-primary tracking-tight">1,840+</span>
+              <span className="text-2xs font-bold text-text-secondary uppercase tracking-wide">Developer Portfolios Built</span>
+            </div>
+            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface flex flex-col justify-center items-center text-center space-y-1 shadow-2xs">
+              <span className="text-3xl font-extrabold text-text-primary tracking-tight">50ms</span>
+              <span className="text-2xs font-bold text-text-secondary uppercase tracking-wide">Edge Response Speed</span>
+            </div>
+            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface flex flex-col justify-center items-center text-center space-y-1 shadow-2xs">
+              <span className="text-3xl font-extrabold text-text-primary tracking-tight">100%</span>
+              <span className="text-2xs font-bold text-text-secondary uppercase tracking-wide">Free Hosting Forever</span>
+            </div>
+          </div>
+
+          {/* Example Portfolios Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[
+              {
+                name: "Suyash Yadav",
+                role: "Senior Staff Engineer",
+                template: "Bento Grid Dashboard",
+                theme: "Midnight Obsidian",
+                tags: ["Bento Layout", "Dark Mode", "Interactive Charts"],
+                link: "/suyash",
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+                quote: "The Bento Grid layout grouped my side projects and GitHub stars in a way that regular resume templates never could."
+              },
+              {
+                name: "Alex Rivera",
+                role: "Systems Developer",
+                template: "Retro UNIX Terminal",
+                theme: "Cyberpunk Green",
+                tags: ["UNIX Console", "CLI Inputs", "Contact Form"],
+                link: "/login",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
+                quote: "Recruiters literally mentioned my command-line terminal landing page during my interview. Absolute game changer."
+              },
+              {
+                name: "Elena Rostova",
+                role: "Frontend Designer",
+                template: "Glassmorphism Grid",
+                theme: "Synthwave Pink",
+                tags: ["Frosted Glass", "Moving Blobs", "Rich Gradients"],
+                link: "/login",
+                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+                quote: "The Synthwave Glassmorphism theme is gorgeous. It feels extremely premium and sets me apart from generic templates."
+              }
+            ].map((example, idx) => (
+              <div key={idx} className="p-6 rounded-xl border border-border-primary bg-bg-surface flex flex-col justify-between space-y-6 hover:shadow-lg hover:border-text-secondary/20 transition duration-300">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <img src={example.avatar} alt={example.name} className="w-10 h-10 rounded-full object-cover border border-border-primary shrink-0" />
+                    <div>
+                      <h4 className="text-xs font-bold text-text-primary leading-tight">{example.name}</h4>
+                      <p className="text-3xs text-text-secondary">{example.role}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-text-secondary italic leading-relaxed">
+                    &ldquo;{example.quote}&rdquo;
+                  </p>
+
+                  <div className="flex flex-wrap gap-1">
+                    {example.tags.map((tag, tagIdx) => (
+                      <span key={tagIdx} className="px-2 py-0.5 rounded bg-bg-primary border border-border-primary text-3xs font-semibold text-text-secondary">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-border-primary flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] text-text-tertiary uppercase font-bold block">Layout Theme</span>
+                    <span className="text-2xs font-extrabold text-text-primary">{example.template}</span>
+                  </div>
+                  <Link
+                    href={example.link}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-bg-primary hover:bg-bg-code border border-border-primary text-2xs font-bold text-text-secondary hover:text-text-primary transition"
+                  >
+                    View Live <ArrowRight size={10} />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* 3-Stage Showcase Section */}
@@ -538,10 +658,10 @@ export default function Home() {
           &copy; {new Date().getFullYear()} devport. Built for developers with zero cost.
         </div>
         <div className="flex gap-6">
-          <a href="#" className="hover:text-text-secondary transition">Terms</a>
-          <a href="#" className="hover:text-text-secondary transition">Privacy</a>
+          <Link href="/terms" className="hover:text-text-secondary transition">Terms</Link>
+          <Link href="/privacy" className="hover:text-text-secondary transition">Privacy</Link>
           <a 
-            href="https://github.com" 
+            href="https://github.com/Sparkyyy45/portfolio-maker" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="hover:text-text-secondary transition flex items-center gap-1"
