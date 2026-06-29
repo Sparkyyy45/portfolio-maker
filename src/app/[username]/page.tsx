@@ -118,14 +118,7 @@ export default async function UsernamePortfolioPage({ params }: PageProps) {
   const profileId = data.profile.id;
   const content = data.content;
   
-  // Fetch views count for the recruiter card dynamically
   const isDemo = username.toLowerCase() === 'suyash23';
-  let viewsCount = 43; // default fallback matching screenshot
-  if (!isDemo) {
-    const { fetchPortfolioStats } = await import('@/utils/db');
-    const stats = await fetchPortfolioStats(profileId);
-    viewsCount = stats.views;
-  }
 
   // Server Action for contact form — emails directly to owner
   async function handleMessageSubmitAction(msg: { name: string; email: string; content: string }) {
@@ -189,7 +182,6 @@ export default async function UsernamePortfolioPage({ params }: PageProps) {
         <AnalyticsTracker portfolioId={profileId} isDemo={isDemo} />
         <PortfolioPreview 
           data={content} 
-          viewsCount={viewsCount}
           onSubmitMessage={handleMessageSubmitAction} 
         />
       </ErrorBoundary>

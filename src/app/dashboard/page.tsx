@@ -948,17 +948,6 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className={labelCls}>Recruiter Card Availability Date</label>
-                      <input
-                        type="text"
-                        value={content.hero.availability_date || ''}
-                        placeholder="Available from June 2025"
-                        onChange={(e) => handleHeroChange('availability_date', e.target.value)}
-                        className={inputCls}
-                      />
-                    </div>
-
                     <h3 className={`${sectionHeaderCls} pt-3`}>Contact Handles</h3>
                     {[
                       { label: 'GitHub Username', platform: 'github', value: content.hero.socials?.github },
@@ -1560,7 +1549,7 @@ export default function DashboardPage() {
                 ? 'w-[375px] h-[667px] border-10 border-zinc-900 rounded-[2.5rem] shadow-2xl relative overflow-y-auto shrink-0 scrollbar-thin' 
                 : 'w-full h-full border border-border-primary rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] relative overflow-y-auto'
             } bg-bg-primary`}>
-              {content ? <PortfolioPreview data={content} isDemo={true} viewsCount={stats.views} /> : (
+              {content ? <PortfolioPreview data={content} isDemo={true} /> : (
                 <div className="absolute inset-0 flex items-center justify-center"><Loader2 size={18} className="animate-spin text-text-tertiary" /></div>
               )}
             </div>

@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import { PortfolioContent } from '@/types/portfolio';
 import BentoTemplate from './templates/BentoTemplate';
 import BrutalistTemplate from './templates/BrutalistTemplate';
@@ -9,18 +7,14 @@ import TerminalTemplate from './templates/TerminalTemplate';
 import GlassTemplate from './templates/GlassTemplate';
 import DeckTemplate from './templates/DeckTemplate';
 import TimelineTemplate from './templates/TimelineTemplate';
-import RecruiterCard from './RecruiterCard';
-import { ShieldAlert } from 'lucide-react';
 
 interface PortfolioPreviewProps {
   data: PortfolioContent;
   isDemo?: boolean;
-  viewsCount?: number;
   onSubmitMessage?: (msg: { name: string; email: string; content: string }) => Promise<void>;
 }
 
-export default function PortfolioPreview({ data, isDemo = false, viewsCount = 0, onSubmitMessage }: PortfolioPreviewProps) {
-  const [isRecruiterMode, setIsRecruiterMode] = useState(false);
+export default function PortfolioPreview({ data, isDemo = false, onSubmitMessage }: PortfolioPreviewProps) {
   const template = data.template || 'minimal';
 
   const renderTemplate = () => {
@@ -61,29 +55,6 @@ export default function PortfolioPreview({ data, isDemo = false, viewsCount = 0,
   return (
     <div className={`relative w-full h-full ${fontPairClass}`}>
       {renderTemplate()}
-
-      {/* Floating Recruiter Mode Toggle Button */}
-      {!isRecruiterMode && (
-        <div className="fixed bottom-6 right-6 z-40">
-          <button
-            onClick={() => setIsRecruiterMode(true)}
-            className="px-4 py-2.5 bg-zinc-950 hover:bg-zinc-900 text-zinc-100 border border-zinc-800 rounded-full shadow-xl font-bold text-xs flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95 duration-200 cursor-pointer"
-          >
-            <ShieldAlert size={14} className="text-amber-500 animate-pulse" />
-            Recruiter Mode
-          </button>
-        </div>
-      )}
-
-      {/* Recruiter Card Modal Overlay */}
-      {isRecruiterMode && (
-        <RecruiterCard
-          data={data}
-          viewsCount={viewsCount}
-          onClose={() => setIsRecruiterMode(false)}
-          onSubmitMessage={onSubmitMessage}
-        />
-      )}
     </div>
   );
 }

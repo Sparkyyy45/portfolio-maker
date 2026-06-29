@@ -7,7 +7,6 @@ export const INITIAL_PORTFOLIO_CONTENT: PortfolioContent = {
     bio: 'Tell recruiters a little bit about yourself, your core focus, and your passion.',
     location: 'San Francisco, CA',
     open_to_work: true,
-    availability_date: 'Available from June 2025',
     socials: {
       github: '',
       linkedin: '',
