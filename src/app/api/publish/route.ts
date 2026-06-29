@@ -45,8 +45,10 @@ export async function POST(request: Request) {
 
       const { error: profileError } = await supabase
         .from('profiles')
-        .update(profileUpdates)
-        .eq('id', user.id);
+        .upsert({
+          id: user.id,
+          ...profileUpdates
+        });
 
       if (profileError) {
         return NextResponse.json({ error: profileError.message }, { status: 400 });

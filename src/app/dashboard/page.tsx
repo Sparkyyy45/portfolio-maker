@@ -80,12 +80,13 @@ export default function DashboardPage() {
       setLoadingData(true);
       try {
         const prof = await fetchProfile(user.id);
-        setProfile(prof);
-        if (prof) {
-          setUsernameInput(prof.username || '');
-          setIsPublishedInput(prof.is_published);
-          if (!prof.username) { router.push('/onboarding'); return; }
+        if (!prof || !prof.username) {
+          router.push('/onboarding');
+          return;
         }
+        setProfile(prof);
+        setUsernameInput(prof.username || '');
+        setIsPublishedInput(prof.is_published);
         const portContent = await fetchPortfolio(user.id);
         if (portContent) {
           portContent.education = portContent.education || [];

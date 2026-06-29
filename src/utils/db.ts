@@ -43,8 +43,10 @@ export async function updateProfile(userId: string, updates: Partial<Profile>): 
 
   const { error } = await supabase
     .from('profiles')
-    .update(updates)
-    .eq('id', userId);
+    .upsert({
+      id: userId,
+      ...updates
+    });
 
   if (error) {
     console.error('Error updating profile:', error);
