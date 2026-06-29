@@ -1,676 +1,404 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
-  Sparkles, 
-  ArrowRight, 
-  Github, 
-  FileText, 
-  Globe, 
-  Inbox, 
-  Database, 
-  Shield, 
-  Cpu, 
-  RefreshCw, 
-  Code,
-  Zap,
-  Server,
-  ChevronRight
+  ArrowRight,
+  Clock,
+  Sparkles,
+  Link as LinkIcon,
+  Layout,
+  Globe,
+  Share2,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-type ScriptLine = {
-  text: string;
-  delay: number;
-  type: 'input' | 'output' | 'success' | 'blank';
-};
-
-const terminalScript: ScriptLine[] = [
-  { text: "$ npx devport init", delay: 500, type: "input" },
-  { text: "", delay: 100, type: "blank" },
-  { text: "? Enter your GitHub username: suyashyadav1709", delay: 600, type: "input" },
-  { text: "  Checking public repository logs...", delay: 200, type: "output" },
-  { text: "  ✓ 18 repositories resolved (calculated main languages & stars)", delay: 300, type: "success" },
-  { text: "", delay: 100, type: "blank" },
-  { text: "? Path to resume PDF: ~/downloads/resume.pdf", delay: 700, type: "input" },
-  { text: "  Extracting PDF character blocks offline (pdfjs-dist)...", delay: 200, type: "output" },
-  { text: "  ✓ Normalizing milestones using Gemini Flash API guidelines...", delay: 400, type: "success" },
-  { text: "  ✓ Saved details to Postgres JSONB document...", delay: 150, type: "success" },
-  { text: "", delay: 100, type: "blank" },
-  { text: "  ✓ Compiled static components & deployed to Vercel Edge...", delay: 250, type: "success" },
-  { text: "  Done. Live portfolio served at: devport.com/suyashyadav", delay: 300, type: "output" },
+const FAQ_ITEMS = [
+  {
+    q: "Is it really free?",
+    a: "Yes. Building and hosting your portfolio is 100% free forever. We'll introduce premium templates and custom domains later, but the core product remains free."
+  },
+  {
+    q: "How does it know what to put on my portfolio?",
+    a: "We analyze your public GitHub repositories, calculate your top languages, fetch your stars, and pull your bio. If you upload a PDF resume, our AI extracts your work experience and education to build a complete profile."
+  },
+  {
+    q: "Can I use my own domain?",
+    a: "Custom domains (like yourname.com) are coming next month. For now, you get a clean, professional devport.com/yourname link."
+  },
+  {
+    q: "What if I don't have a lot of GitHub activity?",
+    a: "That's exactly why we built the PDF import. Even if your GitHub is quiet, we can build a stunning portfolio using just your resume."
+  },
+  {
+    q: "Can I edit the portfolio after it's generated?",
+    a: "Absolutely. DevPort gives you a clean dashboard where you can edit copy, change themes, hide projects, and update your resume anytime."
+  }
 ];
 
-export default function Home() {
-  const [lines, setLines] = useState<ScriptLine[]>([]);
-  const [done, setDone] = useState(false);
+export default function LandingPage() {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [handle, setHandle] = useState("");
 
-  useEffect(() => {
-    let current = 0;
-    let active = true;
-
-    setLines([]);
-    setDone(false);
-
-    const run = async () => {
-      while (current < terminalScript.length && active) {
-        await new Promise((r) => setTimeout(r, terminalScript[current].delay));
-        if (!active) break;
-        const line = terminalScript[current];
-        setLines((prev) => [...prev, line]);
-        current++;
-      }
-      if (active) setDone(true);
-    };
-
-    run();
-    return () => {
-      active = false;
-    };
-  }, []);
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary font-sans flex flex-col justify-between relative selection:bg-neutral-900/5 selection:text-text-primary">
-      
-      {/* Radial Grid Background */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-[0.4] pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/20 via-bg-primary to-bg-primary pointer-events-none" />
-
-      {/* Header */}
-      <header className="max-w-[1120px] mx-auto w-full px-6 py-6 flex items-center justify-between relative z-10 border-b border-border-subtle bg-bg-primary/80 backdrop-blur-md sticky top-0">
-        <div className="flex items-center gap-2">
-          <div className="p-1 rounded bg-accent text-text-inverse">
-            <Sparkles size={16} />
+    <div className="min-h-screen bg-bg-primary text-text-primary font-sans">
+      {/* NAV */}
+      <nav className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto border-b border-border-primary/50">
+        <div className="font-fraunces font-bold text-xl tracking-tight text-text-primary flex items-center gap-2">
+          <div className="w-6 h-6 rounded bg-accent text-white flex items-center justify-center">
+            <Sparkles size={14} />
           </div>
-          <span className="font-bold tracking-tight text-base uppercase text-text-primary">
-            DEVPORT
-          </span>
+          DevPort
         </div>
-
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-text-secondary">
+          <a href="#how-it-works" className="hover:text-text-primary transition-colors">How it works</a>
+          <a href="#features" className="hover:text-text-primary transition-colors">Features</a>
+          <a href="#faq" className="hover:text-text-primary transition-colors">FAQ</a>
+        </div>
         <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-[13px] font-medium text-text-secondary hover:text-text-primary transition"
-          >
+          <Link href="/login" className="text-sm font-medium text-text-secondary hover:text-text-primary hidden sm:block">
             Sign In
           </Link>
-          <Link
-            href="/login"
-            className="px-3.5 py-1.5 rounded-lg bg-accent hover:bg-accent-hover text-[13px] font-semibold text-text-inverse transition active:translate-y-0.5"
-          >
-            Get Started
+          <Link href="/login" className="flex items-center gap-2 bg-text-primary text-bg-primary px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity">
+            Claim your link <ArrowRight size={14} />
           </Link>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <header className="pt-24 pb-16 px-6 text-center max-w-4xl mx-auto">
+        <div className="inline-block bg-warm-light text-warm px-4 py-1.5 rounded-full text-sm font-medium mb-6 border border-warm/20">
+          ✨ Free forever · No credit card required
+        </div>
+        
+        <h1 className="font-fraunces text-5xl md:text-7xl font-bold text-text-primary leading-[1.1] mb-6 tracking-tight">
+          Your portfolio, <br className="hidden md:block" />
+          <span className="text-text-tertiary">built while you sleep.</span>
+        </h1>
+        
+        <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed">
+          Stop tweaking CSS and fighting with hosting. Connect your GitHub or upload your resume, and get a premium, recruiter-ready developer portfolio in 60 seconds.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <Link href="/login" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-accent text-white px-8 py-3.5 rounded-full text-base font-medium hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20">
+            Build my portfolio free <ArrowRight size={16} />
+          </Link>
+          <Link href="/suyash23" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-bg-surface text-text-primary border border-border-primary px-8 py-3.5 rounded-full text-base font-medium hover:bg-bg-code transition-colors">
+            See an example
+          </Link>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-text-secondary font-medium">
+          <span className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Auto-syncs with GitHub</span>
+          <span className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> AI Resume Parsing</span>
+          <span className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Zero maintenance</span>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-[1120px] mx-auto w-full px-6 py-16 md:py-24 space-y-32 relative z-10 flex-1 flex flex-col">
-        
-        {/* Hero Section */}
-        <section className="text-center space-y-8 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 text-[13px] font-medium text-text-secondary bg-bg-surface border border-border-primary rounded-full shadow-sm hover:shadow-md transition">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            100% Free &amp; Hosted Instantly
-          </div>
-
-          <h1 className="text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1.08] tracking-[-0.04em] text-gradient mx-auto max-w-4xl">
-            Get a stunning developer portfolio, in 60 seconds.
-          </h1>
-
-          <p className="text-[17px] md:text-[19px] leading-[1.6] text-text-secondary max-w-2xl mx-auto">
-            Stop fighting with HTML/CSS layouts. Just import your GitHub or upload a resume PDF, pick a gorgeous designer preset, and share a premium recruiter-magnet site hosted completely free.
-          </p>
-
-          {/* Claim Handle Bar */}
-          <div className="max-w-md mx-auto w-full p-1.5 rounded-xl border border-border-primary bg-bg-primary shadow-[0_8px_30px_rgba(0,0,0,0.03)] flex items-center justify-between gap-2 hover:border-text-tertiary transition duration-300">
-            <span className="text-sm text-text-tertiary font-medium pl-3 select-none">
-              devport.com/
-            </span>
-            <input
-              type="text"
-              placeholder="username"
-              disabled
-              className="bg-transparent text-sm font-semibold text-text-primary w-full focus:outline-none placeholder-text-tertiary opacity-60"
-            />
-            <Link
-              href="/login"
-              className="flex items-center gap-1 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-[14px] font-semibold text-text-inverse transition active:translate-y-0.5 shrink-0 cursor-pointer"
-            >
-              Claim Handle
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-
-          {/* Secondary Hero Actions */}
-          <div className="flex flex-wrap justify-center gap-3 pt-2">
-            <Link
-              href="/suyash23"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border-primary bg-bg-surface hover:bg-bg-code text-xs font-semibold text-text-secondary hover:text-text-primary transition shadow-2xs cursor-pointer select-none"
-            >
-              View Demo Profile <Globe size={13} />
-            </Link>
-            <a
-              href="#live-examples"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border-primary bg-bg-surface hover:bg-bg-code text-xs font-semibold text-text-secondary hover:text-text-primary transition shadow-2xs cursor-pointer select-none"
-            >
-              See Example Portfolios
-            </a>
-          </div>
-        </section>
-
-        {/* Terminal Demo Section */}
-        <section className="pb-8">
-          <motion.div 
-            className="max-w-[760px] mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            whileHover={{ y: -4, transition: { duration: 0.3 } }}
-          >
-            <div className="rounded-xl overflow-hidden border border-border-primary shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.1)] transition-all duration-500">
-              {/* Terminal header */}
-              <div className="bg-[#F4F4F5] px-4 py-3 flex items-center border-b border-border-primary">
-                <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#E4E4E7]" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#E4E4E7]" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#E4E4E7]" />
-                </div>
-                <span className="flex-1 text-center text-[12px] font-mono text-text-secondary -ml-10">
-                  Terminal Mockup
-                </span>
-              </div>
-
-              {/* Terminal body */}
-              <div className="bg-bg-terminal p-6 font-mono text-[13px] leading-[1.8] min-h-[350px] text-left">
-                {lines.map((line, i) => {
-                  if (line.type === "blank")
-                    return <div key={i} className="h-[20px]" />;
-
-                  if (line.type === "input")
-                    return (
-                      <div key={i} className="text-text-inverse">
-                        {line.text}
-                      </div>
-                    );
-
-                  if (line.type === "success")
-                    return (
-                      <div key={i} className="text-emerald-400">
-                        {line.text}
-                      </div>
-                    );
-
-                  return (
-                    <div key={i} className="text-zinc-500">
-                      {line.text}
-                    </div>
-                  );
-                })}
-
-                {!done && (
-                  <span className="inline-block w-[6px] h-[14px] bg-zinc-500 animate-pulse align-middle ml-1" />
-                )}
-              </div>
+      {/* PRODUCT PREVIEW */}
+      <section className="px-6 max-w-5xl mx-auto mb-32">
+        <div className="bg-bg-primary rounded-2xl border border-border-primary shadow-2xl overflow-hidden">
+          {/* Browser Chrome */}
+          <div className="bg-bg-surface border-b border-border-primary px-4 py-3 flex items-center gap-4">
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-400"></div>
+              <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+              <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
             </div>
-          </motion.div>
-        </section>
-
-        {/* See What It Builds (Social Proof & Live Examples) */}
-        <section id="live-examples" className="space-y-12 border-t border-border-primary pt-20">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 text-2xs font-bold text-accent bg-accent/5 border border-accent/10 rounded-full uppercase tracking-wider">
-              ✨ Beautiful Developer Showcases
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text-primary leading-tight">
-              See what you can build in 60 seconds
-            </h2>
-            <p className="text-sm md:text-base text-text-secondary leading-relaxed font-normal">
-              No layouts to design, no code to write. Choose from one of our beautiful presets tailored for developers.
-            </p>
-          </div>
-
-          {/* User Count & Testimonials Bar */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto text-center">
-            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface flex flex-col justify-center items-center text-center space-y-1 shadow-2xs">
-              <span className="text-3xl font-extrabold text-text-primary tracking-tight">1,840+</span>
-              <span className="text-2xs font-bold text-text-secondary uppercase tracking-wide">Developer Portfolios Built</span>
-            </div>
-            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface flex flex-col justify-center items-center text-center space-y-1 shadow-2xs">
-              <span className="text-3xl font-extrabold text-text-primary tracking-tight">50ms</span>
-              <span className="text-2xs font-bold text-text-secondary uppercase tracking-wide">Edge Response Speed</span>
-            </div>
-            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface flex flex-col justify-center items-center text-center space-y-1 shadow-2xs">
-              <span className="text-3xl font-extrabold text-text-primary tracking-tight">100%</span>
-              <span className="text-2xs font-bold text-text-secondary uppercase tracking-wide">Free Hosting Forever</span>
+            <div className="bg-bg-primary text-text-secondary text-xs px-4 py-1.5 rounded flex-1 text-center font-mono border border-border-primary max-w-md mx-auto">
+              devport.com/priyasharma
             </div>
           </div>
-
-          {/* Example Portfolios Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              {
-                name: "Suyash Yadav",
-                role: "Senior Staff Engineer",
-                template: "Bento Grid Dashboard",
-                theme: "Midnight Obsidian",
-                tags: ["Bento Layout", "Dark Mode", "Interactive Charts"],
-                link: "/suyash23",
-                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-                quote: "The Bento Grid layout grouped my side projects and GitHub stars in a way that regular resume templates never could."
-              },
-              {
-                name: "Alex Rivera",
-                role: "Systems Developer",
-                template: "Retro UNIX Terminal",
-                theme: "Cyberpunk Green",
-                tags: ["UNIX Console", "CLI Inputs", "Contact Form"],
-                link: "/login",
-                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-                quote: "Recruiters literally mentioned my command-line terminal landing page during my interview. Absolute game changer."
-              },
-              {
-                name: "Elena Rostova",
-                role: "Frontend Designer",
-                template: "Glassmorphism Grid",
-                theme: "Synthwave Pink",
-                tags: ["Frosted Glass", "Moving Blobs", "Rich Gradients"],
-                link: "/login",
-                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
-                quote: "The Synthwave Glassmorphism theme is gorgeous. It feels extremely premium and sets me apart from generic templates."
-              }
-            ].map((example, idx) => (
-              <div key={idx} className="p-6 rounded-xl border border-border-primary bg-bg-surface flex flex-col justify-between space-y-6 hover:shadow-lg hover:border-text-secondary/20 transition duration-300">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <img src={example.avatar} alt={example.name} className="w-10 h-10 rounded-full object-cover border border-border-primary shrink-0" />
-                    <div>
-                      <h4 className="text-xs font-bold text-text-primary leading-tight">{example.name}</h4>
-                      <p className="text-3xs text-text-secondary">{example.role}</p>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-text-secondary italic leading-relaxed">
-                    &ldquo;{example.quote}&rdquo;
-                  </p>
-
-                  <div className="flex flex-wrap gap-1">
-                    {example.tags.map((tag, tagIdx) => (
-                      <span key={tagIdx} className="px-2 py-0.5 rounded bg-bg-primary border border-border-primary text-3xs font-semibold text-text-secondary">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-border-primary flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-text-tertiary uppercase font-bold block">Layout Theme</span>
-                    <span className="text-2xs font-extrabold text-text-primary">{example.template}</span>
-                  </div>
-                  <Link
-                    href={example.link}
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-bg-primary hover:bg-bg-code border border-border-primary text-2xs font-bold text-text-secondary hover:text-text-primary transition"
-                  >
-                    View Live <ArrowRight size={10} />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 3-Stage Showcase Section */}
-        <section className="space-y-20">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text-primary">
-              Ingestion to deployment in three simple stages
-            </h2>
-            <p className="text-sm md:text-base text-text-secondary leading-relaxed font-normal">
-              We engineered a frictionless path that takes raw milestones and builds highly polished static web components.
-            </p>
-          </div>
-
-          <div className="space-y-24">
-            
-            {/* Step 1: PDF Parser */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-              <div className="space-y-5">
-                <div className="px-2.5 py-1 rounded bg-bg-surface border border-border-primary text-text-secondary font-bold text-xs w-fit">
-                  Step 01
-                </div>
-                <h3 className="text-2xl font-bold tracking-tight text-text-primary">
-                  Client-side character extraction &amp; AI normalization
-                </h3>
-                <div className="space-y-4 text-text-secondary text-sm leading-relaxed">
-                  <p>
-                    Drop your resume PDF. Rather than sending heavy files to an API which causes high memory usage and latency, your browser extracts character blocks offline using <code className="bg-bg-code text-text-primary px-1.5 py-0.5 rounded text-xs border border-border-primary">pdfjs-dist</code>.
-                  </p>
-                  <p>
-                    We package this clean text and prompt Google's Gemini Flash model with strict JSON guidelines. It outputs dates, employment histories, and skills lists.
-                  </p>
-                </div>
-              </div>
-
-              {/* PDF Parser Visual Mockup */}
-              <div className="p-5 rounded-xl border border-border-primary bg-bg-surface shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative overflow-hidden group hover:border-border-primary/80 transition duration-300">
-                <div className="flex items-center justify-between border-b border-border-primary pb-3 mb-4 text-xs font-mono text-text-tertiary">
-                  <span className="flex items-center gap-1.5">
-                    <FileText size={14} className="text-text-secondary" />
-                    EXTRACTED_RESUME.JSON
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-bg-code text-text-secondary border border-border-primary font-bold text-[10px]">
-                    GEMINI FLASH
-                  </span>
-                </div>
-                <pre className="text-2xs font-mono text-text-secondary leading-normal overflow-x-auto">
-{`{
-  "name": "Jane Doe",
-  "role": "Full-Stack Software Engineer",
-  "skills": ["Next.js", "TypeScript", "TailwindCSS", "Supabase"],
-  "experience": [
-    {
-      "company": "ScaleTech Inc.",
-      "role": "Senior Engineer",
-      "period": "2023 - Present",
-      "bullets": [
-        "Led migration of central routing pipeline to edge CDNs",
-        "Optimized client-side rendering speeds by 40%"
-      ]
-    }
-  ]
-}`}
-                </pre>
-              </div>
-            </div>
-
-            {/* Step 2: GitHub Ingestion */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-              
-              {/* GitHub Ingestion Visual Mockup (First on Desktop) */}
-              <div className="p-5 rounded-xl border border-border-primary bg-bg-surface shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative overflow-hidden group hover:border-border-primary/80 transition duration-300 order-2 md:order-1">
-                <div className="flex items-center justify-between border-b border-border-primary pb-3 mb-4 text-xs font-mono text-text-tertiary">
-                  <span className="flex items-center gap-1.5">
-                    <Github size={14} className="text-text-secondary" />
-                    GITHUB REPOS RESOLVED
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-bg-code text-text-secondary border border-border-primary font-bold text-[10px]">
-                    API PAYLOAD
-                  </span>
-                </div>
-                <pre className="text-2xs font-mono text-text-secondary leading-normal overflow-x-auto">
-{`[
-  {
-    "name": "nextjs-edge-cache",
-    "stars": 42,
-    "language": "TypeScript",
-    "description": "On-demand cache purging utility"
-  },
-  {
-    "name": "rust-db-pool",
-    "stars": 85,
-    "language": "Rust",
-    "description": "Lightweight async connection pooler"
-  }
-]`}
-                </pre>
-              </div>
-
-              <div className="space-y-5 order-1 md:order-2">
-                <div className="px-2.5 py-1 rounded bg-bg-surface border border-border-primary text-text-secondary font-bold text-xs w-fit">
-                  Step 02
-                </div>
-                <h3 className="text-2xl font-bold tracking-tight text-text-primary">
-                  Frictionless GitHub Sync
-                </h3>
-                <div className="space-y-4 text-text-secondary text-sm leading-relaxed">
-                  <p>
-                    No OAuth login required. Simply enter your username, and we query public repository logs, calculating the main languages and active star counts.
-                  </p>
-                  <p>
-                    We filter out fork archives and populate your featured project bento grids automatically.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Step 3: Edge Caching */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-              <div className="space-y-5">
-                <div className="px-2.5 py-1 rounded bg-bg-surface border border-border-primary text-text-secondary font-bold text-xs w-fit">
-                  Step 03
-                </div>
-                <h3 className="text-2xl font-bold tracking-tight text-text-primary">
-                  Vercel edge caching &amp; instant revalidation
-                </h3>
-                <div className="space-y-4 text-text-secondary text-sm leading-relaxed">
-                  <p>
-                    Normally, dynamic database routing introduces query latency. DevPort compiles your profile page into static components cached at Edge nodes.
-                  </p>
-                  <p>
-                    When you save edits in your dashboard, we invoke <code className="bg-bg-code text-text-primary px-1.5 py-0.5 rounded text-xs border border-border-primary">revalidatePath</code>. The old cache is purged instantly, serving updated content in under 50ms worldwide.
-                  </p>
-                </div>
-              </div>
-
-              {/* CDN metrics visual mockup */}
-              <div className="p-5 rounded-xl border border-border-primary bg-bg-surface shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative overflow-hidden group hover:border-border-primary/80 transition duration-300">
-                <div className="flex items-center justify-between border-b border-border-primary pb-3 mb-4 text-xs font-mono text-text-tertiary">
-                  <span className="flex items-center gap-1.5">
-                    <Server size={14} className="text-text-secondary" />
-                    CDN ROUTING METRICS
-                  </span>
-                  <span className="text-[10px] text-text-tertiary uppercase tracking-wider">
-                    Edge active
-                  </span>
-                </div>
-                <div className="space-y-3 font-mono text-xs text-text-secondary">
-                  <div className="flex items-center justify-between">
-                    <span className="text-text-tertiary uppercase text-[10px]">Edge Location</span>
-                    <span className="font-semibold text-text-primary">LHR-1 (London)</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-text-tertiary uppercase text-[10px]">Cache Status</span>
-                    <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold text-[10px]">
-                      HIT (Edge Cached)
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-text-tertiary uppercase text-[10px]">Purge Trigger</span>
-                    <span className="text-text-primary font-semibold text-[11px]">revalidatePath(&apos;/[username]&apos;)</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-text-tertiary uppercase text-[10px]">Response Latency</span>
-                    <span className="font-bold text-emerald-750 text-[13px] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">18ms</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* Technical Specs Stack Bento Grid */}
-        <section className="space-y-12 border-t border-border-primary pt-20">
-          <div className="max-w-2xl space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary leading-tight">
-              Everything you need to stand out to recruiters
-            </h2>
-            <p className="text-sm md:text-base text-text-secondary leading-relaxed font-normal">
-              DevPort automates layout design, database syncs, and responsive styling so you can focus on your code.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            {/* Stunning Layout Presets */}
-            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
-              <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <Database size={18} />
-              </div>
-              <h4 className="text-base font-bold text-text-primary">Stunning Designer Presets</h4>
-              <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                Choose from Bento Grid dashboards, Unix terminal simulations, minimal resumes, or frosted glassmorphism templates. Switch layouts instantly in one click.
-              </p>
-            </div>
-
-            {/* Ingestion */}
-            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
-              <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <Cpu size={18} />
-              </div>
-              <h4 className="text-base font-bold text-text-primary">1-Click PDF &amp; GitHub Sync</h4>
-              <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                Upload your resume PDF or link your GitHub username. We parse your employment milestones and fetch repository stats automatically with no manual typing.
-              </p>
-            </div>
-
-            {/* ATS Resumes */}
-            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
-              <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <FileText size={18} />
-              </div>
-              <h4 className="text-base font-bold text-text-primary">ATS-Friendly PDF Resumes</h4>
-              <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                Your public page includes a built-in clean CSS print layout. Recruiters can hit Ctrl+P to export your portfolio into an ATS-friendly, clean 1-page paper resume.
-              </p>
-            </div>
-
-            {/* Visitor Mailbox */}
-            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
-              <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <Inbox size={18} />
-              </div>
-              <h4 className="text-base font-bold text-text-primary">Direct Recruiter Inbox</h4>
-              <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                Avoid public email scrapers. Recruiters can send you messages directly through your page forms. Submissions are securely routed straight to your email inbox.
-              </p>
-            </div>
-
-            {/* AI Polish */}
-            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
-              <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <Sparkles size={18} />
-              </div>
-              <h4 className="text-base font-bold text-text-primary">Real-Time AI Polishing</h4>
-              <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                Unsure about your project summaries or employment descriptions? Let our integrated AI assistant instantly polish them to sound metric-oriented and punchy.
-              </p>
-            </div>
-
-            {/* Free Hosting */}
-            <div className="p-6 rounded-xl border border-border-primary bg-bg-surface hover:bg-bg-primary hover:border-text-secondary/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition duration-300 space-y-4 group">
-              <div className="p-2.5 rounded-lg bg-bg-primary border border-border-primary text-text-secondary w-fit group-hover:bg-accent group-hover:text-text-inverse transition duration-350">
-                <Globe size={18} />
-              </div>
-              <h4 className="text-base font-bold text-text-primary">100% Free Lifetime Hosting</h4>
-              <p className="text-[13px] text-text-secondary leading-relaxed font-normal">
-                DevPort handles all deployment configurations. Your claimed subdomain is served globally on local edge CDNs at zero cost to you, forever.
-              </p>
-            </div>
-
-          </div>
-        </section>
-
-        {/* Frequently Asked Questions */}
-        <section className="space-y-12 border-t border-border-primary pt-20">
-          <div className="max-w-2xl space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary leading-tight">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-sm md:text-base text-text-secondary leading-relaxed font-normal">
-              Everything you need to know about DevPort and zero-cost edge hosting.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface/50 space-y-2">
-              <h4 className="text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <Zap size={14} className="text-text-secondary" />
-                How is hosting completely free?
-              </h4>
-              <p className="text-xs md:text-sm text-text-secondary leading-relaxed font-normal">
-                We design sites around statically compiled pages. By rendering profiles statically, page delivery runs completely on Vercel&apos;s Edge CDN limits (which offer 100GB bandwidth free per month), bypassing expensive database query tiers.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface/50 space-y-2">
-              <h4 className="text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <Shield size={14} className="text-text-secondary" />
-                Are my resume details safe?
-              </h4>
-              <p className="text-xs md:text-sm text-text-secondary leading-relaxed font-normal">
-                Yes. PDF processing happens completely in-browser. Your files are not stored on any backend disk storage. We extract the raw characters and stream them directly to the Gemini AI parser model API over HTTPS.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface/50 space-y-2">
-              <h4 className="text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <RefreshCw size={14} className="text-text-secondary" />
-                Will my old URL stop working if I change it?
-              </h4>
-              <p className="text-xs md:text-sm text-text-secondary leading-relaxed font-normal">
-                Yes. When you update your subpath handle in the dashboard, the old route is immediately updated and freed up for others to claim. Visits to the old link will automatically receive a clean 404 page.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-xl border border-border-primary bg-bg-surface/50 space-y-2">
-              <h4 className="text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <Inbox size={14} className="text-text-secondary" />
-                How does the recruiter inbox work?
-              </h4>
-              <p className="text-xs md:text-sm text-text-secondary leading-relaxed font-normal">
-                DevPort portfolios embed a contact message block. Submissions are stored inside a dedicated messaging table indexed by user accounts. You can inspect recruiter names, emails, and message text inside your panel.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Bottom Call to Action Card */}
-        <section className="p-8 md:p-14 rounded-2xl border border-border-primary bg-bg-surface text-center space-y-8 relative overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
-          <div className="absolute inset-0 bg-grid-pattern opacity-[0.2] pointer-events-none" />
           
-          <div className="space-y-3 relative z-10">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
-              Ready to deploy your dev portfolio?
-            </h2>
-            <p className="text-xs md:text-sm text-text-secondary max-w-lg mx-auto leading-relaxed font-normal">
-              Start from scratch or claim your custom subpath route in seconds. Zero setup required.
-            </p>
+          {/* Mock Portfolio Content */}
+          <div className="p-8 md:p-12 bg-white flex flex-col md:flex-row gap-12 items-start text-left">
+            <div className="flex-1">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Priya Sharma</h2>
+              <p className="text-gray-500 text-lg mb-6">Full Stack Developer · React & Node.js</p>
+              <p className="text-gray-600 leading-relaxed mb-8 max-w-lg">
+                Building scalable web applications and intuitive user interfaces. Previously interned at Amazon. Passionate about open source and web accessibility.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="p-4 border border-gray-100 rounded-lg hover:shadow-md transition">
+                  <h3 className="font-semibold text-gray-900">E-Commerce Dashboard</h3>
+                  <p className="text-sm text-gray-500 mt-1">Next.js · Tailwind · Prisma</p>
+                </div>
+                <div className="p-4 border border-gray-100 rounded-lg hover:shadow-md transition">
+                  <h3 className="font-semibold text-gray-900">Real-time Chat App</h3>
+                  <p className="text-sm text-gray-500 mt-1">React · Socket.io · Express</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="w-full md:w-64 bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <h3 className="font-semibold text-gray-900 mb-4">Tech Stack</h3>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">TypeScript</span>
+                <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">React</span>
+                <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">Node.js</span>
+                <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">PostgreSQL</span>
+              </div>
+            </div>
           </div>
-
-          <div className="inline-flex relative z-10">
-            <Link 
-              href="/login" 
-              className="flex items-center gap-1.5 px-5 py-3 rounded-lg bg-accent hover:bg-accent-hover text-text-inverse font-semibold text-sm shadow-sm transition active:translate-y-0.5 cursor-pointer"
-            >
-              Get Started Free 
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-        </section>
-
-      </main>
-
-      {/* Footer */}
-      <footer className="max-w-[1120px] mx-auto w-full px-6 py-10 border-t border-border-primary flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-tertiary relative z-10 font-medium">
-        <div>
-          &copy; {new Date().getFullYear()} devport. Built for developers with zero cost.
         </div>
-        <div className="flex gap-6">
-          <Link href="/terms" className="hover:text-text-secondary transition">Terms</Link>
-          <Link href="/privacy" className="hover:text-text-secondary transition">Privacy</Link>
-          <a 
-            href="https://github.com/Sparkyyy45/portfolio-maker" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="hover:text-text-secondary transition flex items-center gap-1"
+      </section>
+
+      {/* SOCIAL PROOF */}
+      <section className="border-y border-border-primary bg-bg-surface py-12 px-6 text-center">
+        <p className="text-sm font-semibold text-text-secondary uppercase tracking-widest mb-8">Trusted by students and fresh grads at</p>
+        <div className="flex flex-wrap justify-center gap-8 md:gap-16 items-center max-w-4xl mx-auto opacity-60 grayscale font-fraunces font-bold text-xl md:text-2xl text-text-primary">
+          <span>IIT Delhi</span>
+          <span>BITS Pilani</span>
+          <span>NIT Trichy</span>
+          <span>VIT Vellore</span>
+          <span>IIIT Hyderabad</span>
+        </div>
+      </section>
+
+      {/* PROBLEM */}
+      <section className="py-24 px-6 max-w-5xl mx-auto">
+        <h2 className="font-fraunces text-3xl md:text-4xl font-bold text-center mb-16">
+          Building a portfolio takes weeks you don't have.
+        </h2>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-bg-surface p-8 rounded-2xl border border-border-primary">
+            <h3 className="font-semibold text-lg mb-2">The Template Trap</h3>
+            <p className="text-text-secondary leading-relaxed">You buy a React template, but it's full of complex code. You spend 3 days just trying to figure out how to change the primary color and update the projects list.</p>
+          </div>
+          <div className="bg-bg-surface p-8 rounded-2xl border border-border-primary">
+            <h3 className="font-semibold text-lg mb-2">The Design Struggle</h3>
+            <p className="text-text-secondary leading-relaxed">You try to code it from scratch. You spend 4 hours tweaking margins and drop shadows, and it still doesn't look as good as the ones on Awwwards.</p>
+          </div>
+          <div className="bg-bg-surface p-8 rounded-2xl border border-border-primary">
+            <h3 className="font-semibold text-lg mb-2">The Update Chore</h3>
+            <p className="text-text-secondary leading-relaxed">You finally build it, but then you finish a new project. You have to open VS Code, write the HTML, compress the image, and push to Vercel just to add one item.</p>
+          </div>
+          <div className="bg-accent-light p-8 rounded-2xl border border-accent-border">
+            <h3 className="font-semibold text-lg mb-2 text-accent">The DevPort Solution</h3>
+            <p className="text-text-secondary leading-relaxed">You give us your GitHub username or upload your PDF resume. We generate a stunning, deployed portfolio in 60 seconds. You never touch HTML again.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how-it-works" className="py-24 px-6 bg-bg-primary border-t border-border-primary">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-fraunces text-3xl md:text-4xl font-bold text-center mb-16">
+            From zero to deployed in 3 steps.
+          </h2>
+
+          <div className="space-y-12 relative before:absolute before:inset-0 before:ml-[28px] md:before:ml-[50%] before:-translate-x-px md:before:translate-x-0 before:w-0.5 before:bg-border-primary before:z-0">
+            
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 group">
+              <div className="w-full md:w-5/12 md:text-right order-2 md:order-1">
+                <span className="inline-block px-3 py-1 bg-accent-light text-accent text-xs font-bold rounded-full mb-3">Step 1</span>
+                <h3 className="text-xl font-bold mb-2">Import your data</h3>
+                <p className="text-text-secondary">Enter your GitHub username or upload your latest PDF resume. Our AI extracts your experience, skills, and top projects automatically.</p>
+              </div>
+              <div className="w-14 h-14 rounded-full bg-white border-4 border-border-primary flex items-center justify-center font-fraunces font-bold text-xl text-text-tertiary group-hover:border-accent group-hover:text-accent transition-colors order-1 md:order-2 shrink-0 relative z-10 shadow-sm ml-0 md:ml-0">
+                1
+              </div>
+              <div className="w-full md:w-5/12 order-3">
+                <div className="bg-bg-surface p-4 rounded-xl border border-border-primary text-sm font-mono text-text-secondary">
+                  &gt; Extracting PDF text...<br/>
+                  &gt; Identifying work history...<br/>
+                  &gt; Found 3 projects on GitHub
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 group">
+              <div className="w-full md:w-5/12 md:text-right order-2 md:order-1 md:invisible">
+                {/* Spacer for layout */}
+              </div>
+              <div className="w-14 h-14 rounded-full bg-white border-4 border-border-primary flex items-center justify-center font-fraunces font-bold text-xl text-text-tertiary group-hover:border-accent group-hover:text-accent transition-colors order-1 md:order-2 shrink-0 relative z-10 shadow-sm ml-0 md:ml-0">
+                2
+              </div>
+              <div className="w-full md:w-5/12 order-3 md:-ml-0">
+                <span className="inline-block px-3 py-1 bg-warm-light text-warm text-xs font-bold rounded-full mb-3">Step 2</span>
+                <h3 className="text-xl font-bold mb-2">Pick a premium theme</h3>
+                <p className="text-text-secondary">Choose from our curated list of designer-crafted themes. From minimal typography to dark mode glassmorphism, they all look incredible.</p>
+              </div>
+            </div>
+
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 group">
+              <div className="w-full md:w-5/12 md:text-right order-2 md:order-1">
+                <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200 text-xs font-bold rounded-full mb-3">Step 3</span>
+                <h3 className="text-xl font-bold mb-2">Claim your link</h3>
+                <p className="text-text-secondary">Hit publish and instantly get a professional devport.com/yourname link to put on your resume and share with recruiters.</p>
+              </div>
+              <div className="w-14 h-14 rounded-full bg-white border-4 border-border-primary flex items-center justify-center font-fraunces font-bold text-xl text-text-tertiary group-hover:border-accent group-hover:text-accent transition-colors order-1 md:order-2 shrink-0 relative z-10 shadow-sm ml-0 md:ml-0">
+                3
+              </div>
+              <div className="w-full md:w-5/12 order-3">
+                <div className="bg-bg-surface p-4 rounded-xl border border-border-primary flex items-center justify-center gap-2 font-medium">
+                  <LinkIcon size={16} className="text-text-tertiary"/> devport.com/suyash
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section id="features" className="py-24 px-6 max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="font-fraunces text-3xl md:text-4xl font-bold mb-4">Everything you need. Nothing you don't.</h2>
+          <p className="text-text-secondary text-lg max-w-2xl mx-auto">We cut out the bloat so you can focus on what matters: looking good and getting hired.</p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[
+            { icon: <Clock size={24} className="text-accent"/>, title: "60-Second Setup", desc: "No coding required. Just import, pick a theme, and publish." },
+            { icon: <Layout size={24} className="text-accent"/>, title: "Premium Themes", desc: "Designed by professionals. Ensure you stand out from the crowd." },
+            { icon: <Globe size={24} className="text-accent"/>, title: "Free Global Hosting", desc: "Your site is hosted on our edge network, blazing fast and always online." },
+            { icon: <Share2 size={24} className="text-accent"/>, title: "Auto-Sync GitHub", desc: "Connect your account once, and your top repos update automatically." },
+            { icon: <Sparkles size={24} className="text-accent"/>, title: "AI Resume Parser", desc: "Upload your PDF and our AI turns it into structured portfolio data." },
+            { icon: <LinkIcon size={24} className="text-accent"/>, title: "Custom Links", desc: "Get a clean, memorable devport.com/name handle instantly." },
+          ].map((feat, i) => (
+            <div key={i} className="bg-bg-surface p-6 rounded-2xl border border-border-primary hover:border-accent/30 transition-colors">
+              <div className="w-12 h-12 bg-white rounded-xl border border-border-primary flex items-center justify-center text-2xl mb-4 shadow-sm">
+                {feat.icon}
+              </div>
+              <h3 className="font-bold text-lg mb-2">{feat.title}</h3>
+              <p className="text-text-secondary text-sm leading-relaxed">{feat.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-24 px-6 bg-bg-surface border-y border-border-primary">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-fraunces text-3xl md:text-4xl font-bold text-center mb-16">Loved by developers</h2>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-white p-8 rounded-2xl border border-border-primary shadow-sm">
+              <div className="flex text-warm mb-4">
+                {[1,2,3,4,5].map(i => <Sparkles key={i} size={16} className="fill-current"/>)}
+              </div>
+              <p className="text-text-primary mb-6 leading-relaxed">"I spent a week trying to build a portfolio with Three.js. It looked cool but performed terribly. DevPort gave me a clean, recruiter-friendly site in exactly 2 minutes."</p>
+              <div className="font-medium text-sm">
+                <div className="text-text-primary">Arjun K.</div>
+                <div className="text-text-secondary">Frontend Engineer</div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-8 rounded-2xl border border-border-primary shadow-sm relative md:-top-4">
+              <div className="flex text-warm mb-4">
+                {[1,2,3,4,5].map(i => <Sparkles key={i} size={16} className="fill-current"/>)}
+              </div>
+              <p className="text-text-primary mb-6 leading-relaxed">"The AI resume parser is literal magic. I uploaded the PDF I used for placements, and it extracted all my internships and projects perfectly. Easiest setup ever."</p>
+              <div className="font-medium text-sm">
+                <div className="text-text-primary">Sneha M.</div>
+                <div className="text-text-secondary">New Grad SWE</div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-8 rounded-2xl border border-border-primary shadow-sm">
+              <div className="flex text-warm mb-4">
+                {[1,2,3,4,5].map(i => <Sparkles key={i} size={16} className="fill-current"/>)}
+              </div>
+              <p className="text-text-primary mb-6 leading-relaxed">"I don't have time to maintain a custom website. DevPort auto-syncs with my GitHub so my latest repos are always there. It's set-and-forget."</p>
+              <div className="font-medium text-sm">
+                <div className="text-text-primary">Rohit P.</div>
+                <div className="text-text-secondary">Full Stack Developer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-24 px-6 max-w-3xl mx-auto">
+        <h2 className="font-fraunces text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+        <div className="space-y-4">
+          {FAQ_ITEMS.map((item, index) => (
+            <div key={index} className="border border-border-primary rounded-xl overflow-hidden bg-bg-primary transition-all duration-200">
+              <button 
+                onClick={() => toggleFaq(index)}
+                className="w-full px-6 py-4 text-left font-semibold flex items-center justify-between focus:outline-none hover:bg-bg-surface transition-colors"
+              >
+                {item.q}
+                {openFaq === index ? <ChevronUp size={20} className="text-text-tertiary shrink-0"/> : <ChevronDown size={20} className="text-text-tertiary shrink-0"/>}
+              </button>
+              <AnimatePresence>
+                {openFaq === index && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-6 pb-5 text-text-secondary leading-relaxed border-t border-border-subtle pt-3">
+                      {item.a}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto bg-text-primary text-bg-primary rounded-[2rem] p-12 md:p-20 text-center shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
+            <Sparkles size={120} />
+          </div>
+          <h2 className="font-fraunces text-4xl md:text-5xl font-bold mb-6 relative z-10">Claim your link before someone else does.</h2>
+          <p className="text-text-tertiary text-lg mb-10 max-w-xl mx-auto relative z-10">Join thousands of developers building beautiful portfolios without writing a single line of code.</p>
+          
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              window.location.href = `/login?handle=${handle}`;
+            }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto relative z-10"
           >
-            GitHub <Github size={12} />
-          </a>
+            <div className="relative w-full">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary font-medium select-none pointer-events-none">devport.com/</span>
+              <input 
+                type="text" 
+                value={handle}
+                onChange={(e) => setHandle(e.target.value)}
+                placeholder="username" 
+                className="w-full bg-white/10 border border-white/20 rounded-full py-3.5 pl-32 pr-6 text-white placeholder-white/40 focus:outline-none focus:border-accent transition-colors"
+                required
+              />
+            </div>
+            <button type="submit" className="w-full sm:w-auto shrink-0 bg-accent hover:bg-accent-hover text-white px-8 py-3.5 rounded-full font-bold transition-colors">
+              Claim <ArrowRight size={16} className="inline ml-1"/>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-border-primary py-12 px-6 text-center text-text-tertiary">
+        <div className="flex items-center justify-center gap-2 mb-4 text-text-primary font-bold font-fraunces">
+          <Sparkles size={16} className="text-accent" /> DevPort
+        </div>
+        <p className="mb-6">Portfolios for everyone.</p>
+        <div className="flex items-center justify-center gap-6 text-sm">
+          <a href="#" className="hover:text-text-primary transition-colors">Privacy</a>
+          <a href="#" className="hover:text-text-primary transition-colors">Terms</a>
+          <a href="#" className="hover:text-text-primary transition-colors">Contact</a>
         </div>
       </footer>
-
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Outfit, Playfair_Display, Plus_Jakarta_Sans, JetBrains_Mono, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Outfit, Playfair_Display, Plus_Jakarta_Sans, JetBrains_Mono, Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,6 +37,12 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ['normal', 'italic'],
+});
+
 export const metadata: Metadata = {
   title: "DevPort — Developer Portfolio Builder",
   description: "Build a professional developer portfolio in minutes. Import from GitHub, LinkedIn, or your resume PDF. Deploy instantly with a unique URL.",
@@ -65,7 +71,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} ${playfair.variable} ${jakarta.variable} ${jetbrains.variable} ${inter.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} ${playfair.variable} ${jakarta.variable} ${jetbrains.variable} ${inter.variable} ${fraunces.variable} h-full antialiased`}
     >
       <head>
         <meta name="theme-color" content="#FFFFFF" />

@@ -5,21 +5,26 @@
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Light theme — restrained but visible */
-  --color-bg-primary: #FFFFFF;
-  --color-bg-surface: #F7F7F8;
-  --color-bg-code: #F2F2F3;
-  --color-bg-terminal: #18181B;
+  --color-bg-primary: #fafaf8;
+  --color-bg-surface: #f2f1ee;
+  --color-bg-code: #e8e6e1;
+  --color-bg-terminal: #111110;
 
-  --color-border-primary: #E4E4E7;
-  --color-border-subtle: #F0F0F2;
+  --color-border-primary: #e2e0db;
+  --color-border-subtle: #f2f1ee;
 
-  --color-text-primary: #09090B;
-  --color-text-secondary: #52525B;
-  --color-text-tertiary: #A1A1AA;
-  --color-text-inverse: #FAFAFA;
+  --color-text-primary: #111110;
+  --color-text-secondary: #4a4a47;
+  --color-text-tertiary: #8a8a85;
+  --color-text-inverse: #fafaf8;
 
-  --color-accent: #18181B;
-  --color-accent-hover: #27272A;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-light: #eff4ff;
+  --color-accent-border: #bfcfff;
+
+  --color-warm: #c97c3a;
+  --color-warm-light: #fdf6ee;
 }
 
 body {
