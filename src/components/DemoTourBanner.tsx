@@ -20,17 +20,17 @@ export default function DemoTourBanner({ step, onNext, nextLabel, isLivePage = f
   ];
 
   return (
-    <div className="fixed top-0 inset-x-0 z-50 p-4 bg-zinc-950/80 border-b border-zinc-800 backdrop-blur-md text-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-4 font-sans select-none shadow-md">
+    <div className="fixed top-0 inset-x-0 z-50 p-4 bg-bg-surface/90 border-b border-border-primary backdrop-blur-md text-text-primary flex flex-col sm:flex-row items-center justify-between gap-4 font-sans select-none shadow-md">
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-600/30">
+        <div className="w-8 h-8 rounded-lg bg-accent text-text-inverse flex items-center justify-center shadow-lg shadow-accent/20">
           <Sparkles size={16} />
         </div>
         <div>
-          <div className="text-xs font-black uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
+          <div className="text-xs font-black uppercase tracking-wider text-accent flex items-center gap-1.5">
             <span>Product Tour</span>
-            <span className="px-1.5 py-0.5 rounded bg-indigo-950 border border-indigo-900 text-4xs font-bold uppercase tracking-widest text-indigo-300 animate-pulse">Sandbox</span>
+            <span className="px-1.5 py-0.5 rounded bg-accent/10 border border-accent/20 text-4xs font-bold uppercase tracking-widest text-accent animate-pulse">Sandbox</span>
           </div>
-          <p className="text-3xs text-zinc-400 font-medium">Replicating all real dashboard & portfolio functions</p>
+          <p className="text-3xs text-text-secondary font-medium">Replicating all real dashboard & portfolio functions</p>
         </div>
       </div>
 
@@ -41,14 +41,14 @@ export default function DemoTourBanner({ step, onNext, nextLabel, isLivePage = f
           const isActive = step === idx + 1;
           return (
             <React.Fragment key={idx}>
-              {idx > 0 && <div className={`w-6 h-px ${isDone ? 'bg-indigo-500' : 'bg-zinc-800'}`} />}
+              {idx > 0 && <div className={`w-6 h-px ${isDone ? 'bg-accent' : 'bg-border-primary'}`} />}
               <div className="flex items-center gap-1.5">
                 <div className={`w-5 h-5 rounded-full flex items-center justify-center text-4xs font-bold transition ${
-                  isDone ? 'bg-indigo-600 text-white' : isActive ? 'bg-indigo-500/25 border border-indigo-500 text-indigo-400' : 'bg-zinc-900 border border-zinc-800 text-zinc-500'
+                  isDone ? 'bg-accent text-text-inverse' : isActive ? 'bg-accent/10 border border-accent text-accent' : 'bg-bg-primary border border-border-primary text-text-tertiary'
                 }`}>
                   {isDone ? <Check size={10} /> : idx + 1}
                 </div>
-                <span className={`text-2xs ${isActive ? 'text-zinc-100 font-extrabold' : isDone ? 'text-zinc-400' : 'text-zinc-600'}`}>{s.title}</span>
+                <span className={`text-2xs ${isActive ? 'text-text-primary font-extrabold' : isDone ? 'text-text-secondary' : 'text-text-tertiary'}`}>{s.title}</span>
               </div>
             </React.Fragment>
           );
@@ -60,7 +60,7 @@ export default function DemoTourBanner({ step, onNext, nextLabel, isLivePage = f
         {isLivePage ? (
           <a
             href={`/login?handle=${username || ''}`}
-            className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-500/20 transition flex items-center gap-1.5"
+            className="px-4 py-2 bg-accent hover:bg-accent-hover text-text-inverse font-bold text-xs rounded-xl shadow-lg shadow-accent/20 transition flex items-center gap-1.5"
           >
             Claim Handle Permanently <ArrowRight size={12} />
           </a>
@@ -68,7 +68,7 @@ export default function DemoTourBanner({ step, onNext, nextLabel, isLivePage = f
           onNext && (
             <button
               onClick={onNext}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/10 transition flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 bg-accent hover:bg-accent-hover text-text-inverse font-bold text-xs rounded-xl shadow-md shadow-accent/10 transition flex items-center gap-1.5 cursor-pointer"
             >
               {nextLabel || 'Continue'} <ArrowRight size={12} />
             </button>
