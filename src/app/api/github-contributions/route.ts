@@ -14,6 +14,14 @@ export async function GET(request: Request) {
       const response = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}`);
       if (response.ok) {
         const data = await response.json();
+        if (data.contributions) {
+          interface Contribution {
+            date: string;
+            count: number;
+            level: number;
+          }
+          data.contributions.sort((a: Contribution, b: Contribution) => a.date.localeCompare(b.date));
+        }
         return NextResponse.json(data, {
           headers: {
             'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400'

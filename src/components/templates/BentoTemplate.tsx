@@ -818,8 +818,9 @@ export default function BentoTemplate({ data, isDemo = false, onSubmitMessage }:
                 <div className={`p-3 sm:p-4 rounded-xl border ${style.leetBg} ${style.cardBorder} space-y-2 sm:space-y-3`}>
                   <div className="overflow-x-auto pb-1 scrollbar-thin">
                     {(() => {
-                      // Get last 53 weeks (53 * 7 = 371 days)
-                      const lastYearData = contributions.slice(-371);
+                      // Sort chronologically (oldest to newest) to make sure we get the correct last 371 days
+                      const sortedContributions = [...contributions].sort((a, b) => a.date.localeCompare(b.date));
+                      const lastYearData = sortedContributions.slice(-371);
                       if (lastYearData.length > 0) {
                         const firstDate = new Date(lastYearData[0].date);
                         const firstDayOfWeek = firstDate.getDay(); // 0: Sun, 1: Mon, etc.
