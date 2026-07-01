@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PortfolioContent } from '@/types/portfolio';
 import {
   Github, Linkedin, Twitter, ExternalLink, Calendar, Briefcase, Mail, Send,
@@ -31,6 +31,33 @@ export default function BentoTemplate({ data, isDemo = false, onSubmitMessage }:
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  // GitHub Contributions State
+  const [contributions, setContributions] = useState<{ date: string; count: number; level: number }[]>([]);
+  const [loadingContributions, setLoadingContributions] = useState(false);
+
+  useEffect(() => {
+    if (!hero.socials?.github) return;
+
+    const fetchContributions = async () => {
+      setLoadingContributions(true);
+      try {
+        const response = await fetch(`/api/github-contributions?username=${hero.socials.github}`);
+        if (response.ok) {
+          const resData = (await response.json()) as { contributions?: { date: string; count: number; level: number }[] };
+          if (resData.contributions) {
+            setContributions(resData.contributions);
+          }
+        }
+      } catch (err: unknown) {
+        console.error('Error fetching contributions:', err);
+      } finally {
+        setLoadingContributions(false);
+      }
+    };
+
+    fetchContributions();
+  }, [hero.socials?.github]);
 
   const handleMessageSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -789,23 +816,80 @@ export default function BentoTemplate({ data, isDemo = false, onSubmitMessage }:
                 </div>
                 
                 <div className={`p-3 sm:p-4 rounded-xl border ${style.leetBg} ${style.cardBorder} space-y-2 sm:space-y-3`}>
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(14px,1fr))] gap-1 items-center justify-center">
-                    {Array.from({ length: 52 }).map((_, i) => {
-                      const isActive = (i % 3 === 0 && i % 4 !== 0) || i % 7 === 1 || i % 5 === 2;
+                  <div className="overflow-x-auto pb-1 scrollbar-thin">
+                    {(() => {
+                      // Get last 53 weeks (53 * 7 = 371 days)
+                      const lastYearData = contributions.slice(-371);
+                      if (lastYearData.length > 0) {
+                        const firstDate = new Date(lastYearData[0].date);
+                        const firstDayOfWeek = firstDate.getDay(); // 0: Sun, 1: Mon, etc.
+                        
+                        const paddedContributions = [
+                          ...Array.from({ length: firstDayOfWeek }).map(() => null),
+                          ...lastYearData
+                        ];
+
+                        return (
+                          <div className="grid grid-flow-col grid-rows-7 gap-1 min-w-[700px] justify-start md:justify-center">
+                            {paddedContributions.map((day, i) => {
+                              if (day === null) {
+                                return (
+                                  <div
+                                    key={`pad-${i}`}
+                                    className="aspect-square w-3.5 h-3.5 rounded-sm opacity-0"
+                                  />
+                                );
+                              }
+
+                              const level = day.level;
+                              let cellClass = style.heatmapEmpty;
+                              if (level === 1) cellClass = `${style.heatmapFilled} opacity-30`;
+                              else if (level === 2) cellClass = `${style.heatmapFilled} opacity-60`;
+                              else if (level === 3) cellClass = `${style.heatmapFilled} opacity-80`;
+                              else if (level === 4) cellClass = style.heatmapFilled;
+
+                              const formattedDate = new Date(day.date).toLocaleDateString(undefined, {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                              });
+
+                              return (
+                                <div
+                                  key={day.date}
+                                  title={`${day.count} contributions on ${formattedDate}`}
+                                  className={`aspect-square w-3.5 h-3.5 rounded-sm transition-all duration-200 hover:scale-125 cursor-pointer ${cellClass}`}
+                                />
+                              );
+                            })}
+                          </div>
+                        );
+                      }
+
+                      // Fallback Loading/Placeholder
                       return (
-                        <div
-                          key={i}
-                          className={`aspect-square w-full max-w-[14px] rounded-sm transition-all duration-200 ${
-                            isActive ? style.heatmapFilled : style.heatmapEmpty
-                          }`}
-                        />
+                        <div className="grid grid-flow-col grid-rows-7 gap-1 min-w-[700px] justify-start md:justify-center">
+                          {Array.from({ length: 371 }).map((_, i) => {
+                            const isActive = (i % 3 === 0 && i % 4 !== 0) || i % 7 === 1 || i % 5 === 2;
+                            return (
+                              <div
+                                key={`fallback-${i}`}
+                                className={`aspect-square w-3.5 h-3.5 rounded-sm ${
+                                  isActive ? style.heatmapFilled : style.heatmapEmpty
+                                }`}
+                              />
+                            );
+                          })}
+                        </div>
                       );
-                    })}
+                    })()}
                   </div>
                   <div className="flex justify-end gap-1.5 items-center text-[9px] font-bold text-zinc-400">
                     <span>Less</span>
                     <div className={`w-2.5 h-2.5 rounded-sm ${style.heatmapEmpty}`} />
-                    <div className={`w-2.5 h-2.5 rounded-sm opacity-50 ${style.heatmapFilled}`} />
+                    <div className={`w-2.5 h-2.5 rounded-sm opacity-30 ${style.heatmapFilled}`} />
+                    <div className={`w-2.5 h-2.5 rounded-sm opacity-60 ${style.heatmapFilled}`} />
+                    <div className={`w-2.5 h-2.5 rounded-sm opacity-80 ${style.heatmapFilled}`} />
                     <div className={`w-2.5 h-2.5 rounded-sm ${style.heatmapFilled}`} />
                     <span>More</span>
                   </div>
