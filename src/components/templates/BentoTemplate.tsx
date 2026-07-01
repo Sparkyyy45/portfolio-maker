@@ -815,7 +815,64 @@ export default function BentoTemplate({ data, isDemo = false, onSubmitMessage }:
                   <span className={`text-[10px] font-bold ${style.textLight}`}>Recent contributions</span>
                 </div>
                 
-                <div className={`p-3 sm:p-4 rounded-xl border ${style.leetBg} ${style.cardBorder} space-y-2 sm:space-y-3`}>
+                <div className={`p-3 sm:p-4 rounded-xl border ${style.leetBg} ${style.cardBorder} space-y-4 sm:space-y-5`}>
+                  {/* GitHub Stats Stats Card */}
+                  {!loadingContributions && contributions.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2 divide-x divide-current/10">
+                      {(() => {
+                        const sorted = [...contributions].sort((a, b) => a.date.localeCompare(b.date));
+                        
+                        // Total Past Year
+                        let totalLastYear = 0;
+                        const lastYearData = sorted.slice(-371);
+                        lastYearData.forEach(c => totalLastYear += c.count);
+
+                        // Longest Streak
+                        let longestStreak = 0;
+                        let tempStreak = 0;
+                        for (let i = 0; i < sorted.length; i++) {
+                          if (sorted[i].count > 0) {
+                            tempStreak++;
+                            longestStreak = Math.max(longestStreak, tempStreak);
+                          } else {
+                            tempStreak = 0;
+                          }
+                        }
+
+                        // Current Streak
+                        const todayStr = new Date().toISOString().split('T')[0];
+                        let currentStreak = 0;
+                        for (let i = sorted.length - 1; i >= 0; i--) {
+                          const c = sorted[i];
+                          if (c.date > todayStr) continue;
+                          if (c.date === todayStr && c.count === 0) continue;
+                          if (c.count > 0) {
+                            currentStreak++;
+                          } else {
+                            break;
+                          }
+                        }
+
+                        return (
+                          <>
+                            <div className="flex flex-col items-center justify-center text-center px-1">
+                              <span className="text-xl sm:text-2xl font-black text-current">{totalLastYear}</span>
+                              <span className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mt-0.5 ${style.textLight}`}>Total (1 Yr)</span>
+                            </div>
+                            <div className="flex flex-col items-center justify-center text-center px-1">
+                              <span className="text-xl sm:text-2xl font-black text-current">{currentStreak}</span>
+                              <span className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mt-0.5 ${style.textLight}`}>Current Streak</span>
+                            </div>
+                            <div className="flex flex-col items-center justify-center text-center px-1">
+                              <span className="text-xl sm:text-2xl font-black text-current">{longestStreak}</span>
+                              <span className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mt-0.5 ${style.textLight}`}>Longest Streak</span>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  )}
+
                   <div className="overflow-x-auto pb-1 scrollbar-thin">
                     {(() => {
                       // Sort chronologically (oldest to newest) to make sure we get the correct last 371 days
